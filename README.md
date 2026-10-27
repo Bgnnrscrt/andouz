@@ -1,32 +1,44 @@
-# React + TypeScript + Vite
+# ⚡ ANDO Ecosystem (ando.uz)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Официальный веб-портал экосистемы **ANDO** — независимых премиальных приложений нового поколения для Android.
 
-Currently, two official plugins are available:
+🌐 **Официальный сайт**: [https://ando.uz](https://ando.uz)  
+🚀 **Зеркало Vercel**: [https://andouz.vercel.app](https://andouz.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 📱 Продукты экосистемы
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. AndoGram (Telegram Mod)
+Автономный защищённый клиент на базе AyuGram:
+- **Личный Архив & Мост (A-B-C)** — двустороннее дублирование диалогов в приватный форум со второго телефона 24/7.
+- **Обход No-Forwards** — скачивание любых защищённых медиа из каналов без тега автора и снятие `FLAG_SECURE`.
+- **Honeypot-пароли** — ввод аварийного пин-кода скрывает секретные чаты под принуждением.
+- **Сортировка по размеру** — поиск самых тяжёлых медиа в чатах и каналах через облачный MTProto сканер.
+- **3D AR-маски** — MediaPipe аппаратный трекинг 468 точек лица в реальном времени.
 
-## Expanding the Oxlint configuration
+### 2. Andusta (Instagram Mod)
+Автономный клон `com.andusta.android` без необходимости Root-доступа:
+- **Ghost Mode** — анонимный просмотр Stories и эфиров, скрытие статуса «в сети» и набора текста.
+- **Anti-Unsend** — сохранение удалённых собеседником сообщений в Direct с пометкой `⚠️ [Удалено]`.
+- **Unlimited View-Once** — бесконечный повторный просмотр исчезающих фото/видео и скриншоты.
+- **Media Downloader** — скачивание Reels, Stories, постов и аватарок в оригинальном качестве в 1 клик.
+- **Fake Live Camera** — отправка любого фото из галереи под видом снимка с камеры.
+- **Ad Blocker** — полное удаление рекламы и спонсорских постов из ленты и историй.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+---
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+## 🛠️ Стек технологий портала
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- **Фреймворк**: React 18 + Vite + TypeScript
+- **Стилизация**: Ванильный CSS (CSS Custom Properties, Glassmorphism, Neon Cyberpunk)
+- **Иконки**: `lucide-react`
+- **Эффекты**: `canvas-confetti`
+- **Инфраструктура**: Vercel Serverless Edge CDN + aHOST.uz DNS (`ando.uz`)
+- **Языки**: Русский (`ru`), Узбекский (`uz`), Английский (`en`)
+
+---
+
+## 📜 История изменений
+
+Все детали релизов и списки изменений задокументированы в файле **[CHANGELOG.md](./CHANGELOG.md)**.
