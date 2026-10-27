@@ -1,0 +1,419 @@
+/* ==========================================================================
+   AppDetailsModal — content of the shared <Modal> panel (.adm-panel).
+   The panel stays the scroll container (so keyboard scrolling works with
+   focus on the dialog); the close button and the download bar stick to it.
+   ========================================================================== */
+
+.modal-panel.adm-panel {
+  /* No vertical padding: sticky offsets resolve against the content box, so the close
+     button and the download bar would otherwise stick inside the padding. */
+  padding: 0 32px;
+  border-color: color-mix(in srgb, var(--app-color) 30%, rgba(255, 255, 255, 0.08));
+  background:
+    radial-gradient(100% 55% at 0% 0%, color-mix(in srgb, var(--app-color) 14%, transparent), transparent 70%) no-repeat,
+    #0d1017;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.8),
+    0 0 90px -30px color-mix(in srgb, var(--app-color) 50%, transparent);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--app-color) 35%, #1e293b) transparent;
+}
+
+/* Close button stays reachable while the details scroll. Sticky and in flow, but its
+   negative bottom margin gives back its height, so the header starts 28px from the top. */
+.adm-panel > .modal-close {
+  position: sticky;
+  top: 14px;
+  right: auto;
+  width: 40px;
+  height: 40px;
+  margin: 14px -14px -26px auto;
+  background: rgba(22, 26, 36, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .adm-panel > .modal-close:hover {
+    background: rgba(40, 46, 60, 0.96);
+    color: #fff;
+  }
+}
+
+/* ---------- Header ---------- */
+
+.adm-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 44px;
+  margin-bottom: 24px;
+}
+.adm-head-text {
+  min-width: 0;
+}
+.adm-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+.adm-title {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+.adm-version {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--app-color) 30%, transparent);
+  background: color-mix(in srgb, var(--app-color) 8%, transparent);
+  white-space: nowrap;
+}
+.adm-tagline {
+  margin-top: 6px;
+  color: var(--app-color);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+/* ---------- Spec cells ---------- */
+
+.adm-specs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.adm-spec {
+  min-width: 0;
+  padding: 14px 14px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+.adm-spec dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--text-dim);
+}
+.adm-spec dt svg {
+  flex: none;
+  color: var(--app-color);
+}
+.adm-spec dd {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: #fff;
+}
+.adm-spec.is-ok dt svg,
+.adm-spec.is-ok dd {
+  color: var(--accent-ando);
+}
+
+/* ---------- Sections ---------- */
+
+.adm-section {
+  margin-bottom: 30px;
+}
+.adm-h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+}
+.adm-count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.5;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--app-color) 28%, transparent);
+}
+
+/* ---------- Features ---------- */
+
+.adm-features {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.adm-feature {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.adm-feature-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 12%, transparent);
+}
+.adm-feature-body {
+  min-width: 0;
+}
+.adm-feature-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 10px;
+  margin-bottom: 6px;
+}
+.adm-feature-title {
+  flex: 1 1 180px;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+}
+.adm-feature-desc {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- Changelog timeline ---------- */
+
+.adm-timeline {
+  list-style: none;
+}
+.adm-release {
+  position: relative;
+  padding-left: 30px;
+}
+.adm-release + .adm-release {
+  margin-top: 20px;
+}
+/* Rail from the version node down past the release notes. */
+.adm-release::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 22px;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--app-color) 65%, transparent), transparent);
+}
+.adm-node {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--app-color);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--app-color) 18%, transparent),
+    0 0 14px color-mix(in srgb, var(--app-color) 70%, transparent);
+}
+/* Latest release: a slow ping marks it as the current build. */
+.adm-node.is-latest::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--app-color);
+  animation: pingRing 2.4s var(--ease-out) infinite;
+}
+.adm-release-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-bottom: 12px;
+}
+.adm-release-version {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--app-color);
+}
+.adm-latest {
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.5;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--accent-ando);
+  background: rgba(0, 245, 155, 0.1);
+  border: 1px solid rgba(0, 245, 155, 0.25);
+}
+.adm-release-date {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-dim);
+}
+.adm-release-items {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.adm-release-items li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.adm-release-items li::before {
+  content: '+';
+  content: '+' / '';
+  position: absolute;
+  left: 2px;
+  top: 0;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--app-color);
+}
+
+/* ---------- Sticky download bar ---------- */
+
+.adm-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: 0 -32px;
+  padding: 16px 32px 24px;
+  background: rgba(13, 16, 23, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.adm-cta {
+  width: 100%;
+  min-height: 54px;
+  padding: 14px 22px;
+  font-size: 1.02rem;
+  color: #fff;
+  background: var(--app-gradient);
+  box-shadow: 0 0 26px -4px color-mix(in srgb, var(--app-color) 55%, transparent);
+}
+.adm-cta-size {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+@media (hover: hover) and (pointer: fine) {
+  .adm-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px color-mix(in srgb, var(--app-color) 65%, transparent);
+  }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 560px) {
+  .modal-panel.adm-panel {
+    padding: 0 18px;
+  }
+  .adm-panel > .modal-close {
+    top: 10px;
+    margin: 10px -8px -30px auto;
+  }
+  .adm-head {
+    gap: 14px;
+    padding-right: 40px;
+    margin-bottom: 20px;
+  }
+  .adm-title {
+    font-size: 1.6rem;
+  }
+  .adm-tagline {
+    font-size: 0.92rem;
+  }
+  .adm-specs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 26px;
+  }
+  .adm-spec {
+    padding: 12px;
+  }
+  .adm-spec dd {
+    font-size: 0.95rem;
+  }
+  .adm-section {
+    margin-bottom: 26px;
+  }
+  .adm-feature {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+  .adm-feature-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+  .adm-feature-title {
+    font-size: 0.96rem;
+  }
+  .adm-release {
+    padding-left: 26px;
+  }
+  .adm-release-items {
+    padding: 12px 14px;
+  }
+  .adm-footer {
+    margin: 0 -18px;
+    padding: 14px 18px 18px;
+  }
+}
+
+/* Narrow phones: the size is already in the spec cells; keep the label on one line. */
+@media (max-width: 420px) {
+  .adm-cta-size {
+    display: none;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-node.is-latest::after {
+    animation: none;
+    opacity: 0;
+  }
+  .adm-cta:hover {
+    transform: none;
+  }
+}

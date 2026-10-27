@@ -1,0 +1,186 @@
+.install-section {
+  padding: 80px 0;
+}
+
+/* Timeline: number bubbles joined by links that draw in one after another */
+.install-steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.install-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.install-num {
+  position: relative;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text-dim);
+  background: #0d1017;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    color 400ms ease,
+    border-color 400ms ease,
+    box-shadow 400ms ease,
+    background-color 400ms ease;
+  transition-delay: calc(var(--i) * 450ms + 150ms);
+}
+.is-visible .install-num {
+  color: rgb(var(--step-rgb));
+  border-color: rgba(var(--step-rgb), 0.55);
+  background: color-mix(in srgb, rgb(var(--step-rgb)) 10%, #0d1017);
+  box-shadow: 0 0 22px rgba(var(--step-rgb), 0.35);
+}
+
+.install-link {
+  position: absolute;
+  top: 23px;
+  left: calc(50% + 32px);
+  width: calc(100% + 24px - 64px);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgb(var(--step-rgb)), rgba(var(--step-rgb), 0.25));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 550ms var(--ease-in-out);
+  transition-delay: calc(var(--i) * 450ms + 300ms);
+}
+.is-visible .install-link {
+  transform: scaleX(1);
+}
+
+.install-card-slot {
+  width: 100%;
+  flex: 1;
+  display: flex;
+}
+
+.install-card {
+  flex: 1;
+  padding: 28px 26px;
+  border-radius: var(--radius-xl);
+  --spot-color: rgba(var(--step-rgb), 0.08);
+  --spot-border: rgba(var(--step-rgb), 0.5);
+}
+.install-card h3 {
+  font-size: 1.22rem;
+  margin-bottom: 10px;
+}
+.install-card p {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.install-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--step-rgb), 0.1);
+  color: rgb(var(--step-rgb));
+  transition: transform 300ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .install-card:hover .install-icon {
+    transform: translateY(-3px) rotate(-8deg);
+  }
+}
+
+/* Play Protect notice */
+.install-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.install-notice-icon {
+  color: var(--accent-stars);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.install-notice.is-visible .install-notice-icon {
+  animation: installNudge 700ms var(--ease-out) 1.6s 1;
+}
+@keyframes installNudge {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-14deg); }
+  45% { transform: rotate(10deg); }
+  70% { transform: rotate(-5deg); }
+}
+.install-notice-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+.install-notice-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Phones: vertical timeline, bubble on the left */
+@media (max-width: 860px) {
+  .install-section {
+    padding: 64px 0;
+  }
+  .install-steps {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .install-step {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .install-link {
+    top: 56px;
+    left: 23px;
+    width: 2px;
+    height: auto;
+    bottom: -8px;
+    background: linear-gradient(180deg, rgb(var(--step-rgb)), rgba(var(--step-rgb), 0.25));
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+  .is-visible .install-link {
+    transform: scaleY(1);
+  }
+  .install-card {
+    padding: 22px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .install-num,
+  .install-link {
+    transition: none;
+  }
+  .install-notice.is-visible .install-notice-icon {
+    animation: none;
+  }
+}

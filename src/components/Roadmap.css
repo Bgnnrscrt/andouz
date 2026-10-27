@@ -1,0 +1,262 @@
+.rm-section {
+  padding: 80px 0;
+  background: rgba(8, 10, 15, 0.4);
+}
+
+/* Milestone rail above the cards (same 4-column grid) */
+.rm-rail {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.rm-node {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.rm-dot {
+  position: relative;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #05140d;
+  background: var(--node-color);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--node-color) 55%, transparent);
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 300ms var(--ease-out),
+    transform 300ms var(--ease-out);
+  transition-delay: calc(var(--i) * 380ms);
+}
+.is-visible .rm-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+.rm-node--progress .rm-dot {
+  background: #0d1017;
+  border: 2px solid var(--node-color);
+}
+.rm-node--progress .rm-dot::before,
+.rm-node--progress .rm-dot::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+.rm-node--progress .rm-dot::before {
+  inset: 6px;
+  background: var(--node-color);
+}
+.rm-node--progress .rm-dot::after {
+  inset: -2px;
+  border: 2px solid var(--node-color);
+  animation: pingRing 1.8s var(--ease-out) infinite;
+}
+.rm-node--idea .rm-dot {
+  background: transparent;
+  border: 2px dashed var(--node-color);
+  box-shadow: none;
+}
+
+.rm-link {
+  position: absolute;
+  top: 12px;
+  left: calc(50% + 18px);
+  width: calc(100% + 20px - 36px);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--node-color), color-mix(in srgb, var(--node-color) 30%, transparent));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 500ms var(--ease-in-out);
+  transition-delay: calc(var(--i) * 380ms + 200ms);
+}
+.is-visible .rm-link {
+  transform: scaleX(1);
+}
+/* Not built yet: the stretch towards the planned milestone stays dashed */
+.rm-node--to-idea .rm-link {
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.22) 0 6px, transparent 6px 12px);
+}
+
+/* Cards */
+.rm-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.rm-card-slot {
+  display: flex;
+}
+.rm-card {
+  flex: 1;
+  padding: 24px 20px;
+  border-radius: var(--radius-lg);
+  border-top: 3px solid var(--card-color);
+  --spot-color: color-mix(in srgb, var(--card-color) 9%, transparent);
+  --spot-border: color-mix(in srgb, var(--card-color) 60%, transparent);
+}
+.rm-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+.rm-card p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.rm-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--card-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.rm-live {
+  display: inline-flex;
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.rm-progress {
+  margin-top: 16px;
+}
+.rm-progress-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.rm-percent {
+  color: var(--card-color);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.rm-progress-track {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+.rm-progress-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--card-color) 55%, transparent), var(--card-color));
+  transform-origin: left center;
+  transform: scaleX(var(--p));
+}
+.rm-progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: rmShimmer 2.2s linear infinite;
+}
+@keyframes rmShimmer {
+  to { transform: translateX(100%); }
+}
+
+/* Callout with a slow light running around its border */
+.rm-callout {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 28px 32px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(0, 245, 155, 0.08) 0%, rgba(0, 180, 216, 0.08) 100%);
+  border: 1px solid rgba(0, 245, 155, 0.16);
+}
+.rm-callout > :not(.rm-callout-border) {
+  position: relative;
+  z-index: 1;
+}
+.rm-callout h4 {
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+.rm-callout p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+.rm-callout-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.rm-callout-border::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  background: conic-gradient(from 0deg, transparent 0deg 300deg, #00f59b 335deg, #00b4d8 350deg, transparent 360deg);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: rmBorder 7s linear infinite;
+}
+@keyframes rmBorder {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media (max-width: 1000px) {
+  .rm-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rm-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .rm-section {
+    padding: 64px 0;
+  }
+  .rm-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .rm-callout {
+    padding: 22px 20px;
+  }
+  .rm-callout-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-dot,
+  .rm-link {
+    transition: none;
+  }
+  .rm-node--progress .rm-dot::after,
+  .rm-live,
+  .rm-progress-fill::after,
+  .rm-callout-border::before {
+    animation: none;
+  }
+}

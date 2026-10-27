@@ -1,0 +1,653 @@
+/* Sticky header (src/components/Header.tsx). Breakpoints: 960px full nav, 600px bar language switch. */
+
+.hdr {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Glass layer: invisible at the very top, fades in after a few px of scroll (opacity only, height never changes). */
+.hdr-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 9, 14, 0.78);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 36px -24px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  pointer-events: none;
+}
+.hdr[data-solid='true'] .hdr-bg {
+  opacity: 1;
+}
+
+.hdr-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--header-h, 74px);
+}
+
+/* ---------- Brand ---------- */
+
+.hdr-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 0;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 14px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hdr-logo {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  animation: hdr-logo-in 700ms var(--ease-out) both;
+}
+.hdr-logo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  border: 1px solid rgba(0, 245, 155, 0.3);
+  box-shadow: 0 0 18px rgba(0, 245, 155, 0.28);
+}
+/* Hover glow on its own layer, so hovering only changes opacity. */
+.hdr-logo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 155, 0.6),
+    0 0 30px 4px rgba(0, 245, 155, 0.45);
+  opacity: 0;
+  transition: opacity 250ms ease;
+  pointer-events: none;
+}
+
+.hdr-wordmark {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  animation: hdr-wordmark-in 700ms var(--ease-out) 90ms backwards;
+}
+.hdr-wordmark-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hdr-name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.hdr-tld {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: rgba(0, 245, 155, 0.15);
+  color: var(--accent-ando);
+  border: 1px solid rgba(0, 245, 155, 0.3);
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease;
+}
+.hdr-tagline {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hdr-brand:hover .hdr-logo::after {
+    opacity: 1;
+  }
+  .hdr-brand:hover .hdr-tld {
+    background: rgba(0, 245, 155, 0.24);
+    border-color: rgba(0, 245, 155, 0.55);
+  }
+}
+
+/* ---------- Desktop navigation ---------- */
+
+.hdr-nav {
+  display: none;
+  min-width: 0;
+}
+.hdr-nav-list {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+.hdr-nav-list > li {
+  animation: hdr-drop-in 450ms var(--ease-out) backwards;
+  animation-delay: calc(160ms + var(--i, 0) * 40ms);
+}
+
+.hdr-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.hdr-link.is-active {
+  color: #fff;
+}
+.hdr-link-label {
+  position: relative;
+  z-index: 1;
+}
+/* Sliding "you are here" pill (motion layoutId). */
+.hdr-link-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: rgba(0, 245, 155, 0.08);
+  border: 1px solid rgba(0, 245, 155, 0.24);
+  box-shadow:
+    0 0 18px rgba(0, 245, 155, 0.1),
+    inset 0 0 12px rgba(0, 245, 155, 0.05);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hdr-link:hover {
+    color: #fff;
+  }
+}
+
+/* ---------- Actions ---------- */
+
+.hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  animation: hdr-drop-in 450ms var(--ease-out) 300ms backwards;
+}
+
+.hdr .hdr-lang {
+  display: none;
+}
+/* Grow the small language buttons' hit area to 40px without changing how they look. */
+.hdr .hdr-lang .seg-btn::after {
+  content: '';
+  position: absolute;
+  inset: -8px 0;
+}
+
+.hdr-cta-wrap {
+  position: relative;
+  display: inline-flex;
+  border-radius: var(--radius-pill);
+  isolation: isolate;
+}
+/* Soft breathing glow behind the CTA: one opacity-only layer, off for reduced motion. */
+.hdr-cta-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 0 24px 4px rgba(0, 245, 155, 0.5);
+  opacity: 0.2;
+  animation: hdr-cta-breathe 4.4s linear infinite;
+  pointer-events: none;
+}
+.hdr .hdr-cta {
+  min-height: 40px;
+  padding: 9px 18px;
+  gap: 8px;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+.hdr-cta-short {
+  display: none;
+}
+
+/* Two-line toggle that folds into an X: lines meet in the middle, then rotate (reverse on close). */
+.hdr-burger {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    transform 140ms var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.hdr-burger:active {
+  transform: scale(0.94);
+}
+.hdr-burger[aria-expanded='true'] {
+  color: var(--accent-ando);
+  border-color: rgba(0, 245, 155, 0.35);
+  background: rgba(0, 245, 155, 0.08);
+}
+.hdr-burger-line {
+  position: absolute;
+  top: calc(50% - 1px);
+  left: calc(50% - 9px);
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition:
+    rotate 150ms var(--ease-in-out),
+    translate 150ms var(--ease-in-out) 130ms;
+}
+.hdr-burger-line:first-child {
+  translate: 0 -4px;
+}
+.hdr-burger-line:last-child {
+  translate: 0 4px;
+}
+.hdr-burger[aria-expanded='true'] .hdr-burger-line {
+  translate: 0 0;
+  transition:
+    translate 150ms var(--ease-in-out),
+    rotate 170ms var(--ease-in-out) 130ms;
+}
+.hdr-burger[aria-expanded='true'] .hdr-burger-line:first-child {
+  rotate: 45deg;
+}
+.hdr-burger[aria-expanded='true'] .hdr-burger-line:last-child {
+  rotate: -45deg;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hdr-burger:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+  .hdr-burger[aria-expanded='true']:hover {
+    background: rgba(0, 245, 155, 0.12);
+    border-color: rgba(0, 245, 155, 0.45);
+  }
+}
+
+/* ---------- Phone / tablet menu ---------- */
+
+/* Dims the page under the open menu; tapping it closes the menu and it swallows scroll gestures. */
+.hdr-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(3, 4, 8, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  touch-action: none;
+  transition:
+    opacity 160ms var(--ease-out),
+    visibility 0s linear 160ms;
+  -webkit-tap-highlight-color: transparent;
+}
+.hdr[data-open='true'] .hdr-scrim {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 250ms var(--ease-out),
+    visibility 0s linear 0s;
+}
+
+.hdr-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  max-height: calc(100dvh - var(--header-h, 74px) - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px;
+  border-radius: 22px;
+  background: rgba(12, 14, 21, 0.9);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 28px 64px -16px rgba(0, 0, 0, 0.8),
+    0 0 40px -12px rgba(0, 245, 155, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transform-origin: top right;
+  /* Motion owns opacity/visibility/transform; these keep it hidden before the first render. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hdr-panel-list {
+  list-style: none;
+}
+.hdr-panel-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 14px;
+  border-radius: 14px;
+  color: var(--text-main);
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.hdr-panel-link:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+.hdr-panel-index {
+  min-width: 1.6em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  transition: color 200ms ease;
+}
+.hdr-panel-label {
+  flex: 1;
+  min-width: 0;
+}
+.hdr-panel-arrow {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  transition: color 200ms ease;
+}
+.hdr-panel-link.is-active {
+  background: rgba(0, 245, 155, 0.08);
+}
+.hdr-panel-link.is-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent-ando);
+  box-shadow: 0 0 10px rgba(0, 245, 155, 0.7);
+}
+.hdr-panel-link.is-active .hdr-panel-index,
+.hdr-panel-link.is-active .hdr-panel-arrow {
+  color: var(--accent-ando);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hdr-panel-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .hdr-panel-link:hover .hdr-panel-arrow {
+    color: var(--text-main);
+  }
+}
+
+.hdr-panel-lang {
+  margin-top: 8px;
+  padding: 14px 6px 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.hdr-panel-caption {
+  display: block;
+  margin: 0 0 10px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.hdr-panel .seg-btn {
+  min-height: 44px;
+  padding: 0 6px;
+  font-size: 0.9rem;
+}
+
+/* ---------- Scroll progress ---------- */
+
+.hdr-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  z-index: 3;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #00f59b 0%, #00b4d8 55%, #ff007f 100%);
+  box-shadow: 0 0 10px rgba(0, 245, 155, 0.45);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Short CTA label where the bar is tight: phones, small tablets and the 960–1119px desktop squeeze. */
+@media (max-width: 719px), (min-width: 960px) and (max-width: 1119px) {
+  .hdr-cta-full {
+    display: none;
+  }
+  .hdr-cta-short {
+    display: inline;
+  }
+}
+
+@media (max-width: 399px), (min-width: 960px) and (max-width: 1119px) {
+  .hdr .hdr-cta {
+    padding: 9px 16px;
+  }
+  .hdr-cta-icon {
+    display: none;
+  }
+}
+
+/* Five links, the language switch and the CTA share 912px at 960: tighten the links until 1200. */
+@media (min-width: 960px) and (max-width: 1199px) {
+  .hdr-inner {
+    gap: 12px;
+  }
+  .hdr-actions {
+    gap: 8px;
+  }
+  .hdr-link {
+    padding: 0 9px;
+    font-size: 0.86rem;
+  }
+}
+
+@media (max-width: 399px) {
+  .hdr-inner {
+    gap: 8px;
+  }
+  .hdr-actions {
+    gap: 8px;
+  }
+  .hdr .hdr-cta {
+    padding: 9px 13px;
+  }
+  .hdr-burger {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 359px) {
+  .hdr-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+  }
+  .hdr-inner,
+  .hdr-actions {
+    gap: 6px;
+  }
+  .hdr-brand {
+    gap: 8px;
+  }
+  .hdr-name {
+    font-size: 1.15rem;
+  }
+  .hdr .hdr-cta {
+    padding: 8px 11px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .hdr .hdr-lang {
+    display: inline-flex;
+  }
+  .hdr-panel {
+    left: auto;
+    right: 24px;
+    width: 340px;
+  }
+  .hdr-panel-lang {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  .hdr-nav {
+    display: block;
+  }
+  .hdr-burger,
+  .hdr-panel,
+  .hdr-scrim {
+    display: none;
+  }
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes hdr-logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Wordmark wipes in left to right, like a terminal line being written. */
+@keyframes hdr-wordmark-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes hdr-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hdr-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Sine-shaped breathing approximated with linear segments (constant loop = linear easing). */
+@keyframes hdr-cta-breathe {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  12.5%,
+  87.5% {
+    opacity: 0.27;
+  }
+  25%,
+  75% {
+    opacity: 0.45;
+  }
+  37.5%,
+  62.5% {
+    opacity: 0.63;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Reduced motion: entrances become fades, the glow stops breathing, the toggle swaps without travelling. */
+@media (prefers-reduced-motion: reduce) {
+  .hdr-logo,
+  .hdr-wordmark,
+  .hdr-nav-list > li,
+  .hdr-actions {
+    animation-name: hdr-fade-in;
+  }
+  .hdr-cta-wrap::before {
+    animation: none;
+    opacity: 0.35;
+  }
+  .hdr-burger-line,
+  .hdr-burger[aria-expanded='true'] .hdr-burger-line {
+    transition: none;
+  }
+  .hdr-burger:active {
+    transform: none;
+  }
+}

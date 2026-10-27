@@ -1,0 +1,442 @@
+/* HERO — layout */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 64px 0 112px;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Backdrop: aurora glows → perspective grid floor → particle canvas → vignette */
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-aurora {
+  position: absolute;
+  width: min(46vw, 640px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  will-change: transform;
+}
+.hero-aurora--green {
+  top: -22%;
+  left: calc(50% - min(23vw, 320px));
+  background: radial-gradient(circle, rgba(0, 245, 155, 0.32), transparent 65%);
+  animation: heroAuroraA 18s var(--ease-in-out) infinite alternate;
+}
+.hero-aurora--cyan {
+  top: 8%;
+  right: -14%;
+  background: radial-gradient(circle, rgba(0, 180, 216, 0.28), transparent 65%);
+  animation: heroAuroraB 22s var(--ease-in-out) infinite alternate;
+}
+.hero-aurora--magenta {
+  bottom: -26%;
+  left: -14%;
+  background: radial-gradient(circle, rgba(255, 0, 127, 0.2), transparent 65%);
+  animation: heroAuroraC 26s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes heroAuroraA {
+  from { transform: translate3d(-4vw, 0, 0) scale(1); }
+  to { transform: translate3d(5vw, 4vh, 0) scale(1.15); }
+}
+@keyframes heroAuroraB {
+  from { transform: translate3d(0, 0, 0) scale(1.1); }
+  to { transform: translate3d(-7vw, 6vh, 0) scale(0.95); }
+}
+@keyframes heroAuroraC {
+  from { transform: translate3d(0, 0, 0) scale(0.95); }
+  to { transform: translate3d(8vw, -5vh, 0) scale(1.12); }
+}
+
+.hero-floor {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: 0;
+  height: 52%;
+  perspective: 480px;
+  perspective-origin: 50% 0%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 88%);
+  mask-image: linear-gradient(to top, #000 0%, transparent 88%);
+}
+.hero-floor-plane {
+  position: absolute;
+  inset: -100% 0 0 0;
+  background-size: 48px 48px;
+  background-image:
+    linear-gradient(to right, rgba(0, 245, 155, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 245, 155, 0.09) 1px, transparent 1px);
+  transform-origin: 50% 100%;
+  transform: rotateX(72deg);
+  animation: heroFloor 3.2s linear infinite;
+}
+@keyframes heroFloor {
+  from { transform: rotateX(72deg) translateY(0); }
+  to { transform: rotateX(72deg) translateY(48px); }
+}
+
+.hero-constellation {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 40%, transparent 50%, rgba(8, 9, 14, 0.75) 100%),
+    linear-gradient(to bottom, transparent 72%, var(--bg-dark) 100%);
+}
+
+/* Emblem: logo disc, rotating conic light ring, orbit with the two app colours */
+.hero-emblem-slot {
+  margin-bottom: 22px;
+}
+.hero-emblem {
+  position: relative;
+  width: 132px;
+  height: 132px;
+}
+.hero-emblem-glow {
+  position: absolute;
+  inset: -35%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 245, 155, 0.28), transparent 62%);
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+.hero-emblem-orbit {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  animation: spin 18s linear infinite;
+}
+.hero-emblem-sat {
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+}
+.hero-emblem-sat--gram {
+  top: -4px;
+  background: var(--accent-gram);
+  box-shadow: 0 0 12px 2px var(--accent-gram-glow), 0 0 4px var(--accent-gram);
+}
+.hero-emblem-sat--usta {
+  bottom: -4px;
+  background: var(--accent-usta);
+  box-shadow: 0 0 12px 2px var(--accent-usta-glow), 0 0 4px var(--accent-usta);
+}
+.hero-emblem-spin {
+  position: absolute;
+  inset: -3px;
+  animation: spin 5s linear infinite;
+}
+.hero-emblem-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, #00f59b 70deg, #00b4d8 140deg, transparent 200deg, transparent 260deg, #ff007f 320deg, transparent 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+}
+.hero-emblem-ring--blur {
+  filter: blur(6px);
+  opacity: 0.9;
+}
+.hero-emblem-disc {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 245, 155, 0.18);
+}
+.hero-emblem-disc img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Copy */
+.hero-badge-slot {
+  margin-bottom: 22px;
+}
+.hero-badge {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 5.6vw, 4.2rem);
+  line-height: 1.12;
+  font-weight: 900;
+  max-width: 960px;
+  margin: 0 auto 22px;
+  text-wrap: balance;
+}
+.hero-word {
+  display: inline-block;
+}
+.hero-word--grad {
+  position: relative;
+  padding-bottom: 0.08em;
+  background: linear-gradient(90deg, var(--g1), var(--g2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.hero-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-sheen-band::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, 0.85) 50%, transparent 58%);
+  background-size: 260% 100%;
+  background-position: 120% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: heroSheen 7s var(--ease-in-out) infinite;
+  animation-delay: var(--sheen-delay, 2.4s);
+}
+@keyframes heroSheen {
+  0% { background-position: 120% 0; }
+  22%, 100% { background-position: -20% 0; }
+}
+
+.hero-subtitle {
+  font-size: clamp(1.02rem, 2vw, 1.22rem);
+  color: var(--text-muted);
+  max-width: 780px;
+  margin: 0 auto 36px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* CTAs */
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 52px;
+}
+.hero-cta-slot,
+.hero-magnet {
+  display: flex;
+}
+.hero-cta {
+  padding: 16px 30px;
+  font-size: 1.05rem;
+}
+.hero-cta--stars {
+  padding: 16px 24px;
+  font-size: 0.95rem;
+}
+.hero-cta-icon-ando {
+  color: var(--accent-ando);
+}
+
+/* Rotating light running around the primary CTA's edge */
+.hero-cta-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.hero-cta-ring::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 260%;
+  aspect-ratio: 1;
+  background: conic-gradient(from 0deg, transparent 0deg 250deg, rgba(255, 255, 255, 0.95) 300deg, #00b4d8 330deg, transparent 360deg);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: heroRing 3.2s linear infinite;
+}
+@keyframes heroRing {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Stat cards */
+.hero-stats {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 14px;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.hero-stat-slot {
+  display: flex;
+}
+.hero-stat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  text-align: left;
+  --spot-color: rgba(var(--stat-rgb), 0.1);
+  --spot-border: rgba(var(--stat-rgb), 0.55);
+}
+.hero-stat-icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--stat-rgb), 0.1);
+  color: rgb(var(--stat-rgb));
+  transition: transform 300ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-stat:hover .hero-stat-icon {
+    transform: var(--stat-hover);
+  }
+}
+.hero-stat-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hero-stat-title {
+  font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+.hero-stat-sub {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+/* Scroll cue */
+.hero-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  z-index: 1;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.hero-scroll-cue-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.hero-scroll-cue-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.hero-scroll-cue-track {
+  position: relative;
+  width: 22px;
+  height: 34px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+.hero-scroll-cue-dot {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--accent-ando);
+  animation: heroCueDot 1.8s var(--ease-in-out) infinite;
+}
+@keyframes heroCueDot {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  80% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(12px); opacity: 0; }
+}
+
+/* Phones */
+@media (max-width: 640px) {
+  .hero {
+    padding: 40px 0 96px;
+  }
+  .hero-emblem {
+    width: 104px;
+    height: 104px;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 40px;
+  }
+  .hero-cta-slot,
+  .hero-magnet,
+  .hero-cta {
+    width: 100%;
+  }
+}
+
+/* Reduced motion: everything holds still, the static composition stays */
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora,
+  .hero-floor-plane,
+  .hero-emblem-glow,
+  .hero-emblem-orbit,
+  .hero-emblem-spin,
+  .hero-sheen-band::before,
+  .hero-cta-ring::before,
+  .hero-scroll-cue-dot {
+    animation: none;
+  }
+  .hero-cta-ring {
+    display: none;
+  }
+}

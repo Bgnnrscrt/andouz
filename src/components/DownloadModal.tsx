@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useAnimate, useReducedMotion } from 'motion/react';
+import { QRCodeSVG } from 'qrcode.react';
 import { Language, AppId } from '../types';
 import { translations } from '../translations';
-import { INITIAL_VALID_COUPONS, APPS_DATA } from '../data';
-import { X, Star, Sparkles, Download, CheckCircle2, AlertCircle, Copy, Check } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { INITIAL_VALID_COUPONS, APPS_DATA, DOWNLOAD_URLS } from '../data';
+import { Star, Sparkles, Download, AlertCircle, Copy, Check } from 'lucide-react';
+import { DURATION, EASE_OUT } from '../lib/motion';
+import { Modal } from './ui/Modal';
+import { SegmentedControl } from './ui/SegmentedControl';
+import './DownloadModal.css';
 
 interface DownloadModalProps {
   isOpen: boolean;
@@ -12,437 +17,377 @@ interface DownloadModalProps {
   initialAppId?: AppId;
 }
 
-export const DownloadModal: React.FC<DownloadModalProps> = ({
-  isOpen,
-  onClose,
-  lang,
-  initialAppId = 'andogram'
-}) => {
+type Method = 'stars' | 'coupon';
+type CouponStatus = 'idle' | 'used' | 'invalid';
+
+const APP_COLORS: Record<AppId, string> = { andogram: '#00b4d8', andusta: '#ff007f' };
+const CONFETTI_COLORS = ['#00f59b', '#00b4d8', '#ff007f', '#f59e0b', '#ffffff'];
+
+const readStorage = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const writeStorage = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Storage unavailable (private mode) — the unlock still works for this visit.
+  }
+};
+
+const getLabels = (lang: Language) => {
+  switch (lang) {
+    case 'uz':
+      return {
+        close: 'Yopish',
+        appLabel: 'Ilova',
+        methodLabel: "Kirish usuli",
+        afterPay: "To'lovdan so'ng bot darhol ochish kodini yuboradi",
+        devCodes: 'Test promokodlari (faqat dev rejimida):',
+        copy: 'Havoladan nusxa olish',
+        copied: 'Havola nusxalandi',
+        download: (name: string, version: string) => `Yuklab olish: ${name} (${version})`
+      };
+    case 'en':
+      return {
+        close: 'Close',
+        appLabel: 'App',
+        methodLabel: 'Access method',
+        afterPay: 'Right after payment the bot sends you an unlock code',
+        devCodes: 'Test promo codes (dev mode only):',
+        copy: 'Copy Direct Download Link',
+        copied: 'Link Copied',
+        download: (name: string, version: string) => `Download ${name} (${version})`
+      };
+    default:
+      return {
+        close: 'Закрыть',
+        appLabel: 'Приложение',
+        methodLabel: 'Способ доступа',
+        afterPay: 'После оплаты бот немедленно пришлёт код разблокировки',
+        devCodes: 'Тестовые промокоды (только в режиме разработки):',
+        copy: 'Скопировать прямую ссылку',
+        copied: 'Ссылка скопирована',
+        download: (name: string, version: string) => `Скачать ${name} (${version})`
+      };
+  }
+};
+
+/** Success mark: a ring that glows in and a check that draws itself. */
+const SuccessMark: React.FC<{ reduce: boolean }> = ({ reduce }) => (
+  <div className="dl-success-mark" aria-hidden="true">
+    <motion.span
+      className="dl-success-glow"
+      initial={{ opacity: 0, transform: reduce ? 'none' : 'scale(0.9)' }}
+      animate={{ opacity: 1, transform: 'scale(1)' }}
+      transition={{ duration: 0.5, ease: EASE_OUT }}
+    />
+    <svg viewBox="0 0 64 64" width="64" height="64">
+      <motion.circle
+        cx="32"
+        cy="32"
+        r="29"
+        className="dl-success-ring"
+        initial={{ pathLength: reduce ? 1 : 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.5, ease: EASE_OUT }}
+      />
+      <motion.path
+        d="M20 33.5l8 8 16-17"
+        className="dl-success-check"
+        initial={{ pathLength: reduce ? 1 : 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.35, ease: EASE_OUT, delay: reduce ? 0 : 0.35 }}
+      />
+    </svg>
+  </div>
+);
+
+interface PanelProps {
+  lang: Language;
+  initialAppId: AppId;
+}
+
+/** Mounted fresh on every open, so the selected app always starts from `initialAppId`. */
+const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
   const t = translations.modal;
+  const l = getLabels(lang);
+  const reduce = useReducedMotion() ?? false;
   const [selectedApp, setSelectedApp] = useState<AppId>(initialAppId);
-  const [activeTab, setActiveTab] = useState<'stars' | 'coupon'>('stars');
-  const [couponInput, setCouponInput] = useState<string>('');
-  const [couponStatus, setCouponStatus] = useState<'idle' | 'success' | 'used' | 'invalid'>('idle');
-  const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
-  const [copiedLink, setCopiedLink] = useState<boolean>(false);
+  const [method, setMethod] = useState<Method>('stars');
+  const [couponInput, setCouponInput] = useState('');
+  const [couponStatus, setCouponStatus] = useState<CouponStatus>('idle');
+  const [isUnlocked, setIsUnlocked] = useState(() => readStorage('ando_app_unlocked') === 'true');
+  const [justUnlocked, setJustUnlocked] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<number | undefined>(undefined);
+  const [inputScope, animateInput] = useAnimate<HTMLDivElement>();
 
-  useEffect(() => {
-    setSelectedApp(initialAppId);
-  }, [initialAppId]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('ando_app_unlocked');
-    if (saved === 'true') {
-      setIsUnlocked(true);
-      setCouponStatus('success');
-    }
-  }, []);
-
-  if (!isOpen) return null;
+  useEffect(() => () => window.clearTimeout(copyTimer.current), []);
 
   const currentApp = APPS_DATA.find((a) => a.id === selectedApp) || APPS_DATA[0];
+  const downloadUrl = DOWNLOAD_URLS[selectedApp];
+
+  const shake = () => {
+    if (reduce || !inputScope.current) return;
+    animateInput(
+      inputScope.current,
+      { transform: ['translateX(0px)', 'translateX(-8px)', 'translateX(7px)', 'translateX(-5px)', 'translateX(3px)', 'translateX(0px)'] },
+      { duration: 0.4, ease: 'easeOut' }
+    );
+  };
+
+  const celebrate = async () => {
+    if (reduce) return;
+    try {
+      const { default: confetti } = await import('canvas-confetti');
+      confetti({ particleCount: 90, spread: 75, origin: { y: 0.55 }, colors: CONFETTI_COLORS, disableForReducedMotion: true });
+    } catch {
+      // Confetti is decoration only.
+    }
+  };
 
   const handleActivateCoupon = () => {
     const cleanCode = couponInput.trim().toUpperCase();
     if (!cleanCode) return;
 
-    const redeemedList: string[] = JSON.parse(localStorage.getItem('ando_redeemed_coupons') || '[]');
+    let redeemedList: string[] = [];
+    try {
+      redeemedList = JSON.parse(readStorage('ando_redeemed_coupons') || '[]');
+    } catch {
+      redeemedList = [];
+    }
 
     if (redeemedList.includes(cleanCode)) {
       setCouponStatus('used');
+      shake();
       return;
     }
 
     if (INITIAL_VALID_COUPONS.includes(cleanCode)) {
       redeemedList.push(cleanCode);
-      localStorage.setItem('ando_redeemed_coupons', JSON.stringify(redeemedList));
-      localStorage.setItem('ando_app_unlocked', 'true');
+      writeStorage('ando_redeemed_coupons', JSON.stringify(redeemedList));
+      writeStorage('ando_app_unlocked', 'true');
+      setCouponStatus('idle');
+      setJustUnlocked(true);
       setIsUnlocked(true);
-      setCouponStatus('success');
-
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      } catch (e) {
-        // Fallback
-      }
+      void celebrate();
     } else {
       setCouponStatus('invalid');
+      shake();
     }
   };
 
-  const handleCopyLink = (url: string) => {
-    navigator.clipboard.writeText(url);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
-  };
-
-  const downloadUrl = selectedApp === 'andogram'
-    ? 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andogram-arm64-v8a-27102026.apk'
-    : 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andusta-v1.0.0.apk';
-
-  const getCopyText = () => {
-    switch (lang) {
-      case 'uz': return copiedLink ? "Havola nusxalandi" : "Havoladan nusxa olish";
-      case 'en': return copiedLink ? "Link Copied" : "Copy Direct Download Link";
-      default: return copiedLink ? "Ссылка скопирована" : "Скопировать прямую ссылку";
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(downloadUrl);
+      setCopied(true);
+      window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard blocked (insecure context / permissions) — the link stays visible via the QR code.
     }
   };
 
-  const getDownloadText = () => {
-    switch (lang) {
-      case 'uz': return `Yuklab olish: ${currentApp.name} (${currentApp.version})`;
-      case 'en': return `Download ${currentApp.name} (${currentApp.version})`;
-      default: return `Скачать ${currentApp.name} (${currentApp.version})`;
-    }
+  const swap = {
+    initial: { opacity: 0, transform: reduce ? 'none' : 'translateY(8px)' },
+    animate: { opacity: 1, transform: 'translateY(0px)' },
+    exit: { opacity: 0, transform: reduce ? 'none' : 'translateY(-6px)', transition: { duration: 0.15, ease: EASE_OUT } },
+    transition: { duration: DURATION.ui, ease: EASE_OUT }
   };
+
+  const reveal = (i: number) => ({
+    initial: { opacity: 0, transform: reduce ? 'none' : 'translateY(10px)' },
+    animate: { opacity: 1, transform: 'translateY(0px)' },
+    transition: { duration: 0.4, ease: EASE_OUT, delay: reduce || !justUnlocked ? 0 : 0.45 + i * 0.08 }
+  });
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 1000,
-      background: 'rgba(0, 0, 0, 0.8)',
-      backdropFilter: 'blur(16px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px'
-    }} onClick={onClose}>
-      <div
-        className="glass-panel"
-        style={{
-          width: '100%',
-          maxWidth: '560px',
-          background: '#0d1017',
-          borderRadius: 'var(--radius-xl)',
-          padding: '32px',
-          position: 'relative',
-          boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8)',
-          border: '1px solid rgba(255, 255, 255, 0.12)'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '20px',
-            right: '20px',
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '36px',
-            height: '36px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--text-muted)',
-            cursor: 'pointer'
-          }}
-        >
-          <X size={18} />
-        </button>
+    <>
+      {/* Modal Header */}
+      <div className="dl-head">
+        <h3 id="dl-title" className="dl-title">{t.downloadTitle[lang]}</h3>
+        <SegmentedControl
+          ariaLabel={l.appLabel}
+          layoutId="dl-app"
+          size="sm"
+          value={selectedApp}
+          onChange={setSelectedApp}
+          options={[
+            { value: 'andogram', label: 'AndoGram', color: APP_COLORS.andogram },
+            { value: 'andusta', label: 'Andusta', color: APP_COLORS.andusta }
+          ]}
+        />
+      </div>
 
-        {/* Modal Header */}
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }}>
-            {t.downloadTitle[lang]}
-          </h3>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '12px' }}>
-            {(['andogram', 'andusta'] as AppId[]).map((id) => (
-              <button
-                key={id}
-                onClick={() => setSelectedApp(id)}
-                style={{
-                  padding: '6px 16px',
-                  borderRadius: 'var(--radius-pill)',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  background: selectedApp === id ? (id === 'andogram' ? 'rgba(0, 180, 216, 0.2)' : 'rgba(255, 0, 127, 0.2)') : 'transparent',
-                  color: selectedApp === id ? (id === 'andogram' ? '#00b4d8' : '#ff007f') : 'var(--text-muted)',
-                  border: selectedApp === id ? `1px solid ${id === 'andogram' ? '#00b4d8' : '#ff007f'}` : '1px solid rgba(255, 255, 255, 0.08)'
-                }}
-              >
-                {id === 'andogram' ? 'AndoGram' : 'Andusta'}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Access Method Tabs (Stars vs Promo Coupon) */}
-        {!isUnlocked && (
-          <div style={{
-            display: 'flex',
-            background: 'rgba(255, 255, 255, 0.04)',
-            borderRadius: 'var(--radius-pill)',
-            padding: '4px',
-            marginBottom: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.06)'
-          }}>
-            <button
-              onClick={() => setActiveTab('stars')}
-              style={{
-                flex: 1,
-                padding: '10px',
-                borderRadius: 'var(--radius-pill)',
-                background: activeTab === 'stars' ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
-                color: activeTab === 'stars' ? '#f59e0b' : 'var(--text-muted)',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-                border: activeTab === 'stars' ? '1px solid rgba(245, 158, 11, 0.4)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                cursor: 'pointer'
-              }}
-            >
-              <Star size={16} fill={activeTab === 'stars' ? '#f59e0b' : 'none'} />
-              <span>{t.starsTab[lang]}</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('coupon')}
-              style={{
-                flex: 1,
-                padding: '10px',
-                borderRadius: 'var(--radius-pill)',
-                background: activeTab === 'coupon' ? 'rgba(0, 245, 155, 0.2)' : 'transparent',
-                color: activeTab === 'coupon' ? '#00f59b' : 'var(--text-muted)',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-                border: activeTab === 'coupon' ? '1px solid rgba(0, 245, 155, 0.4)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                cursor: 'pointer'
-              }}
-            >
-              <Sparkles size={16} />
-              <span>{t.couponTab[lang]}</span>
-            </button>
-          </div>
-        )}
-
-        {/* Tab Content */}
+      <AnimatePresence mode="wait" initial={false}>
         {isUnlocked ? (
           /* UNLOCKED STATE */
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              background: 'rgba(0, 245, 155, 0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px',
-              color: '#00f59b'
-            }}>
-              <CheckCircle2 size={36} />
-            </div>
+          <motion.div key="unlocked" className="dl-unlocked" {...swap}>
+            <SuccessMark reduce={reduce || !justUnlocked} />
 
-            <h4 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', color: '#00f59b' }}>
-              {t.unlockedTitle[lang]}
-            </h4>
+            <motion.h4 className="dl-unlocked-title" {...reveal(0)}>{t.unlockedTitle[lang]}</motion.h4>
+            <motion.p className="dl-muted" {...reveal(1)}>{t.unlockedDesc[lang]}</motion.p>
 
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginBottom: '24px', lineHeight: 1.5 }}>
-              {t.unlockedDesc[lang]}
-            </p>
+            <motion.div {...reveal(2)}>
+              <a href={downloadUrl} className="btn btn-primary-ando btn-shine dl-wide" data-autofocus>
+                <Download size={20} />
+                <span>{l.download(currentApp.name, currentApp.version)}</span>
+              </a>
+            </motion.div>
 
-            <a
-              href={downloadUrl}
-              className="btn btn-primary-ando"
-              style={{
-                width: '100%',
-                padding: '16px',
-                fontSize: '1.05rem',
-                marginBottom: '16px',
-                textDecoration: 'none'
-              }}
-            >
-              <Download size={20} />
-              <span>{getDownloadText()}</span>
-            </a>
-
-            {/* QR Code Demo Representation */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              borderRadius: 'var(--radius-lg)',
-              padding: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              marginTop: '16px'
-            }}>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
-                {t.qrHint[lang]}
-              </div>
-              <div style={{
-                width: '130px',
-                height: '130px',
-                margin: '0 auto 12px',
-                background: '#fff',
-                borderRadius: '12px',
-                padding: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <svg viewBox="0 0 100 100" width="100%" height="100%">
-                  <rect width="100" height="100" fill="#fff" />
-                  <rect x="10" y="10" width="25" height="25" fill="#0a0b10" />
-                  <rect x="15" y="15" width="15" height="15" fill="#fff" />
-                  <rect x="18" y="18" width="9" height="9" fill="#0a0b10" />
-                  <rect x="65" y="10" width="25" height="25" fill="#0a0b10" />
-                  <rect x="70" y="15" width="15" height="15" fill="#fff" />
-                  <rect x="73" y="18" width="9" height="9" fill="#0a0b10" />
-                  <rect x="10" y="65" width="25" height="25" fill="#0a0b10" />
-                  <rect x="15" y="70" width="15" height="15" fill="#fff" />
-                  <rect x="18" y="73" width="9" height="9" fill="#0a0b10" />
-                  <rect x="42" y="42" width="16" height="16" fill="#0a0b10" />
-                  <rect x="42" y="15" width="8" height="8" fill="#0a0b10" />
-                  <rect x="42" y="75" width="8" height="8" fill="#0a0b10" />
-                  <rect x="75" y="42" width="8" height="8" fill="#0a0b10" />
-                  <rect x="65" y="65" width="25" height="25" fill="#0a0b10" />
-                </svg>
+            <motion.div className="dl-qr-box" {...reveal(3)}>
+              <div className="dl-qr-hint">{t.qrHint[lang]}</div>
+              <div className="dl-qr">
+                <QRCodeSVG
+                  value={downloadUrl}
+                  size={148}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#0a0b10"
+                  imageSettings={{ src: '/logo-96.webp', height: 28, width: 28, excavate: true }}
+                  title={currentApp.name}
+                />
               </div>
 
-              <button
-                onClick={() => handleCopyLink(downloadUrl)}
-                className="btn btn-outline"
-                style={{ fontSize: '0.82rem', padding: '8px 16px' }}
-              >
-                {copiedLink ? <Check size={14} color="#00f59b" /> : <Copy size={14} />}
-                <span>{getCopyText()}</span>
+              <button type="button" onClick={handleCopyLink} className={`btn btn-outline dl-copy${copied ? ' is-copied' : ''}`}>
+                {copied ? <Check size={14} color="#00f59b" /> : <Copy size={14} />}
+                <span aria-live="polite">{copied ? l.copied : l.copy}</span>
               </button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ) : (
           /* LOCKED STATE */
-          <div>
-            {activeTab === 'stars' ? (
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  background: 'rgba(245, 158, 11, 0.08)',
-                  border: '1px solid rgba(245, 158, 11, 0.25)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: '24px 20px',
-                  marginBottom: '24px'
-                }}>
-                  <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f59e0b', marginBottom: '6px', fontFamily: 'var(--font-heading)' }}>
-                    {t.starsPrice[lang]}
-                  </div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                    {t.starsDesc[lang]}
-                  </div>
-                </div>
+          <motion.div key="locked" {...swap}>
+            <div className="dl-method">
+              <SegmentedControl
+                ariaLabel={l.methodLabel}
+                layoutId="dl-method"
+                fullWidth
+                value={method}
+                onChange={setMethod}
+                idPrefix="dl"
+                options={[
+                  { value: 'stars', label: t.starsTab[lang], icon: <Star size={16} />, color: '#f59e0b' },
+                  { value: 'coupon', label: t.couponTab[lang], icon: <Sparkles size={16} />, color: '#00f59b' }
+                ]}
+              />
+            </div>
 
-                <a
-                  href={`https://t.me/ando_stars_bot?start=buy_${selectedApp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-stars"
-                  style={{ width: '100%', padding: '16px', fontSize: '1.05rem', marginBottom: '14px' }}
-                >
-                  <Star size={20} fill="#0c0802" />
-                  <span>{t.btnPayBot[lang]}</span>
-                </a>
+            <AnimatePresence mode="wait" initial={false}>
+              {method === 'stars' ? (
+                <motion.div key="stars" className="dl-center" role="tabpanel" id="dl-panel-stars" aria-labelledby="dl-tab-stars" {...swap}>
+                  <div className="dl-price">
+                    <span className="dl-price-sparkle" aria-hidden="true">
+                      <Star size={18} fill="currentColor" />
+                    </span>
+                    <div className="dl-price-value">{t.starsPrice[lang]}</div>
+                    <div className="dl-muted dl-price-desc">{t.starsDesc[lang]}</div>
+                  </div>
 
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-                  После оплаты бот немедленно пришлёт код разблокировки
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div style={{ marginBottom: '16px' }}>
-                  <input
-                    type="text"
-                    value={couponInput}
-                    onChange={(e) => {
-                      setCouponInput(e.target.value.toUpperCase());
-                      setCouponStatus('idle');
+                  <a
+                    href={`https://t.me/ando_stars_bot?start=buy_${selectedApp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-stars btn-shine dl-wide"
+                  >
+                    <Star size={20} fill="#0c0802" />
+                    <span>{t.btnPayBot[lang]}</span>
+                  </a>
+
+                  <div className="dl-hint">{l.afterPay}</div>
+                </motion.div>
+              ) : (
+                <motion.div key="coupon" role="tabpanel" id="dl-panel-coupon" aria-labelledby="dl-tab-coupon" {...swap}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleActivateCoupon();
                     }}
-                    placeholder={t.couponPlaceholder[lang]}
-                    style={{
-                      width: '100%',
-                      padding: '14px 18px',
-                      borderRadius: 'var(--radius-md)',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
-                      color: '#fff',
-                      fontSize: '1rem',
-                      fontFamily: 'var(--font-mono)',
-                      letterSpacing: '0.05em',
-                      outline: 'none',
-                      textTransform: 'uppercase'
-                    }}
-                  />
-                </div>
-
-                {couponStatus === 'invalid' && (
-                  <div style={{ color: '#ef4444', fontSize: '0.85rem', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <AlertCircle size={16} />
-                    <span>{t.couponInvalid[lang]}</span>
-                  </div>
-                )}
-
-                {couponStatus === 'used' && (
-                  <div style={{ color: '#f59e0b', fontSize: '0.85rem', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <AlertCircle size={16} />
-                    <span>{t.couponAlreadyUsed[lang]}</span>
-                  </div>
-                )}
-
-                <button
-                  onClick={handleActivateCoupon}
-                  className="btn btn-primary-ando"
-                  style={{ width: '100%', padding: '15px', fontSize: '1rem', marginBottom: '16px' }}
-                >
-                  <Sparkles size={18} />
-                  <span>{t.btnActivate[lang]}</span>
-                </button>
-
-                {/* Helpful quick demo coupon test badges */}
-                <div style={{
-                  padding: '12px 14px',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                  fontSize: '0.78rem',
-                  color: 'var(--text-dim)'
-                }}>
-                  <div style={{ marginBottom: '6px' }}>Промокоды для тестов (нажмите для ввода):</div>
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    {INITIAL_VALID_COUPONS.slice(0, 3).map((code) => (
-                      <span
-                        key={code}
-                        onClick={() => { setCouponInput(code); setCouponStatus('idle'); }}
-                        style={{
-                          cursor: 'pointer',
-                          padding: '3px 8px',
-                          background: 'rgba(0, 245, 155, 0.1)',
-                          border: '1px solid rgba(0, 245, 155, 0.25)',
-                          borderRadius: '4px',
-                          color: '#00f59b',
-                          fontFamily: 'var(--font-mono)'
+                  >
+                    <div ref={inputScope} className="dl-input-wrap">
+                      <input
+                        type="text"
+                        value={couponInput}
+                        onChange={(e) => {
+                          setCouponInput(e.target.value.toUpperCase());
+                          setCouponStatus('idle');
                         }}
-                      >
-                        {code}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+                        placeholder={t.couponPlaceholder[lang]}
+                        aria-label={t.couponTab[lang]}
+                        aria-invalid={couponStatus === 'invalid' || undefined}
+                        aria-describedby="dl-coupon-status"
+                        autoComplete="off"
+                        spellCheck={false}
+                        className={`dl-input${couponStatus !== 'idle' ? ` is-${couponStatus}` : ''}`}
+                      />
+                    </div>
+
+                    <div id="dl-coupon-status" aria-live="polite">
+                      <AnimatePresence initial={false}>
+                        {couponStatus !== 'idle' && (
+                          <motion.div
+                            key={couponStatus}
+                            className={`dl-status dl-status--${couponStatus}`}
+                            initial={{ opacity: 0, transform: reduce ? 'none' : 'translateY(-4px)' }}
+                            animate={{ opacity: 1, transform: 'translateY(0px)' }}
+                            exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                            transition={{ duration: DURATION.fast, ease: EASE_OUT }}
+                          >
+                            <AlertCircle size={16} />
+                            <span>{couponStatus === 'invalid' ? t.couponInvalid[lang] : t.couponAlreadyUsed[lang]}</span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary-ando btn-shine dl-wide">
+                      <Sparkles size={18} />
+                      <span>{t.btnActivate[lang]}</span>
+                    </button>
+                  </form>
+
+                  {import.meta.env.DEV && (
+                    <div className="dl-dev-codes">
+                      <div>{l.devCodes}</div>
+                      <div className="dl-dev-chips">
+                        {INITIAL_VALID_COUPONS.slice(0, 3).map((code) => (
+                          <button
+                            key={code}
+                            type="button"
+                            className="dl-dev-chip"
+                            onClick={() => {
+                              setCouponInput(code);
+                              setCouponStatus('idle');
+                            }}
+                          >
+                            {code}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         )}
-      </div>
-    </div>
+      </AnimatePresence>
+    </>
   );
 };
+
+export const DownloadModal: React.FC<DownloadModalProps> = ({
+  isOpen,
+  onClose,
+  lang,
+  initialAppId = 'andogram'
+}) => (
+  <Modal open={isOpen} onClose={onClose} labelledBy="dl-title" closeLabel={getLabels(lang).close} maxWidth={560}>
+    {isOpen && <DownloadPanel lang={lang} initialAppId={initialAppId} />}
+  </Modal>
+);

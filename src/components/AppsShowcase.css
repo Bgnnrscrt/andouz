@@ -1,0 +1,444 @@
+/* ==========================================================================
+   AppsShowcase (#apps) — flagship cards. Shared pieces at the bottom
+   (.app-tile, .app-tag) are also used by AppDetailsModal.
+   ========================================================================== */
+
+.apps-section {
+  position: relative;
+  padding: 88px 0;
+}
+
+/* Soft app-coloured light behind the two cards. Static, decorative. */
+.apps-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 24% 62%, rgba(0, 180, 216, 0.07), transparent 70%),
+    radial-gradient(38% 42% at 76% 62%, rgba(255, 0, 127, 0.06), transparent 70%);
+}
+.apps-section > .container {
+  position: relative;
+}
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 28px;
+}
+
+/* Grid item; owns the scroll-reveal transform (the card inside owns the tilt). */
+.apps-card-shell {
+  min-width: 0;
+}
+
+/* ---------- Card surface ---------- */
+
+.apps-card {
+  --spot-color: color-mix(in srgb, var(--app-color) 11%, transparent);
+  --spot-border: color-mix(in srgb, var(--app-color) 70%, transparent);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 30px 30px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(165deg, color-mix(in srgb, var(--app-color) 8%, #10121b) 0%, #0c0e15 58%);
+  border: 1px solid color-mix(in srgb, var(--app-color) 22%, rgba(255, 255, 255, 0.06));
+}
+
+/* Decorative layers. `.spotlight > *` makes children relative; these stay absolute. */
+.apps-card > .apps-card-halo,
+.apps-card > .apps-card-deco,
+.apps-card > .apps-card-edge {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Outer glow in the app colour; fades in on hover (opacity only, the shadow is pre-rendered). */
+.apps-card > .apps-card-halo {
+  inset: -1px;
+  z-index: 0;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--app-color) 50%, transparent),
+    0 0 44px -10px color-mix(in srgb, var(--app-color) 45%, transparent),
+    0 28px 70px -28px color-mix(in srgb, var(--app-color) 55%, transparent);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+/* Corner light + a faint dot matrix fading out from it. */
+.apps-card > .apps-card-deco {
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+.apps-card-deco::before,
+.apps-card-deco::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.apps-card-deco::before {
+  background: radial-gradient(420px circle at 100% 0%, color-mix(in srgb, var(--app-color) 18%, transparent), transparent 62%);
+}
+.apps-card-deco::after {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1.6px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(340px circle at 100% 0%, #000, transparent 75%);
+  mask-image: radial-gradient(340px circle at 100% 0%, #000, transparent 75%);
+}
+
+/* Neon top edge: a 1px line with a soft glow under it. */
+.apps-card > .apps-card-edge {
+  top: -1px;
+  left: 14%;
+  right: 14%;
+  height: 26px;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, transparent, var(--app-color) 50%, transparent) top / 100% 1px no-repeat,
+    radial-gradient(50% 100% at 50% 0%, color-mix(in srgb, var(--app-color) 22%, transparent), transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .apps-card:hover > .apps-card-halo {
+    opacity: 1;
+  }
+}
+/* Keyboard users get the same "this card" glow while tabbing through its buttons. */
+.apps-card:has(:focus-visible) > .apps-card-halo {
+  opacity: 0.85;
+}
+
+/* ---------- Head ---------- */
+
+.apps-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 16px;
+  margin-bottom: 24px;
+}
+.apps-card-id {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+.apps-card-name {
+  min-width: 0;
+}
+.apps-card-name h3 {
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+.apps-card-version {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-dim);
+}
+.apps-card-badge {
+  white-space: nowrap;
+}
+
+/* Parallax layers (icon, badge): transform comes from motion values on desktop. */
+.apps-depth {
+  display: inline-flex;
+  flex: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .apps-depth {
+    will-change: transform;
+  }
+}
+
+/* ---------- Copy ---------- */
+
+.apps-card-tagline {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--app-color);
+  margin-bottom: 10px;
+  text-wrap: balance;
+}
+.apps-card-desc {
+  flex: 1;
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.65;
+  margin-bottom: 26px;
+  text-wrap: pretty;
+}
+
+/* ---------- Feature rows ---------- */
+
+.apps-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.apps-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+.apps-feature-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 12%, transparent);
+  transition: background-color 200ms ease;
+}
+.apps-feature-icon svg {
+  transition: transform 200ms ease;
+}
+.apps-feature-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 10px;
+}
+.apps-feature-title {
+  flex: 1 1 150px;
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-main);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .apps-feature:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: color-mix(in srgb, var(--app-color) 32%, transparent);
+  }
+  .apps-feature:hover .apps-feature-icon {
+    background-color: color-mix(in srgb, var(--app-color) 22%, transparent);
+  }
+  .apps-feature:hover .apps-feature-icon svg {
+    transform: translateX(2px) rotate(-8deg);
+  }
+}
+
+/* ---------- Actions ---------- */
+
+.apps-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.apps-card-actions .btn {
+  min-height: 48px;
+}
+.apps-dl {
+  flex: 1 1 220px;
+  padding: 12px 20px;
+  color: #fff;
+  background: var(--app-gradient);
+  box-shadow: 0 0 22px -2px color-mix(in srgb, var(--app-color) 45%, transparent);
+}
+.apps-dl-size {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+.apps-more {
+  flex: 1 1 auto;
+  padding: 12px 18px;
+}
+.apps-more svg {
+  transition: transform 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .apps-dl:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 34px color-mix(in srgb, var(--app-color) 60%, transparent);
+  }
+  .apps-more:hover svg {
+    transform: translateX(3px);
+  }
+  /* Icon tile answers the card hover: a small tilt-and-lift. */
+  .apps-card:hover .app-tile {
+    transform: rotate(-6deg) scale(1.06);
+  }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 560px) {
+  .apps-section {
+    padding: 64px 0;
+  }
+  .apps-grid {
+    gap: 20px;
+  }
+  .apps-card {
+    padding: 24px 20px 20px;
+    border-radius: 24px;
+  }
+  .apps-card-head {
+    margin-bottom: 20px;
+  }
+  .apps-card-id {
+    gap: 14px;
+  }
+  .apps-card-name h3 {
+    font-size: 1.45rem;
+  }
+  .apps-card-desc {
+    font-size: 0.92rem;
+    margin-bottom: 22px;
+  }
+  .apps-features {
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .apps-feature {
+    gap: 10px;
+    padding: 10px;
+  }
+  .apps-feature-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .apps-dl,
+  .apps-more {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .apps-card {
+    padding: 22px 16px 18px;
+  }
+}
+
+/* ==========================================================================
+   Shared with AppDetailsModal
+   ========================================================================== */
+
+/* App icon tile: gradient monogram + idle glint. */
+.app-tile {
+  --tile: 56px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--tile);
+  height: var(--tile);
+  border-radius: 17px;
+  background: var(--app-gradient);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: calc(var(--tile) * 0.4);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -10px 18px rgba(0, 0, 0, 0.16),
+    0 12px 28px -10px color-mix(in srgb, var(--app-color) 75%, transparent);
+  transition: transform 250ms ease;
+  user-select: none;
+}
+.app-tile-lg {
+  --tile: 64px;
+  border-radius: 19px;
+}
+@media (max-width: 560px) {
+  .app-tile {
+    --tile: 52px;
+    border-radius: 15px;
+  }
+  .app-tile-lg {
+    --tile: 56px;
+    border-radius: 17px;
+  }
+}
+
+/* A light band crosses the tile once every 6.5s (about 0.9s of travel, then rest). */
+.app-tile::after {
+  content: '';
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 42%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-180%) skewX(-20deg);
+  animation: app-tile-glint 6.5s linear infinite;
+  animation-delay: var(--glint-delay, 0s);
+  pointer-events: none;
+}
+@keyframes app-tile-glint {
+  0% {
+    transform: translateX(-180%) skewX(-20deg);
+  }
+  14%,
+  100% {
+    transform: translateX(380%) skewX(-20deg);
+  }
+}
+
+/* Feature tag pill. */
+.app-tag {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--app-color) 26%, transparent);
+  white-space: nowrap;
+}
+
+/* ---------- Reduced motion: keep light and colour, drop movement ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-tile::after {
+    animation: none;
+    opacity: 0;
+  }
+  .apps-card:hover .app-tile,
+  .apps-feature:hover .apps-feature-icon svg,
+  .apps-more:hover svg,
+  .apps-dl:hover {
+    transform: none;
+  }
+}

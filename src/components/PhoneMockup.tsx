@@ -1,269 +1,207 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  AnimatePresence, motion, animate, useInView, useMotionTemplate, useMotionValue, useReducedMotion,
+} from 'motion/react';
+import type { LucideIcon } from 'lucide-react';
+import { Archive, Lock, FolderDown, Ghost, Eye, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../translations';
-import { Archive, Lock, FolderDown, Ghost, Eye, CheckCircle2, Shield, Download, Sparkles, Send } from 'lucide-react';
+import { SectionHeader } from './ui/SectionHeader';
+import { SegmentedControl } from './ui/SegmentedControl';
+import type { SegmentOption } from './ui/SegmentedControl';
+import { useTilt } from '../hooks/useTilt';
+import { DURATION, EASE_OUT } from '../lib/motion';
+import { TAB_ORDER, SCENE_COLOR, underHood, benefits, autoplayLabel, scenes } from './demo/copy';
+import type { DemoTab } from './demo/copy';
+import { ArchiveScene, HoneypotScene, MediaSortScene, GhostScene, ViewOnceScene } from './demo/Scenes';
+import './PhoneMockup.css';
+
+const SCENE_COMPONENTS: Record<DemoTab, React.FC<{ lang: Language }>> = {
+  archive: ArchiveScene,
+  honeypot: HoneypotScene,
+  mediasort: MediaSortScene,
+  ghost: GhostScene,
+  viewonce: ViewOnceScene,
+};
 
 interface PhoneMockupProps {
   lang: Language;
 }
 
+const TAB_ICONS: Record<DemoTab, LucideIcon> = {
+  archive: Archive,
+  honeypot: Lock,
+  mediasort: FolderDown,
+  ghost: Ghost,
+  viewonce: Eye,
+};
+
+/** One autoplay cycle, in seconds. */
+const CYCLE = 6.5;
+
+const ARIA_TABS: Record<Language, string> = {
+  ru: 'Сценарии демонстрации',
+  uz: 'Namoyish ssenariylari',
+  en: 'Demo scenarios',
+};
+
 export const PhoneMockup: React.FC<PhoneMockupProps> = ({ lang }) => {
   const t = translations.mockup;
-  const [activeTab, setActiveTab] = useState<'archive' | 'honeypot' | 'mediasort' | 'ghost' | 'viewonce'>('archive');
+  const reduce = useReducedMotion();
+
+  const [activeTab, setActiveTab] = useState<DemoTab>('archive');
+  const [userInteracted, setUserInteracted] = useState(false);
+  const [hidden, setHidden] = useState(() => document.hidden);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { amount: 0.3 });
+  const tilt = useTilt<HTMLDivElement>(5);
+
+  const progress = useMotionValue(0);
+  const fillTransform = useMotionTemplate`scaleX(${progress})`;
+
+  // Pause autoplay when the tab is backgrounded.
+  useEffect(() => {
+    const onVis = () => setHidden(document.hidden);
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
+
+  const autoplay = !userInteracted && inView && !hidden && !reduce;
+
+  // Cycle scenarios while autoplaying; the progress value drives the fill below.
+  useEffect(() => {
+    if (!autoplay) return;
+    progress.set(0);
+    const controls = animate(progress, 1, {
+      duration: CYCLE,
+      ease: 'linear',
+      onComplete: () => {
+        setActiveTab((prev) => TAB_ORDER[(TAB_ORDER.indexOf(prev) + 1) % TAB_ORDER.length]);
+      },
+    });
+    return () => controls.stop();
+  }, [autoplay, activeTab, progress]);
+
+  const onTabChange = (tab: DemoTab) => {
+    setUserInteracted(true);
+    setActiveTab(tab);
+  };
+
+  const options: SegmentOption<DemoTab>[] = TAB_ORDER.map((tab) => {
+    const Icon = TAB_ICONS[tab];
+    return {
+      value: tab,
+      label: t.tabs[tab][lang],
+      icon: <Icon size={16} color={SCENE_COLOR[tab]} aria-hidden />,
+      color: SCENE_COLOR[tab],
+    };
+  });
+
+  const Scene = SCENE_COMPONENTS[activeTab];
+  const accent = SCENE_COLOR[activeTab];
+  const showAutoplay = !userInteracted && !reduce;
 
   return (
-    <section id="demo" style={{
-      padding: '80px 0',
-      background: 'linear-gradient(180deg, rgba(8, 9, 14, 0) 0%, rgba(13, 16, 23, 0.8) 50%, rgba(8, 9, 14, 0) 100%)',
-      position: 'relative'
-    }}>
+    <section id="demo" ref={sectionRef} className="demo-section">
       <div className="container">
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 48px' }}>
-          <span className="badge-pill badge-ando" style={{ marginBottom: '14px' }}>
-            <Sparkles size={14} />
-            <span>{t.badge[lang]}</span>
-          </span>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginBottom: '16px', fontWeight: 800 }}>
-            {t.title[lang]}
-          </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.6 }}>
-            {t.subtitle[lang]}
-          </p>
-        </div>
-
-        {/* Feature Scenario Selector Tabs */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '10px',
-          flexWrap: 'wrap',
-          marginBottom: '44px'
-        }}>
-          {(['archive', 'honeypot', 'mediasort', 'ghost', 'viewonce'] as const).map((tabKey) => (
-            <button
-              key={tabKey}
-              onClick={() => setActiveTab(tabKey)}
-              className="glass-panel"
-              style={{
-                padding: '10px 18px',
-                borderRadius: 'var(--radius-pill)',
-                fontSize: '0.88rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                color: activeTab === tabKey ? '#fff' : 'var(--text-muted)',
-                background: activeTab === tabKey ? 'rgba(0, 245, 155, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                borderColor: activeTab === tabKey ? 'rgba(0, 245, 155, 0.4)' : 'rgba(255, 255, 255, 0.08)',
-                boxShadow: activeTab === tabKey ? '0 0 20px rgba(0, 245, 155, 0.2)' : 'none',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {tabKey === 'archive' && <Archive size={16} color="#00b4d8" />}
-              {tabKey === 'honeypot' && <Lock size={16} color="#00f59b" />}
-              {tabKey === 'mediasort' && <FolderDown size={16} color="#00b4d8" />}
-              {tabKey === 'ghost' && <Ghost size={16} color="#ff007f" />}
-              {tabKey === 'viewonce' && <Eye size={16} color="#ff007f" />}
-              <span>{t.tabs[tabKey][lang]}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Phone Frame & Interactive Simulator Screen */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '48px',
-          flexWrap: 'wrap'
-        }}>
-          {/* Smartphone Frame */}
-          <div className="phone-frame">
-            <div className="phone-screen">
-              {/* Dynamic Screen Content based on Active Tab */}
-              {activeTab === 'archive' && (
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#00b4d8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 800 }}>
-                        A
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: '0.8rem' }}>Личный Архив (Мост)</div>
-                        <div style={{ fontSize: '0.65rem', color: '#00f59b' }}>● Онлайн 24/7 (KeepAlive)</div>
-                      </div>
-                    </div>
-                    <span className="badge-pill badge-gram" style={{ fontSize: '0.65rem', padding: '2px 8px' }}>Topic #104</span>
-                  </div>
-
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-                    <div style={{ background: '#1c2230', padding: '8px 10px', borderRadius: '10px', fontSize: '0.75rem', alignSelf: 'flex-start', maxWidth: '85%' }}>
-                      <div style={{ fontSize: '0.65rem', color: '#00b4d8', fontWeight: 700 }}>Собеседник (Аккаунт C):</div>
-                      Привет! Документы отправлены на почту.
-                    </div>
-
-                    <div style={{ background: '#005b82', padding: '8px 10px', borderRadius: '10px', fontSize: '0.75rem', alignSelf: 'flex-end', maxWidth: '85%' }}>
-                      <div style={{ fontSize: '0.65rem', color: '#00f59b', fontWeight: 700 }}>Ответ через Мост (Телефон 2):</div>
-                      Принято, сейчас проверю.
-                    </div>
-
-                    <div style={{ background: 'rgba(0, 245, 155, 0.08)', border: '1px dashed rgba(0, 245, 155, 0.3)', padding: '6px 8px', borderRadius: '8px', fontSize: '0.68rem', color: '#00f59b', textAlign: 'center', marginTop: 'auto' }}>
-                      ⚡ Сообщение отправлено от имени Аккаунта A
-                    </div>
-                  </div>
+        <SectionHeader badge={t.badge[lang]} badgeIcon={<Sparkles size={14} />} title={t.title[lang]} subtitle={t.subtitle[lang]}>
+          <div className="demo-controls">
+            <SegmentedControl
+              options={options}
+              value={activeTab}
+              onChange={onTabChange}
+              layoutId="demo-tabs"
+              idPrefix="demo"
+              variant="pills"
+              ariaLabel={ARIA_TABS[lang]}
+            />
+            {showAutoplay && (
+              <div className="demo-autoplay">
+                <span className="demo-autoplay-label">{autoplayLabel[lang]}</span>
+                <div className="demo-progress-track" aria-hidden>
+                  <motion.div
+                    className="demo-progress-fill"
+                    style={{ transform: fillTransform, transformOrigin: 'left', background: accent }}
+                  />
                 </div>
-              )}
-
-              {activeTab === 'honeypot' && (
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(0, 245, 155, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00f59b', marginBottom: '16px' }}>
-                    <Lock size={28} />
-                  </div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: '6px' }}>
-                    Режим Защиты Honeypot
-                  </div>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                    Введён пин-код под принуждением: <span style={{ color: '#00f59b', fontFamily: 'var(--font-mono)' }}>9941</span>
-                  </div>
-
-                  <div style={{ background: '#121e1a', border: '1px solid rgba(0, 245, 155, 0.25)', padding: '10px 14px', borderRadius: '10px', width: '100%', textAlign: 'left', fontSize: '0.72rem' }}>
-                    <div style={{ color: '#00f59b', fontWeight: 700, marginBottom: '4px' }}>✓ Активирован безопасный профиль</div>
-                    <div style={{ color: 'var(--text-muted)' }}>• Скрыты 14 секретных чатов</div>
-                    <div style={{ color: 'var(--text-muted)' }}>• Мост и темы отключены</div>
-                    <div style={{ color: 'var(--text-muted)' }}>• Оставлены только публичные каналы</div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'mediasort' && (
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <span style={{ fontWeight: 700, fontSize: '0.82rem' }}>Медиа чата (По размеру)</span>
-                    <span style={{ fontSize: '0.68rem', color: '#00b4d8' }}>Сверху вниз ↓</span>
-                  </div>
-
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ background: '#1c2230', padding: '8px 10px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.78rem' }}>Video_Archive_4K.mp4</div>
-                        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>Видео 60 fps • 27 мин</div>
-                      </div>
-                      <span className="badge-pill badge-gram" style={{ fontSize: '0.7rem' }}>96.5 МБ</span>
-                    </div>
-
-                    <div style={{ background: '#1c2230', padding: '8px 10px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.78rem' }}>Voice_Podcast_HQ.ogg</div>
-                        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>Голосовое • 48 kHz</div>
-                      </div>
-                      <span className="badge-pill badge-gram" style={{ fontSize: '0.7rem' }}>34.2 МБ</span>
-                    </div>
-
-                    <div style={{ background: '#1c2230', padding: '8px 10px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: '0.78rem' }}>Project_Backup.zip</div>
-                        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>Архив файлов</div>
-                      </div>
-                      <span className="badge-pill badge-gram" style={{ fontSize: '0.7rem' }}>18.1 МБ</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'ghost' && (
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.88rem', marginBottom: '8px', color: '#ff007f' }}>
-                    Andusta • Instagram Direct
-                  </div>
-
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <div style={{ background: '#251728', border: '1px solid rgba(255, 0, 127, 0.25)', padding: '10px', borderRadius: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: '#ff4d4d', fontWeight: 700, marginBottom: '3px' }}>
-                        <span>⚠️ Собеседник удалил сообщение:</span>
-                      </div>
-                      <div style={{ fontSize: '0.78rem' }}>«Секретный файл отправлен другому человеку»</div>
-                      <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginTop: '4px' }}>Сохранено Andusta Anti-Unsend</div>
-                    </div>
-
-                    <div style={{ background: 'rgba(255, 0, 127, 0.08)', padding: '10px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Ghost size={20} color="#ff007f" />
-                      <div style={{ fontSize: '0.74rem' }}>
-                        <b>Режим невидимки включен:</b> Автор истории не увидит вас в зрителях.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'viewonce' && (
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                  <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(255, 0, 127, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff007f', marginBottom: '16px' }}>
-                    <Eye size={30} />
-                  </div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: '6px' }}>
-                    Одноразовое Фото
-                  </div>
-                  <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                    Просмотров: <b>24 раза</b> (Без сгорания)
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-                    <div style={{ padding: '8px 12px', background: '#1f1322', borderRadius: '8px', fontSize: '0.72rem', color: '#ff007f', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                      <Shield size={14} />
-                      <span>FLAG_SECURE снят: Скриншот разрешён</span>
-                    </div>
-
-                    <button style={{ padding: '8px 14px', background: 'linear-gradient(135deg, #ff007f 0%, #7928ca 100%)', border: 'none', borderRadius: '8px', color: '#fff', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>
-                      Сохранить фото в галерею
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="phone-bottom-bar" />
+              </div>
+            )}
           </div>
+        </SectionHeader>
 
-          {/* Side Explanation Box */}
-          <div style={{ maxWidth: '480px' }}>
-            <span className="badge-pill badge-ando" style={{ marginBottom: '14px' }}>
-              Как это работает под капотом
-            </span>
-            <h3 style={{ fontSize: '1.85rem', marginBottom: '14px', lineHeight: 1.25 }}>
-              {activeTab === 'archive' && 'Мост между двумя номерами и устройствами'}
-              {activeTab === 'honeypot' && 'Защита от принуждения прямо в интерфейсе'}
-              {activeTab === 'mediasort' && 'Мгновенная индексация и поиск тяжёлых файлов'}
-              {activeTab === 'ghost' && 'Анонимный просмотр историй и сообщений'}
-              {activeTab === 'viewonce' && 'Полное отключение самоуничтожения медиа'}
-            </h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '24px' }}>
-              {activeTab === 'archive' && 'Аккаунт A в AndoGram держит постоянную фоновую службу KeepAlive. Новые сообщения пересылаются в топик, а ответ из топика отправляется обратно контакту через API без следов посредника.'}
-              {activeTab === 'honeypot' && 'Honeypot перехватывает стандартную проверку SHA-256 пароля. По специальному пин-коду приложение скрывает секретную базу данных и переключается на чистый decoy-профиль.'}
-              {activeTab === 'mediasort' && 'В отличие от стандартного клиента, AndoGram запрашивает метаданные пачками по 100 сообщений через MTProto и моментально сортирует файлы прямо в оперативной памяти.'}
-              {activeTab === 'ghost' && 'Блокируются API-запросы к media/seen, reel_media_seen и activity_indicator на уровне хуков без модификации оригинального ключа приложения.'}
-              {activeTab === 'viewonce' && 'Снимает флаг самоуничтожения перед рендером и отключает системный флаг запрета снимков экрана Android.'}
-            </p>
-
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.92rem' }}>
-                <CheckCircle2 size={18} color="#00f59b" />
-                <span>Работает автономно без сторонних серверов</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.92rem' }}>
-                <CheckCircle2 size={18} color="#00f59b" />
-                <span>Все ключи и базы данных остаются на телефоне</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.92rem' }}>
-                <CheckCircle2 size={18} color="#00f59b" />
-                <span>Не требует прав суперпользователя (Root)</span>
+        <div className="demo-stage">
+          {/* Phone: tilt wrapper (owns transform) → float wrapper (CSS) → frame */}
+          <motion.div
+            {...tilt}
+            className="phone-tilt"
+          >
+            <div className="phone-float">
+              <div className="phone-glow" aria-hidden style={{ '--phone-accent': accent } as React.CSSProperties} />
+              <div className="phone-frame" style={{ '--phone-accent': accent } as React.CSSProperties}>
+                <div className="phone-punchhole" aria-hidden />
+                <div className="phone-screen">
+                  <div
+                    role="tabpanel"
+                    id={`demo-panel-${activeTab}`}
+                    aria-labelledby={`demo-tab-${activeTab}`}
+                    tabIndex={0}
+                    className="demo-scene-stack"
+                  >
+                    <AnimatePresence initial={false}>
+                      <motion.div
+                        key={activeTab}
+                        className="demo-scene"
+                        initial={reduce ? { opacity: 0 } : { opacity: 0, transform: 'translateY(12px)', filter: 'blur(6px)' }}
+                        animate={reduce ? { opacity: 1 } : { opacity: 1, transform: 'translateY(0px)', filter: 'blur(0px)' }}
+                        exit={reduce
+                          ? { opacity: 0, transition: { duration: DURATION.ui } }
+                          : { opacity: 0, transform: 'translateY(-10px)', filter: 'blur(4px)', transition: { duration: 0.3, ease: EASE_OUT } }}
+                        transition={{ duration: DURATION.scene, ease: EASE_OUT }}
+                      >
+                        <Scene lang={lang} />
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </div>
+                <div className="phone-glare" aria-hidden />
+                <div className="phone-bottom-bar" aria-hidden />
               </div>
             </div>
+          </motion.div>
+
+          {/* Side explanation — crossfades in sync with the scene */}
+          <div className="demo-side">
+            <span className="badge-pill badge-ando demo-side-badge">
+              <Sparkles size={13} aria-hidden />
+              {underHood[lang]}
+            </span>
+
+            <div className="demo-side-copy">
+              <AnimatePresence initial={false}>
+                <motion.div
+                  key={activeTab}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, transform: 'translateY(10px)' }}
+                  animate={reduce ? { opacity: 1 } : { opacity: 1, transform: 'translateY(0px)' }}
+                  exit={reduce
+                    ? { opacity: 0, transition: { duration: DURATION.ui } }
+                    : { opacity: 0, transform: 'translateY(-8px)', transition: { duration: 0.25, ease: EASE_OUT } }}
+                  transition={{ duration: DURATION.scene, ease: EASE_OUT }}
+                >
+                  <h3 className="demo-side-title" style={{ color: accent }}>{scenes[activeTab].title[lang]}</h3>
+                  <p className="demo-side-desc">{scenes[activeTab].desc[lang]}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <ul className="demo-benefits">
+              {benefits.map((b, i) => (
+                <li key={i}>
+                  <CheckCircle2 size={18} color="#00f59b" aria-hidden />
+                  <span>{b[lang]}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

@@ -1,0 +1,194 @@
+.cmp-section {
+  padding: 80px 0;
+}
+
+.cmp-panel {
+  border-radius: var(--radius-xl);
+  padding: 8px;
+}
+
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.cmp-table thead tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cmp-table th,
+.cmp-table td {
+  padding: 20px;
+  vertical-align: middle;
+}
+
+.cmp-th-feature {
+  width: 38%;
+  font-size: 0.92rem;
+  color: var(--text-dim);
+}
+.cmp-th-official {
+  width: 28%;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+.cmp-th-ando {
+  width: 34%;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--cmp-color);
+  transition: color 250ms ease;
+}
+.cmp-th-ando-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--cmp-color) 55%, transparent);
+}
+
+/* The ANDO column reads as one tinted band */
+.cmp-th-ando,
+.cmp-table .cmp-ando {
+  background: color-mix(in srgb, var(--cmp-color) 6%, transparent);
+  transition: background-color 250ms ease;
+}
+.cmp-th-ando {
+  border-radius: 18px 18px 0 0;
+}
+.cmp-table tbody tr:last-child .cmp-ando {
+  border-radius: 0 0 18px 18px;
+}
+
+.cmp-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background-color 200ms ease;
+}
+.cmp-table tbody tr:last-child {
+  border-bottom: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cmp-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.025);
+  }
+}
+
+.cmp-feature {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.cmp-official {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+.cmp-table .cmp-ando {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.94rem;
+}
+
+.cmp-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cmp-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cmp-icon--no {
+  width: 20px;
+  height: 20px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+.cmp-icon--yes {
+  background: color-mix(in srgb, var(--cmp-color) 18%, transparent);
+  color: var(--cmp-color);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--cmp-color) 35%, transparent);
+}
+
+/* Phone cards (hidden on wide screens) */
+.cmp-cards {
+  display: none;
+  list-style: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.cmp-card {
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.cmp-card-title {
+  font-weight: 700;
+  font-size: 0.98rem;
+  margin-bottom: 10px;
+}
+.cmp-card-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.cmp-card-line + .cmp-card-line {
+  margin-top: 8px;
+}
+.cmp-card-line .cmp-icon {
+  margin-top: 1px;
+}
+.cmp-card-ando {
+  padding: 10px 12px;
+  margin-left: -4px;
+  margin-right: -4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cmp-color) 8%, transparent);
+  color: #fff;
+  font-weight: 600;
+}
+.cmp-card-label {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.cmp-card-ando .cmp-card-label {
+  color: var(--cmp-color);
+}
+
+@media (max-width: 720px) {
+  .cmp-section {
+    padding: 64px 0;
+  }
+  .cmp-table {
+    display: none;
+  }
+  .cmp-cards {
+    display: flex;
+  }
+  .cmp-panel {
+    padding: 10px;
+    border-radius: 24px;
+  }
+}
+
+/* Narrow phones: the two long tab labels share the width and may wrap */
+@media (max-width: 520px) {
+  .cmp-section .seg {
+    display: flex;
+    width: 100%;
+  }
+  .cmp-section .seg-btn {
+    flex: 1;
+    white-space: normal;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+}

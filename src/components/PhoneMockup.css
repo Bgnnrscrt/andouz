@@ -1,0 +1,346 @@
+/* ===================== Interactive demo (#demo) ===================== */
+
+.demo-section {
+  padding: 80px 0;
+  position: relative;
+  overflow-x: clip;
+  background: linear-gradient(180deg, rgba(8, 9, 14, 0) 0%, rgba(13, 16, 23, 0.8) 50%, rgba(8, 9, 14, 0) 100%);
+}
+
+/* ----- Tabs + autoplay ----- */
+.demo-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.demo-autoplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  max-width: 280px;
+}
+.demo-autoplay-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+.demo-progress-track {
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.demo-progress-fill {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  transform: scaleX(0);
+  transition: background-color 300ms ease;
+}
+
+/* ----- Stage layout ----- */
+.demo-stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 440px);
+  gap: 56px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ----- Phone ----- */
+.phone-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.phone-float {
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+
+.phone-glow {
+  position: absolute;
+  inset: -16%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--phone-accent, #00f59b) 0%, transparent 62%);
+  filter: blur(48px);
+  opacity: 0.32;
+  pointer-events: none;
+  transition: opacity 500ms ease;
+}
+
+.phone-frame {
+  position: relative;
+  z-index: 1;
+  width: clamp(260px, 84vw, 312px);
+  aspect-ratio: 320 / 640;
+  background: #000;
+  border-radius: 44px;
+  border: 4px solid #232733;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 0 0 2px #0f131a,
+    0 25px 50px -12px rgba(0, 0, 0, 0.8),
+    0 0 72px -14px var(--phone-accent, #00f59b);
+  transition: box-shadow 500ms ease;
+}
+
+.phone-punchhole {
+  width: 12px;
+  height: 12px;
+  background: #05070a;
+  border-radius: 50%;
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.phone-screen {
+  flex: 1;
+  min-height: 0;
+  background: #0d1117;
+  padding: 36px 15px 14px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font-size: 0.82rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Diagonal glass reflection over the screen. */
+.phone-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    132deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0) 72%,
+    rgba(255, 255, 255, 0.045) 100%
+  );
+  mix-blend-mode: screen;
+}
+
+.phone-bottom-bar {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 104px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+  z-index: 7;
+}
+
+/* Scene crossfade stack: scenes share one grid cell so enter/exit overlap. */
+.demo-scene-stack {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  outline: none;
+}
+.demo-scene-stack:focus-visible {
+  outline: 2px solid var(--accent-ando);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.demo-scene {
+  grid-area: 1 / 1;
+  min-width: 0;
+  height: 100%;
+  will-change: transform, opacity, filter;
+}
+
+/* ----- Shared phone-screen pieces ----- */
+.demo-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f59b;
+  position: relative;
+  flex-shrink: 0;
+}
+.demo-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #00f59b;
+  animation: pingRing 1.9s var(--ease-out) infinite;
+}
+
+.demo-bubble {
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  max-width: 88%;
+}
+.demo-bubble-in {
+  background: #1c2230;
+  align-self: flex-start;
+  border-top-left-radius: 4px;
+}
+.demo-bubble-out {
+  background: #0a4a67;
+  align-self: flex-end;
+  border-top-right-radius: 4px;
+}
+
+.demo-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 1px dashed;
+  border-radius: 9px;
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.demo-typing-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  display: inline-block;
+  animation: typingBounce 1s ease-in-out infinite;
+}
+.demo-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.demo-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* One-shot flash on unlock / message recovery. */
+.demo-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  animation: demoFlash 0.5s var(--ease-out) 1;
+}
+
+/* One-shot save-button pulse. */
+.demo-save-pulse {
+  animation: demoSavePulse 0.6s var(--ease-out) 1;
+}
+
+/* ----- Side explanation ----- */
+.demo-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.demo-side-badge {
+  align-self: flex-start;
+  margin-bottom: 16px;
+}
+.demo-side-copy {
+  display: grid;
+  margin-bottom: 22px;
+}
+.demo-side-copy > * {
+  grid-area: 1 / 1;
+}
+.demo-side-title {
+  font-size: clamp(1.5rem, 2.4vw, 1.85rem);
+  line-height: 1.22;
+  margin-bottom: 14px;
+  transition: color 400ms ease;
+  text-wrap: balance;
+}
+.demo-side-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.demo-benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.demo-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+}
+.demo-benefits svg {
+  flex-shrink: 0;
+}
+
+/* ----- Keyframes (transform / opacity only) ----- */
+@keyframes typingBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes demoFlash {
+  0% { opacity: 0; }
+  30% { opacity: 0.45; }
+  100% { opacity: 0; }
+}
+@keyframes demoSavePulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 900px) {
+  .demo-stage {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    justify-items: center;
+  }
+  .demo-side {
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+  .demo-side-badge {
+    align-self: center;
+  }
+  .demo-side-copy {
+    justify-items: center;
+  }
+  .demo-benefits li {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .demo-section { padding: 64px 0; }
+  .demo-benefits li { font-size: 0.88rem; }
+}
+
+/* ----- Reduced motion: drop loops and one-shot movement, keep layout usable ----- */
+@media (prefers-reduced-motion: reduce) {
+  .phone-float { animation: none; }
+  .demo-live-dot::after { animation: none; opacity: 0; }
+  .demo-typing-dot { animation: none; }
+  .demo-flash { animation: none; opacity: 0; }
+  .demo-save-pulse { animation: none; }
+}

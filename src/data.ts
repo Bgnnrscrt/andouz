@@ -1,4 +1,4 @@
-import { AppInfo, ComparisonRow } from './types';
+import { AppId, AppInfo, ComparisonRow } from './types';
 
 export const APPS_DATA: AppInfo[] = [
   {
@@ -346,6 +346,12 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
     isWin: true
   }
 ];
+
+/** Direct APK links per app (GitHub release assets). */
+export const DOWNLOAD_URLS: Record<AppId, string> = {
+  andogram: 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andogram-arm64-v8a-27102026.apk',
+  andusta: 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andusta-v1.0.0.apk'
+};
 
 export const INITIAL_VALID_COUPONS = [
   "ANDO-VIP-2026",

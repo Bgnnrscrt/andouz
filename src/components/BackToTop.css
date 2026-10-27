@@ -1,0 +1,56 @@
+.to-top {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(13, 16, 23, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: var(--text-main);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.to-top-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.to-top-track,
+.to-top-progress {
+  fill: none;
+  stroke-width: 2.5;
+}
+.to-top-track {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+.to-top-progress {
+  stroke: var(--accent-ando);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(0, 245, 155, 0.6));
+}
+
+.to-top-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 200ms var(--ease-out), color 200ms ease;
+}
+.to-top:active .to-top-icon {
+  transform: scale(0.9);
+}
+@media (hover: hover) and (pointer: fine) {
+  .to-top:hover .to-top-icon {
+    transform: translateY(-2px);
+    color: var(--accent-ando);
+  }
+}

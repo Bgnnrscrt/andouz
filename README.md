@@ -30,12 +30,38 @@
 
 ## 🛠️ Стек технологий портала
 
-- **Фреймворк**: React 18 + Vite + TypeScript
+- **Фреймворк**: React 19 + Vite 8 + TypeScript 7, линтер oxlint
 - **Стилизация**: Ванильный CSS (CSS Custom Properties, Glassmorphism, Neon Cyberpunk)
+- **Анимации**: [`motion`](https://motion.dev), canvas-фон с частицами, CSS-анимации
 - **Иконки**: `lucide-react`
-- **Эффекты**: `canvas-confetti`
+- **Эффекты**: `canvas-confetti`, `qrcode.react` (QR-код для скачивания)
 - **Инфраструктура**: Vercel Serverless Edge CDN + aHOST.uz DNS (`ando.uz`)
 - **Языки**: Русский (`ru`), Узбекский (`uz`), Английский (`en`)
+
+---
+
+## 🧑‍💻 Разработка
+
+```bash
+npm install
+npm run dev      # локальный сервер с HMR
+npm run build    # проверка типов + продакшн-сборка в dist/
+npm run lint
+```
+
+```
+src/
+  App.tsx              страница, язык, модалки (грузятся лениво)
+  data.ts              приложения, сравнения, ссылки на APK (DOWNLOAD_URLS), промокоды
+  lib/motion.ts        токены анимаций: кривые, длительности, пружины
+  hooks/               useMediaQuery / useCanHover, useTilt (3D-наклон)
+  components/fx/       Reveal / Stagger (появление при скролле), ScrambleText, spotlight
+  components/ui/       SectionHeader, SegmentedControl (вкладки), Modal
+  components/hero/     фон с частицами, эмблема, заголовок, «магнитная» кнопка
+  components/demo/     сцены интерактивного демо телефона
+```
+
+Правила анимаций: анимируются только `transform`/`opacity`, кривые и длительности берутся из `src/lib/motion.ts`, hover-эффекты только для мыши, `prefers-reduced-motion` учитывается везде, canvas ставится на паузу вне экрана.
 
 ---
 

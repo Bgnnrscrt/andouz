@@ -1,0 +1,261 @@
+.dl-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.dl-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  padding: 0 40px;
+}
+
+.dl-method {
+  margin-bottom: 24px;
+}
+
+.dl-center {
+  text-align: center;
+}
+
+.dl-muted {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.dl-wide {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.05rem;
+}
+
+.dl-hint {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* Stars price card */
+.dl-price {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  padding: 24px 20px;
+  border-radius: var(--radius-lg);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+.dl-price::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, rgba(245, 158, 11, 0.16) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: dlSweep 3.6s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+@keyframes dlSweep {
+  0% { transform: translateX(-100%); }
+  45%, 100% { transform: translateX(100%); }
+}
+.dl-price-sparkle {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: var(--accent-stars);
+  animation: dlTwinkle 2.4s ease-in-out infinite;
+}
+@keyframes dlTwinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.9) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(18deg); }
+}
+.dl-price-value {
+  position: relative;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent-stars);
+  margin-bottom: 6px;
+}
+.dl-price-desc {
+  position: relative;
+  font-size: 0.88rem;
+}
+
+/* Coupon form */
+.dl-input-wrap {
+  margin-bottom: 12px;
+}
+.dl-input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  outline: none;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+}
+.dl-input::placeholder {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+.dl-input:focus {
+  border-color: rgba(0, 245, 155, 0.55);
+  background: rgba(0, 245, 155, 0.04);
+  box-shadow: 0 0 0 4px rgba(0, 245, 155, 0.12);
+}
+.dl-input.is-invalid {
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+.dl-input.is-used {
+  border-color: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+}
+
+.dl-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+}
+.dl-status--invalid {
+  color: #ef4444;
+}
+.dl-status--used {
+  color: var(--accent-stars);
+}
+
+.dl-dev-codes {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+.dl-dev-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.dl-dev-chip {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(0, 245, 155, 0.1);
+  border: 1px solid rgba(0, 245, 155, 0.25);
+  color: var(--accent-ando);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+/* Unlocked state */
+.dl-unlocked {
+  text-align: center;
+}
+.dl-success-mark {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+}
+.dl-success-glow {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 245, 155, 0.35), transparent 70%);
+}
+.dl-success-mark svg {
+  position: relative;
+  display: block;
+}
+.dl-success-ring,
+.dl-success-check {
+  fill: none;
+  stroke: var(--accent-ando);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.dl-success-ring {
+  stroke-width: 2.5;
+}
+.dl-success-check {
+  stroke-width: 4;
+}
+.dl-unlocked-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--accent-ando);
+}
+.dl-unlocked .dl-muted {
+  margin-bottom: 22px;
+}
+
+.dl-qr-box {
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dl-qr-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.dl-qr {
+  width: 168px;
+  height: 168px;
+  margin: 0 auto 14px;
+  padding: 10px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 0 30px rgba(0, 245, 155, 0.15);
+}
+.dl-qr svg {
+  display: block;
+}
+.dl-copy {
+  font-size: 0.82rem;
+  padding: 8px 16px;
+}
+.dl-copy.is-copied {
+  border-color: rgba(0, 245, 155, 0.4);
+  color: var(--accent-ando);
+}
+
+@media (max-width: 420px) {
+  .dl-title {
+    font-size: 1.3rem;
+  }
+  .dl-price-value {
+    font-size: 1.6rem;
+  }
+  .dl-wide {
+    font-size: 0.98rem;
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dl-price::before,
+  .dl-price-sparkle {
+    animation: none;
+  }
+}
