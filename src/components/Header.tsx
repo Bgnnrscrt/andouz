@@ -36,21 +36,18 @@ export const Header: React.FC<HeaderProps> = ({ lang, setLang, onOpenDownload })
           textDecoration: 'none',
           color: '#fff'
         }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #00f59b 0%, #00b4d8 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 20px rgba(0, 245, 155, 0.35)',
-            fontWeight: 900,
-            color: '#08090e',
-            fontSize: '1.2rem'
-          }}>
-            A
-          </div>
+          <img
+            src="/logo.jpg"
+            alt="ANDO Logo"
+            style={{
+              width: '42px',
+              height: '42px',
+              borderRadius: '12px',
+              objectFit: 'cover',
+              boxShadow: '0 0 20px rgba(0, 245, 155, 0.35)',
+              border: '1px solid rgba(0, 245, 155, 0.3)'
+            }}
+          />
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{
