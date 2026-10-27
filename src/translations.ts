@@ -1,353 +1,138 @@
 export const translations = {
-  "nav": {
-    "home": {
-      "ru": "???????",
-      "uz": "Bosh sahifa",
-      "en": "Home"
+  nav: {
+    home: { ru: "Главная", uz: "Bosh sahifa", en: "Home" },
+    andogram: { ru: "AndoGram", uz: "AndoGram", en: "AndoGram" },
+    andusta: { ru: "Andusta", uz: "Andusta", en: "Andusta" },
+    compare: { ru: "Сравнение", uz: "Taqqoslash", en: "Compare" },
+    install: { ru: "Установка", uz: "O'rnatish", en: "Install" },
+    roadmap: { ru: "Планы", uz: "Rejalar", en: "Roadmap" },
+    getAccess: { ru: "Получить доступ", uz: "Yuklab olish", en: "Get Access" }
+  },
+  hero: {
+    badge: { ru: "⚡ ЭКОСИСТЕМА ANDO • ANDROID ONLY", uz: "⚡ ANDO EKOTIZIMI • FAQAT ANDROID", en: "⚡ ANDO ECOSYSTEM • ANDROID ONLY" },
+    titleStart: { ru: "Свобода и Безопасность", uz: "Smartfoningiz Uchun", en: "Freedom & Security" },
+    titleGradient: { ru: "Твоего Смартфона", uz: "Erkinlik va Xavfsizlik", en: "For Your Smartphone" },
+    subtitle: {
+      ru: "Автономные клиенты Telegram и Instagram: Мост Архива, Honeypot-пароли, обход одноразовых фото, сохранение удалённых сообщений и полная приватность без Root-прав.",
+      uz: "Kengaytirilgan Telegram va Instagram mustaqil mijozlari: Shaxsiy Arxiv ko'prigi, Honeypot parollari, o'chuvchi mediani saqlash va Root-huquqlarisiz to'liq maxfiylik.",
+      en: "Autonomous Telegram & Instagram power-user clients: Archive Bridge, Duress Passcodes, view-once media bypass, anti-unsend messages, and full privacy without Root."
     },
-    "andogram": {
-      "ru": "AndoGram",
-      "uz": "AndoGram",
-      "en": "AndoGram"
+    btnExplore: { ru: "Изучить приложения", uz: "Ilovalarni ko'rish", en: "Explore Apps" },
+    btnDownload: { ru: "Скачать APK", uz: "APK yuklab olish", en: "Download APK" },
+    btnStars: { ru: "1000 Stars / Промокод", uz: "1000 Stars / Promokod", en: "1,000 Stars / Promo" },
+    stat1: { ru: "100% Без Root-прав", uz: "100% Rootsiz", en: "100% No-Root" },
+    stat2: { ru: "Анти-бан защита", uz: "Anti-ban himoyasi", en: "Anti-Ban Safe" },
+    stat3: { ru: "Локальная приватность", uz: "Qurilma maxfiyligi", en: "On-Device Privacy" },
+    stat4: { ru: "Регулярные апдейты", uz: "Doimiy yangilanishlar", en: "Frequent Updates" }
+  },
+  apps: {
+    badge: { ru: "Флагманские продукты", uz: "Asosiy ilovalar", en: "Flagship Products" },
+    andogramTitle: { ru: "AndoGram — Твой Ультимативный Telegram", uz: "AndoGram — Telegram Ustidan To'liq Nazorat", en: "AndoGram — Ultimate Telegram Client" },
+    andustaTitle: { ru: "Andusta — Instagram Без Ограничений", uz: "Andusta — Cheklovlarsiz Instagram", en: "Andusta — Uncensored Instagram Mod" },
+    downloadApk: { ru: "Скачать APK", uz: "Yuklab olish", en: "Download APK" },
+    viewSpecs: { ru: "Все возможности", uz: "Imkoniyatlar", en: "View Specs" },
+    featuresTitle: { ru: "Ключевые возможности:", uz: "Asosiy imkoniyatlar:", en: "Key Features:" }
+  },
+  mockup: {
+    badge: { ru: "Интерактивная демонстрация", uz: "Interaktiv namoyish", en: "Interactive Simulator" },
+    title: { ru: "Попробуй фичи в действии", uz: "Imkoniyatlarni sinab ko'ring", en: "Test Features in Action" },
+    subtitle: {
+      ru: "Переключай сценарии прямо сейчас и посмотри, как работают эксклюзивные технологии AndoGram и Andusta.",
+      uz: "Ssenariylarni tanlang va Ando ilovalari qanday ishlashini amalda ko'ring.",
+      en: "Switch scenarios below to experience exclusive Ando features live."
     },
-    "andusta": {
-      "ru": "Andusta",
-      "uz": "Andusta",
-      "en": "Andusta"
-    },
-    "compare": {
-      "ru": "?????????",
-      "uz": "Taqqoslash",
-      "en": "Compare"
-    },
-    "install": {
-      "ru": "?????????",
-      "uz": "O'rnatish",
-      "en": "Install Guide"
-    },
-    "roadmap": {
-      "ru": "?????",
-      "uz": "Rejalar",
-      "en": "Roadmap"
-    },
-    "getAccess": {
-      "ru": "???????? ??????",
-      "uz": "Kirishni olish",
-      "en": "Get Access"
+    tabs: {
+      archive: { ru: "Мост Архива (A-B-C)", uz: "Arxiv Ko'prigi (A-B-C)", en: "Archive Bridge" },
+      honeypot: { ru: "Honeypot-пароли", uz: "Honeypot Parollari", en: "Duress Passcodes" },
+      mediasort: { ru: "Сортировка по размеру", uz: "Hajm Saralash", en: "Media Size Sorter" },
+      ghost: { ru: "Ghost Mode (Andusta)", uz: "Arvoh Rejimi", en: "Ghost Mode" },
+      viewonce: { ru: "Обход View-Once", uz: "O'chuvchi Media", en: "View-Once Bypass" }
     }
   },
-  "hero": {
-    "badge": {
-      "ru": "? ?????????? ANDO ? ?????? ??? Android",
-      "uz": "? ANDO Ekotizimi ? Faqat Android uchun",
-      "en": "? ANDO Ecosystem ? Android Exclusive"
+  compare: {
+    badge: { ru: "Честное сравнение", uz: "To'g'ridan-to'g'ri taqqoslash", en: "Honest Comparison" },
+    title: { ru: "Почему пользователи выбирают ANDO", uz: "Nega foydalanuvchilar ANDOni tanlashadi", en: "Why Power Users Choose ANDO" },
+    subtitle: {
+      ru: "Сравнение стандартных официальных клиентов с автономными модами AndoGram и Andusta.",
+      uz: "Rasmiy ilovalar va Ando ilovalari orasidagi aniq farqlar.",
+      en: "Comparing official stock apps against AndoGram and Andusta."
     },
-    "titleStart": {
-      "ru": "??????? ? ???????????",
-      "uz": "Erkinlik va maxfiylik",
-      "en": "Freedom & Privacy"
+    tabTelegram: { ru: "Telegram vs AndoGram", uz: "Telegram vs AndoGram", en: "Telegram vs AndoGram" },
+    tabInstagram: { ru: "Instagram vs Andusta", uz: "Instagram vs Andusta", en: "Instagram vs Andusta" },
+    thFeature: { ru: "Возможность / Функция", uz: "Imkoniyat / Xususiyat", en: "Feature" },
+    thOfficial: { ru: "Официальное приложение", uz: "Rasmiy ilova", en: "Official App" },
+    thAndo: { ru: "Версия ANDO", uz: "ANDO versiyasi", en: "ANDO Version" }
+  },
+  install: {
+    badge: { ru: "Быстрый старт", uz: "Tezkor o'rnatish", en: "Quick Setup" },
+    title: { ru: "Установка за 3 простых шага", uz: "O'rnatish 3 qadamda", en: "Installation in 3 Steps" },
+    subtitle: {
+      ru: "Приложения ANDO не требуют Root-прав и устанавливаются на любой Android 8.0+ как обычный APK.",
+      uz: "ANDO ilovalariga Root kerak emas, oddiy APK kabi 1 daqiqada o'rnatiladi.",
+      en: "No Root required. Runs on any Android 8.0+ phone within 1 minute."
     },
-    "titleGradient": {
-      "ru": "?????? ?????????",
-      "uz": "yangi avlodda",
-      "en": "Next-Gen Mobile"
+    steps: {
+      s1Title: { ru: "1. Скачай APK файл", uz: "1. APK faylni yuklab oling", en: "1. Download APK" },
+      s1Desc: { ru: "Получи доступ по кнопке «Скачать APK», оплатив 1000 Stars или введя промокод.", uz: "1000 Stars yoki promokod orqali ilovani yuklab oling.", en: "Get APK via 1,000 Stars or promo coupon." },
+      s2Title: { ru: "2. Разреши установку", uz: "2. O'rnatishga ruxsat bering", en: "2. Allow Unknown Sources" },
+      s2Desc: { ru: "В настройках браузера или проводника разреши установку из этого источника.", uz: "Fayl menejeri yoki brauzeringizda noma'lum manbalardan o'rnatishga ruxsat bering.", en: "Allow installation from Unknown Sources in Android settings." },
+      s3Title: { ru: "3. Запусти и пользуйся", uz: "3. Ochib foydalaning", en: "3. Launch & Enjoy" },
+      s3Desc: { ru: "Войди в свой аккаунт. Все функции приватности активируются автоматически.", uz: "Profilingizga kiring. Maxfiylik sozlamalari darhol ishga tushadi.", en: "Log into your account. All privacy mods are active instantly." }
     },
-    "subtitle": {
-      "ru": "???????????????? ?????????? Telegram ? Instagram ? ?????????? ????????????: ?????? ????? ?????????, ????? ??????????? ??????????, ????? ???????? ? ?????? ??? ????????????. ??? Root-????.",
-      "uz": "Telegram va Instagram mustaqil modifikatsiyalari: shaxsiy xabarlar arxivi, saqlash cheklovlarini chetlab o'tish, arvoh rejimi va majburlashdan himoya. Root huquqlarisiz.",
-      "en": "Independent Telegram and Instagram modifications with elite capabilities: personal archive bridge, media bypass, ghost mode, and duress passcodes. 100% No-Root required."
-    },
-    "btnDownload": {
-      "ru": "??????? ??????????",
-      "uz": "Ilovalarni yuklash",
-      "en": "Download Apps"
-    },
-    "btnExplore": {
-      "ru": "?????? ?????????",
-      "uz": "Batafsil tanishish",
-      "en": "Explore Features"
-    },
-    "stat1": {
-      "ru": "??? Root-????",
-      "uz": "Rootsiz ishlaydi",
-      "en": "100% No Root"
-    },
-    "stat2": {
-      "ru": "????-??? ??????",
-      "uz": "Anti-Ban himoyasi",
-      "en": "Anti-Ban Safe"
-    },
-    "stat3": {
-      "ru": "????????? ????????????",
-      "uz": "Lokal xavfsizlik",
-      "en": "On-Device Privacy"
-    },
-    "stat4": {
-      "ru": "?????????? ??????????",
-      "uz": "Doimiy yangilanish",
-      "en": "Frequent Updates"
+    playProtectNotice: {
+      ru: "Примечание: так как моды не публикуются в Google Play, Play Защита может показать предупреждение. Нажмите «Все равно установить» (Install anyway) — в наших приложениях нет вредоносного кода.",
+      uz: "Eslatma: Google Play Protect ogohlantirish bersa, «Baribir o'rnatish» (Install anyway) tugmasini bosing — ilovalarimizda hech qanday xavf yo'q.",
+      en: "Note: Because mods are not in Google Play, Play Protect might show a warning. Tap 'Install anyway' — our builds are 100% clean and privacy-focused."
     }
   },
-  "mockup": {
-    "title": {
-      "ru": "????????????? ????????????",
-      "uz": "Interaktiv namoyish",
-      "en": "Live Feature Preview"
+  roadmap: {
+    badge: { ru: "Будущее экосистемы", uz: "Ekotizim kelajagi", en: "Ecosystem Roadmap" },
+    title: { ru: "Планы развития ANDO", uz: "ANDO Rivojlanish Rejasi", en: "ANDO Roadmap" },
+    subtitle: {
+      ru: "Мы создаем целую экосистему защищенных и свободных Android-инструментов.",
+      uz: "Biz Android uchun xavfsiz va erkin ilovalar tizimini yaratmoqdamiz.",
+      en: "Building a complete suite of power tools for Android users."
     },
-    "subtitle": {
-      "ru": "??????? ?? ???????, ????? ??????? ?? ?????? ?? ?????? ?????????",
-      "uz": "Smartfon ekranida qanday ishlashini ko'rish uchun funksiyani bosing",
-      "en": "Click any feature to inspect it in the smartphone simulator"
+    suggestTitle: { ru: "Есть идея для нового функционала?", uz: "Yangi funksiya bo'yicha taklifingiz bormi?", en: "Have an idea for a new feature?" },
+    suggestDesc: {
+      ru: "Напиши нам в официальный Telegram-канал или чат сообщества. Мы внедряем лучшие предложения пользователей!",
+      uz: "Telegram kanalimizda o'z fikrlaringizni qoldiring. Biz eng yaxshi takliflarni amalga oshiramiz!",
+      en: "Drop a message in our Telegram channel. We build the features our community asks for!"
     },
-    "tabArchive": {
-      "ru": "?????? ????? (???? A-B-C)",
-      "uz": "Shaxsiy Arxiv (A-B-C Ko'prik)",
-      "en": "Archive Bridge (A-B-C)"
-    },
-    "tabHoneypot": {
-      "ru": "?????? ??? ????????????",
-      "uz": "Majburiy kod-parol",
-      "en": "Duress Passcodes"
-    },
-    "tabMediaSort": {
-      "ru": "?????????? ?? ???????",
-      "uz": "Hajm bo'yicha saralash",
-      "en": "Sort by Media Size"
-    },
-    "tabGhost": {
-      "ru": "????? ???????? (Andusta)",
-      "uz": "Arvoh Rejimi (Andusta)",
-      "en": "Ghost Mode (Andusta)"
-    },
-    "tabViewOnce": {
-      "ru": "??????????? ???? ?",
-      "uz": "Bir martalik rasm ?",
-      "en": "Unlimited View-Once"
-    }
+    btnSuggest: { ru: "Предложить идею в Telegram", uz: "Telegramda taklif yuborish", en: "Suggest on Telegram" }
   },
-  "comparison": {
-    "title": {
-      "ru": "?????? ANDO ??????????? ????????",
-      "uz": "Nega ANDO aslidagidan ancha ustun",
-      "en": "Why ANDO Outperforms Originals"
+  modal: {
+    downloadTitle: { ru: "Получить доступ к приложению", uz: "Ilovani yuklab olish", en: "Get App Access" },
+    starsTab: { ru: "Оплата Stars", uz: "Stars orqali to'lash", en: "Telegram Stars" },
+    couponTab: { ru: "Промокод (VIP)", uz: "Promokod (VIP)", en: "Promo Coupon" },
+    starsPrice: { ru: "1000 Telegram Stars", uz: "1000 Telegram Stars", en: "1,000 Telegram Stars" },
+    starsDesc: {
+      ru: "Единоразовый доступ ко всем будущим обновлениям. Оплата происходит мгновенно в официальном боте Telegram.",
+      uz: "Barcha yangilanishlarga cheksiz ruxsat. To'lov rasmiy Telegram boti orqali darhol amalga oshiriladi.",
+      en: "One-time access including all future updates. Instant payment via official Telegram Bot."
     },
-    "subtitle": {
-      "ru": "????????? ????????? ??????????? ???????? ? ????????????? ?????????? ANDO",
-      "uz": "Oddiy ilovalar va ANDO ekotizimi imkoniyatlarini taqqoslang",
-      "en": "Side-by-side breakdown between official apps and the ANDO suite"
+    btnPayBot: { ru: "Оплатить 1000 Stars в боте", uz: "Botda 1000 Stars to'lash", en: "Pay 1,000 Stars in Bot" },
+    couponPlaceholder: { ru: "ВВЕДИТЕ ПРОМОКОД (НАПР. ANDO-VIP-2026)", uz: "PROMOKODNI KIRITING", en: "ENTER PROMO CODE" },
+    btnActivate: { ru: "Активировать промокод", uz: "Promokodni faollashtirish", en: "Activate Coupon" },
+    couponInvalid: { ru: "Неверный промокод. Проверьте правильность ввода.", uz: "Noto'g'ri promokod. Qaytadan tekshiring.", en: "Invalid promo coupon code." },
+    couponAlreadyUsed: { ru: "Этот промокод уже был активирован ранее.", uz: "Ushbu promokod allaqachon ishlatilgan.", en: "This coupon has already been redeemed." },
+    unlockedTitle: { ru: "Доступ успешно разблокирован!", uz: "Ilova muvaffaqiyatli ochildi!", en: "Access Successfully Unlocked!" },
+    unlockedDesc: {
+      ru: "Скачай APK файл на телефон или отсканируй QR-код камерой смартфона.",
+      uz: "APK faylni yuklab oling yoki QR-kod orqali telefoningizga o'rnating.",
+      en: "Download the APK directly or scan the QR code with your phone."
     },
-    "tabGram": {
-      "ru": "Telegram vs AndoGram",
-      "uz": "Telegram vs AndoGram",
-      "en": "Telegram vs AndoGram"
-    },
-    "tabUsta": {
-      "ru": "Instagram vs Andusta",
-      "uz": "Instagram vs Andusta",
-      "en": "Instagram vs Andusta"
-    },
-    "colOfficial": {
-      "ru": "??????????? ??????",
-      "uz": "Rasmiy ilova",
-      "en": "Official App"
-    },
-    "colAndo": {
-      "ru": "??????????? ANDO",
-      "uz": "ANDO modifikatsiyasi",
-      "en": "ANDO Edition"
-    }
+    qrHint: { ru: "Сканируй камерой телефона для мгновенной загрузки:", uz: "Yuklash uchun telefon kamerasi bilan skanerlang:", en: "Scan with your phone camera to download instantly:" }
   },
-  "guide": {
-    "title": {
-      "ru": "??? ?????????? ?????????? ?? 1 ??????",
-      "uz": "Ilovani 1 daqiqada o'rnatish qo'llanmasi",
-      "en": "How to Install in 1 Minute"
+  footer: {
+    copyright: { ru: "© 2026 ANDO Ecosystem (ando.uz). Все права защищены.", uz: "© 2026 ANDO Ekotizimi (ando.uz). Barcha huquqlar himoyalangan.", en: "© 2026 ANDO Ecosystem (ando.uz). All rights reserved." },
+    disclaimer: {
+      ru: "AndoGram и Andusta являются независимыми модификациями с открытыми исходными компонентами и не аффилированы с Telegram FZ-LLC или Meta Platforms, Inc.",
+      uz: "AndoGram va Andusta mustaqil loyihalar bo'lib, Telegram FZ-LLC yoki Meta Platforms, Inc. kompaniyalariga aloqador emas.",
+      en: "AndoGram & Andusta are autonomous third-party mods and are not affiliated with Telegram FZ-LLC or Meta Platforms, Inc."
     },
-    "subtitle": {
-      "ru": "??? ??????: Root ?? ?????, ???????? ?? ???????????",
-      "uz": "Juda oson: Root kerak emas, akkaunt bloklanmaydi",
-      "en": "Simple & Safe: No root required, runs independently"
-    },
-    "step1Title": {
-      "ru": "1. ???????? APK-????",
-      "uz": "1. APK faylini oling",
-      "en": "1. Get the APK File"
-    },
-    "step1Desc": {
-      "ru": "??????????? ??????????? ????? ?? ????? ??? ??????????? ?????? ????? ?????? ???? ?? 1000 Telegram Stars.",
-      "uz": "Saytda bir martalik kuponni kiriting yoki botimiz orqali 1000 Telegram Stars evaziga yuklab oling.",
-      "en": "Redeem a single-use coupon on the site or acquire access via our Telegram bot for 1,000 Stars."
-    },
-    "step2Title": {
-      "ru": "2. ????????? ?????????",
-      "uz": "2. O'rnatishga ruxsat bering",
-      "en": "2. Allow Installation"
-    },
-    "step2Desc": {
-      "ru": "??? ???????? ????? Android ???????? ??????????: ?????????? ????????? ?? ????? ??????????. ??????? ???????????.",
-      "uz": "Faylni ochganingizda Android 'Noma'lum manbalardan o'rnatish' ruxsatini so'raydi. 'Ruxsat berish'ni bosing.",
-      "en": "When opening the APK, Android prompts 'Allow from this source'. Tap allow to continue."
-    },
-    "step3Title": {
-      "ru": "3. ??????????? ?????????",
-      "uz": "3. O'rnatishni yakunlang",
-      "en": "3. Confirm & Enjoy"
-    },
-    "step3Desc": {
-      "ru": "???? Google Play ?????? ??????? ?????????????? ? ??????? ???? ????? ???????????. ??? ????????? ? ????????.",
-      "uz": "Agar Google Play Protect ogohlantirish bersa ? 'Baribir o'rnatish'ni bosing. Ilova mutlaqo xavfsiz.",
-      "en": "If Google Play Protect warns about unknown developer, tap 'Install anyway'. Code is fully local."
-    }
-  },
-  "roadmap": {
-    "title": {
-      "ru": "???????? ????? ??????????",
-      "uz": "Ekotizim rejasi (Roadmap)",
-      "en": "Ecosystem Roadmap"
-    },
-    "subtitle": {
-      "ru": "?? ??????? ?????? ????? ????????? ???????????? ??? Android",
-      "uz": "Biz Android uchun to'liq erkin ilovalar to'plamini yaratmoqdamiz",
-      "en": "Building a comprehensive private Android suite"
-    },
-    "p1Title": {
-      "ru": "AndoGram v10.9.2 (??????)",
-      "uz": "AndoGram v10.9.2 (Tayyor)",
-      "en": "AndoGram v10.9.2 (Live)"
-    },
-    "p1Desc": {
-      "ru": "?????? ?????, ????? No-Forwards, Honeypot, ?????????? ?????, AR-????? ???????.",
-      "uz": "Shaxsiy arxiv, No-Forwards aylanib o'tish, Honeypot, hajm saralash, AR-niqoblar.",
-      "en": "Archive bridge, no-forwards bypass, duress passcodes, size sorter, AR masks."
-    },
-    "p2Title": {
-      "ru": "Andusta v1.0.0 (??????)",
-      "uz": "Andusta v1.0.0 (Tayyor)",
-      "en": "Andusta v1.0.0 (Live)"
-    },
-    "p2Desc": {
-      "ru": "?????????? ???? ??? Root: Ghost mode, ????-????????, ?????????? Reels ? Stories.",
-      "uz": "Rootsiz mustaqil klon: Arvoh rejimi, o'chirilgan xabarlar, Reels va Stories yuklash.",
-      "en": "Rootless clone: Ghost mode, anti-unsend direct, Reels/Stories downloader."
-    },
-    "p3Title": {
-      "ru": "AndoTube (? ??????????)",
-      "uz": "AndoTube (Ishlab chiqilmoqda)",
-      "en": "AndoTube (In Development)"
-    },
-    "p3Desc": {
-      "ru": "YouTube ?????? ??? ???????, ??????? ??????????????? ? ??????????? ???????, ?????????? 4K ? MP3.",
-      "uz": "Reklamasiz YouTube: ekran o'chiq holda tinglash, 4K va MP3 formatda yuklab olish.",
-      "en": "Ad-free YouTube client: background playback with screen locked, 4K and MP3 downloader."
-    },
-    "p4Title": {
-      "ru": "AndoVPN (???????????)",
-      "uz": "AndoVPN (Rejalashtirilgan)",
-      "en": "AndoVPN (Planned)"
-    },
-    "p4Desc": {
-      "ru": "???????????? VLESS/WireGuard ??????? ??? ????? ?? ?????????? ??????? ??????????.",
-      "uz": "Bloklanishlarsiz tezyurar VLESS/WireGuard protokoli, mutlaqo logsiz.",
-      "en": "High-speed VLESS/WireGuard privacy tunnel with zero logs and anti-censorship."
-    }
-  },
-  "modal": {
-    "title": {
-      "ru": "???????? ?????? ? ??????????",
-      "uz": "Ilovaga kirish huquqini olish",
-      "en": "Get Access to Application"
-    },
-    "subtitle": {
-      "ru": "???????? ??????? ??????: ?????? ????? Telegram Stars ??? ???? ???????? ??????",
-      "uz": "Qulay usulni tanlang: Telegram Stars orqali to'lov yoki bir martalik kupon kiritish",
-      "en": "Choose access method: Pay with Telegram Stars or enter a one-time promo coupon"
-    },
-    "tabStars": {
-      "ru": "? Telegram Stars",
-      "uz": "? Telegram Stars",
-      "en": "? Telegram Stars"
-    },
-    "tabCoupon": {
-      "ru": "??? ???????????? ?????",
-      "uz": "??? Kuponni kiritish",
-      "en": "??? Promo Coupon"
-    },
-    "starsPrice": {
-      "ru": "1 000 ????? (?)",
-      "uz": "1 000 Yulduz (?)",
-      "en": "1,000 Stars (?)"
-    },
-    "starsDesc": {
-      "ru": "?????? ???????? ?????????? ????? ?????????? ?????? Telegram. ????? ??????? ??? ????????? ?????? ???????????? ?????? ?? ??????????.",
-      "uz": "To'lov Telegram ichki valyutasi orqali rasmiy amalga oshiriladi. To'lovdan so'ng bot sizga yuklash havolasini taqdim etadi.",
-      "en": "Official payment via Telegram internal currency. The bot immediately generates your exclusive APK download link."
-    },
-    "btnPayBot": {
-      "ru": "???????? ? ???? @ando_stars_bot",
-      "uz": "@ando_stars_bot da to'lash",
-      "en": "Pay in @ando_stars_bot"
-    },
-    "couponPlaceholder": {
-      "ru": "??????? ????? (????????: ANDO-VIP-2026)",
-      "uz": "Kuponni kiriting (masalan: ANDO-VIP-2026)",
-      "en": "Enter coupon (e.g. ANDO-VIP-2026)"
-    },
-    "btnActivate": {
-      "ru": "???????????? ? ???????",
-      "uz": "Faollashtirish va yuklash",
-      "en": "Activate & Download"
-    },
-    "couponSuccess": {
-      "ru": "?? ????? ??????? ???????????! ?????? ??????.",
-      "uz": "?? Kupon muvaffaqiyatli faollashtirildi! Yuklab olish mumkin.",
-      "en": "?? Coupon activated successfully! Access unlocked."
-    },
-    "couponAlreadyUsed": {
-      "ru": "?? ???? ????? ??? ??? ??????????? ????? ?? ?????? ??????????.",
-      "uz": "?? Ushbu kupon boshqa qurilmada allaqachon ishlatilgan.",
-      "en": "?? This coupon has already been redeemed on another device."
-    },
-    "couponInvalid": {
-      "ru": "? ???????? ??? ???????????? ?????.",
-      "uz": "? Noto'g'ri yoki muddati o'tgan kupon.",
-      "en": "? Invalid or expired coupon code."
-    },
-    "btnDownloadApk": {
-      "ru": "??????? APK ????????",
-      "uz": "APK ni to'g'ridan-to'g'ri yuklash",
-      "en": "Download APK Directly"
-    },
-    "qrHint": {
-      "ru": "??? ???????????? QR-??? ??????? ????????:",
-      "uz": "Yoki telefon kamerasi bilan QR-kodni skanerlang:",
-      "en": "Or scan the QR code with your phone camera:"
-    },
-    "close": {
-      "ru": "???????",
-      "uz": "Yopish",
-      "en": "Close"
-    }
-  },
-  "footer": {
-    "rights": {
-      "ru": "??? ????? ????????. ??????????? ??? ??????????? Android.",
-      "uz": "Barcha huquqlar himoyalangan. Android ixlosmandlari uchun yaratilgan.",
-      "en": "All rights reserved. Built for Android power users."
-    },
-    "disclaimer": {
-      "ru": "AndoGram ? Andusta ???????? ???????????? ????????????? ? ?? ??????? ? Telegram FZ-LLC ??? Meta Platforms Inc.",
-      "uz": "AndoGram va Andusta mustaqil modifikatsiyalar bo'lib, Telegram FZ-LLC yoki Meta Platforms Inc bilan aloqador emas.",
-      "en": "AndoGram and Andusta are independent client modifications not affiliated with Telegram FZ-LLC or Meta Platforms Inc."
-    },
-    "channel": {
-      "ru": "??????????? ????? ? Telegram",
-      "uz": "Telegramdagi rasmiy kanal",
-      "en": "Official Telegram Channel"
-    },
-    "bot": {
-      "ru": "??? ????????? ? ???????",
-      "uz": "Qo'llab-quvvatlash va to'lov boti",
-      "en": "Support & Stars Bot"
-    }
+    communityTitle: { ru: "Сообщество и поддержка", uz: "Hamjamiyat va yordam", en: "Community & Support" },
+    channelLink: { ru: "Официальный канал", uz: "Rasmiy kanal", en: "Official Channel" },
+    botLink: { ru: "Бот оплаты Stars", uz: "To'lov boti", en: "Stars Bot" }
   }
 };

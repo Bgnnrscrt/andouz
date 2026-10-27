@@ -85,7 +85,7 @@ export const Hero: React.FC<HeroProps> = ({ lang, onOpenDownload }) => {
             style={{ padding: '16px 24px', fontSize: '0.95rem' }}
           >
             <Star size={18} fill="#0c0802" />
-            <span>1000 ? Stars / ?????</span>
+            <span>{t.btnStars[lang]}</span>
           </button>
         </div>
 
@@ -112,7 +112,7 @@ export const Hero: React.FC<HeroProps> = ({ lang, onOpenDownload }) => {
             </div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 700, fontSize: '0.98rem' }}>{t.stat1[lang]}</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Android 8.0 ? 15+</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Android 8.0 — 15+</div>
             </div>
           </div>
 
@@ -131,7 +131,7 @@ export const Hero: React.FC<HeroProps> = ({ lang, onOpenDownload }) => {
             </div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 700, fontSize: '0.98rem' }}>{t.stat2[lang]}</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>100% ?????????</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>100% Безопасно</div>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export const Hero: React.FC<HeroProps> = ({ lang, onOpenDownload }) => {
             </div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 700, fontSize: '0.98rem' }}>{t.stat3[lang]}</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>?????????? ??????</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Локальные ключи</div>
             </div>
           </div>
 
@@ -169,7 +169,7 @@ export const Hero: React.FC<HeroProps> = ({ lang, onOpenDownload }) => {
             </div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 700, fontSize: '0.98rem' }}>{t.stat4[lang]}</div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>????????? 2026</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Поколение 2026</div>
             </div>
           </div>
         </div>

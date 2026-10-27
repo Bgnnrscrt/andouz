@@ -1,6 +1,6 @@
 import React from 'react';
 import { Language, AppInfo } from '../types';
-import { X, Download, CheckCircle2, Cpu, Calendar, Smartphone, Sparkles } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 interface AppDetailsModalProps {
   app: AppInfo | null;
@@ -16,6 +16,49 @@ export const AppDetailsModal: React.FC<AppDetailsModalProps> = ({
   onOpenDownload
 }) => {
   if (!app) return null;
+
+  const getHeaders = () => {
+    switch (lang) {
+      case 'uz':
+        return {
+          size: "APK hajmi",
+          compat: "Moslik",
+          arch: "Arxitektura",
+          root: "Root-huquqlari",
+          noRoot: "Talab qilinmaydi",
+          features: "Barcha imkoniyatlar",
+          changelog: "O'zgarishlar tarixi (Changelog)",
+          version: "Versiya",
+          download: `${app.name} yuklab olish`
+        };
+      case 'en':
+        return {
+          size: "APK Size",
+          compat: "Compatibility",
+          arch: "Architecture",
+          root: "Root Access",
+          noRoot: "Not Required",
+          features: "Full Capabilities",
+          changelog: "Version Changelog",
+          version: "Version",
+          download: `Download ${app.name}`
+        };
+      default:
+        return {
+          size: "Размер APK",
+          compat: "Совместимость",
+          arch: "Архитектура",
+          root: "Root-права",
+          noRoot: "Не требуются",
+          features: "Полные возможности",
+          changelog: "История изменений (Changelog)",
+          version: "Версия",
+          download: `Скачать ${app.name}`
+        };
+    }
+  };
+
+  const h = getHeaders();
 
   return (
     <div style={{
@@ -110,25 +153,25 @@ export const AppDetailsModal: React.FC<AppDetailsModalProps> = ({
           marginBottom: '32px'
         }}>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>?????? APK</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>{h.size}</div>
             <div style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>{app.size}</div>
           </div>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>?????????????</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>{h.compat}</div>
             <div style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>{app.minAndroid}</div>
           </div>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>???????????</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>{h.arch}</div>
             <div style={{ fontWeight: 700, fontSize: '1rem', color: '#fff' }}>ARM64-v8a</div>
           </div>
           <div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>Root-?????</div>
-            <div style={{ fontWeight: 700, fontSize: '1rem', color: '#00f59b' }}>?? ?????????</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase' }}>{h.root}</div>
+            <div style={{ fontWeight: 700, fontSize: '1rem', color: '#00f59b' }}>{h.noRoot}</div>
           </div>
         </div>
 
         {/* Detailed Features List */}
-        <h3 style={{ fontSize: '1.3rem', marginBottom: '16px' }}>???????? ???????????</h3>
+        <h3 style={{ fontSize: '1.3rem', marginBottom: '16px' }}>{h.features}</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}>
           {app.features.map((feat) => (
             <div
@@ -158,7 +201,7 @@ export const AppDetailsModal: React.FC<AppDetailsModalProps> = ({
         </div>
 
         {/* Changelog */}
-        <h3 style={{ fontSize: '1.3rem', marginBottom: '16px' }}>??????? ????????? (Changelog)</h3>
+        <h3 style={{ fontSize: '1.3rem', marginBottom: '16px' }}>{h.changelog}</h3>
         <div style={{ marginBottom: '36px' }}>
           {app.changelog.map((log) => (
             <div key={log.version} style={{
@@ -169,7 +212,7 @@ export const AppDetailsModal: React.FC<AppDetailsModalProps> = ({
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <span style={{ fontWeight: 800, fontSize: '1.05rem', color: app.color }}>
-                  ?????? {log.version}
+                  {h.version} {log.version}
                 </span>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>
                   {log.date}
@@ -204,7 +247,7 @@ export const AppDetailsModal: React.FC<AppDetailsModalProps> = ({
             }}
           >
             <Download size={20} />
-            <span>??????? {app.name}</span>
+            <span>{h.download}</span>
           </button>
         </div>
       </div>

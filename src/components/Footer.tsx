@@ -1,7 +1,7 @@
 import React from 'react';
 import { Language } from '../types';
 import { translations } from '../translations';
-import { Send, Star, ShieldCheck, Heart } from 'lucide-react';
+import { Send, Star } from 'lucide-react';
 
 interface FooterProps {
   lang: Language;
@@ -9,6 +9,40 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ lang }) => {
   const t = translations.footer;
+
+  const getColTitles = () => {
+    switch (lang) {
+      case 'uz':
+        return {
+          about: "Android uchun mustaqil ekotizim. Maxfiylik, erkinlik va platformalar cheklovlaridan to'liq ozod bo'lish.",
+          nav: "Navigatsiya",
+          comm: "Hamjamiyat & Bot",
+          rights: "Barcha huquqlar himoyalangan.",
+          guide: "O'rnatish qo'llanmasi",
+          compare: "Taqqoslash jadvali"
+        };
+      case 'en':
+        return {
+          about: "Autonomous app ecosystem for Android. True privacy, freedom, and liberation from corporate limits.",
+          nav: "Navigation",
+          comm: "Community & Bot",
+          rights: "All rights reserved.",
+          guide: "Installation Guide",
+          compare: "Comparison Matrix"
+        };
+      default:
+        return {
+          about: "Независимая экосистема приложений для Android. Приватность, свобода и освобождение от ограничений корпораций.",
+          nav: "Навигация",
+          comm: "Сообщество & Бот",
+          rights: "Все права защищены.",
+          guide: "Инструкция по установке",
+          compare: "Таблица сравнения"
+        };
+    }
+  };
+
+  const c = getColTitles();
 
   return (
     <footer style={{
@@ -44,45 +78,45 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               </span>
             </div>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '20px' }}>
-              ??????????? ???????? ?????????? ??? Android. ????????????, ??????????? ? ??????? ?? ????????????? ???????????.
+              {c.about}
             </p>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-              ? 2026 ANDO Ecosystem. {t.rights[lang]}
+              © 2026 ANDO Ecosystem. {c.rights}
             </div>
           </div>
 
           {/* Col 2: Fast Links */}
           <div>
             <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '16px', color: '#fff' }}>
-              ??????????
+              {c.nav}
             </div>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <li>
                 <a href="#apps" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.88rem', transition: 'color 0.2s' }}
                    onMouseEnter={(e) => (e.currentTarget.style.color = '#00b4d8')}
                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}>
-                  AndoGram (??? Telegram)
+                  AndoGram (Telegram Mod)
                 </a>
               </li>
               <li>
                 <a href="#apps" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.88rem', transition: 'color 0.2s' }}
                    onMouseEnter={(e) => (e.currentTarget.style.color = '#ff007f')}
                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}>
-                  Andusta (???? Instagram)
+                  Andusta (Instagram Mod)
                 </a>
               </li>
               <li>
                 <a href="#compare" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.88rem', transition: 'color 0.2s' }}
                    onMouseEnter={(e) => (e.currentTarget.style.color = '#00f59b')}
                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}>
-                  ??????? ?????????
+                  {c.compare}
                 </a>
               </li>
               <li>
                 <a href="#install" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.88rem', transition: 'color 0.2s' }}
                    onMouseEnter={(e) => (e.currentTarget.style.color = '#00f59b')}
                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}>
-                  ?????????? ?? ?????????
+                  {c.guide}
                 </a>
               </li>
             </ul>
@@ -91,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
           {/* Col 3: Community & Bot */}
           <div>
             <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '16px', color: '#fff' }}>
-              ?????????? & ???
+              {c.comm}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <a
@@ -102,7 +136,7 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
                 style={{ padding: '10px 18px', fontSize: '0.85rem' }}
               >
                 <Star size={16} color="#f59e0b" fill="#f59e0b" />
-                <span>??? ???????: @ando_stars_bot</span>
+                <span>Бот оплаты: @ando_stars_bot</span>
               </a>
 
               <a

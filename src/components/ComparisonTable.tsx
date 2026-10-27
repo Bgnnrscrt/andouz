@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Language } from '../types';
-import { translations } from '../translations';
 import { TELEGRAM_COMPARISON, INSTAGRAM_COMPARISON } from '../data';
 import { Check, X, Sparkles } from 'lucide-react';
 
@@ -9,21 +8,62 @@ interface ComparisonTableProps {
 }
 
 export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
-  const t = translations.comparison;
   const [activeTab, setActiveTab] = useState<'telegram' | 'instagram'>('telegram');
 
   const rows = activeTab === 'telegram' ? TELEGRAM_COMPARISON : INSTAGRAM_COMPARISON;
   const activeColor = activeTab === 'telegram' ? 'var(--accent-gram)' : 'var(--accent-usta)';
 
+  const getLabels = () => {
+    switch (lang) {
+      case 'uz':
+        return {
+          badge: "To'g'ridan-to'g'ri taqqoslash",
+          title: "Rasmiy Ilovalar Bilan Taqqoslash",
+          subtitle: "Nega ilg'or foydalanuvchilar cheklangan rasmiy ilovalar o'rniga ANDO ekotizimini tanlashadi",
+          tabGram: "Telegram vs AndoGram",
+          tabUsta: "Instagram vs Andusta",
+          thFeature: "Imkoniyat / Funksiya",
+          thOfficial: "Rasmiy Ilova",
+          thAndo: "ANDO Versiyasi"
+        };
+      case 'en':
+        return {
+          badge: "Direct Comparison",
+          title: "Comparison with Official Apps",
+          subtitle: "Why power users choose ANDO ecosystem over restricted official clients",
+          tabGram: "Telegram vs AndoGram",
+          tabUsta: "Instagram vs Andusta",
+          thFeature: "Feature / Capability",
+          thOfficial: "Official App",
+          thAndo: "ANDO Version"
+        };
+      default:
+        return {
+          badge: "Прямое сравнение",
+          title: "Сравнение с Официальными Клиентами",
+          subtitle: "Почему продвинутые пользователи выбирают экосистему ANDO вместо ограниченных стандартных приложений",
+          tabGram: "Telegram vs AndoGram",
+          tabUsta: "Instagram vs Andusta",
+          thFeature: "Возможность / Функция",
+          thOfficial: "Официальное приложение",
+          thAndo: "Версия ANDO"
+        };
+    }
+  };
+
+  const l = getLabels();
+
   return (
     <section id="compare" style={{ padding: '80px 0' }}>
       <div className="container">
-        <div className="section-header">
+        <div className="section-header" style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 48px' }}>
           <span className="badge-pill badge-ando" style={{ marginBottom: '12px' }}>
-            {t.title[lang]}
+            {l.badge}
           </span>
-          <h2>????????? ? ???????????</h2>
-          <p>{t.subtitle[lang]}</p>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', marginBottom: '16px', fontWeight: 800 }}>
+            {l.title}
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.6 }}>{l.subtitle}</p>
 
           <div style={{
             display: 'inline-flex',
@@ -47,7 +87,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
                 transition: 'all 0.2s'
               }}
             >
-              {t.tabGram[lang]}
+              {l.tabGram}
             </button>
             <button
               onClick={() => setActiveTab('instagram')}
@@ -63,7 +103,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
                 transition: 'all 0.2s'
               }}
             >
-              {t.tabUsta[lang]}
+              {l.tabUsta}
             </button>
           </div>
         </div>
@@ -82,15 +122,15 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <th style={{ padding: '20px', fontSize: '0.92rem', color: 'var(--text-dim)', width: '38%' }}>
-                  ??????????? / ???????
+                  {l.thFeature}
                 </th>
                 <th style={{ padding: '20px', fontSize: '0.92rem', color: 'var(--text-muted)', width: '28%' }}>
-                  {t.colOfficial[lang]}
+                  {l.thOfficial}
                 </th>
                 <th style={{ padding: '20px', fontSize: '0.98rem', fontWeight: 700, color: activeColor, width: '34%' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Sparkles size={16} />
-                    <span>{t.colAndo[lang]}</span>
+                    <span>{l.thAndo}</span>
                   </div>
                 </th>
               </tr>
