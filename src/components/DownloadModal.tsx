@@ -81,8 +81,8 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({
   };
 
   const downloadUrl = selectedApp === 'andogram'
-    ? 'https://github.com/Bgnnrscrt/andogram/releases/download/v10.9.2/Andogram-arm64-v8a-27102026.apk'
-    : 'https://github.com/Bgnnrscrt/andusta/releases/download/v1.0.0/Andusta-v1.apk';
+    ? 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andogram-arm64-v8a-27102026.apk'
+    : 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andusta-v1.0.0.apk';
 
   const getCopyText = () => {
     switch (lang) {
