@@ -3,7 +3,6 @@
 Официальный веб-портал экосистемы **ANDO** — независимых премиальных приложений нового поколения для Android.
 
 🌐 **Официальный сайт**: [https://ando.uz](https://ando.uz)  
-🚀 **Зеркало Vercel**: [https://andouz.vercel.app](https://andouz.vercel.app)
 
 ---
 
