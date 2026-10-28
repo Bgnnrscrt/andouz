@@ -348,18 +348,15 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
 ];
 
 /** Direct APK links per app (GitHub release assets). */
+/**
+ * Fallback APK links when the activation API does not return one. The real download URL now
+ * comes from the bot's `/api/redeem-coupon` response (see DownloadModal); these stay as a
+ * safety net and for the QR code.
+ */
 export const DOWNLOAD_URLS: Record<AppId, string> = {
   andogram: 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andogram-arm64-v8a-27102026.apk',
   andusta: 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andusta-v1.0.0.apk'
 };
 
-export const INITIAL_VALID_COUPONS = [
-  "ANDO-VIP-2026",
-  "ANDO-UZ-PRO",
-  "VIP-STARS-FREE",
-  "ANDOGRAM-SPECIAL",
-  "ANDUSTA-PROMO",
-  "UZBEKISTAN-2026",
-  "CYBER-ANDO-777",
-  "MASTER-KEY-ANDO"
-];
+// Coupons are now validated server-side by the ANDO bot API (api.ando.uz). The old hard-coded,
+// client-side list has been removed — it offered no real protection (it shipped in the bundle).

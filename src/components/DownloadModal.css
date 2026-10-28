@@ -253,9 +253,79 @@
   }
 }
 
+/* Download row (one button, or two for the All-Access bundle) */
+.dl-dl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The one installation code, tap to copy */
+.dl-code-box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: rgba(0, 245, 155, 0.06);
+  border: 1px solid rgba(0, 245, 155, 0.28);
+  text-align: left;
+}
+.dl-code-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--accent-ando);
+  margin-bottom: 10px;
+}
+.dl-code-value {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(10, 11, 16, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.dl-code-value:hover {
+  border-color: var(--accent-ando);
+  background: rgba(10, 11, 16, 0.8);
+}
+.dl-code-value code {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  word-break: break-all;
+}
+.dl-code-hint {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Inline spinner on the verify button */
+.dl-spin {
+  animation: dl-spin 0.8s linear infinite;
+}
+@keyframes dl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dl-price::before,
   .dl-price-sparkle {
     animation: none;
+  }
+  .dl-spin {
+    animation-duration: 1.6s;
   }
 }

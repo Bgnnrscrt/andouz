@@ -100,7 +100,7 @@ README.md, CHANGELOG.md документация для людей (RU): фич�
 src/main.tsx            вход (StrictMode)
 src/App.tsx             каркас: язык (state + localStorage), порядок секций, ленивые модалки, PAGE_TITLES, skip-link
 src/types.ts            Language, AppId, AppFeature, AppInfo, ComparisonRow
-src/data.ts             APPS_DATA, TELEGRAM_COMPARISON, INSTAGRAM_COMPARISON, DOWNLOAD_URLS, INITIAL_VALID_COUPONS
+src/data.ts             APPS_DATA, TELEGRAM_COMPARISON, INSTAGRAM_COMPARISON, DOWNLOAD_URLS (купоны теперь серверные)
 src/translations.ts     словарь translations.<секция>.<ключ>[lang]
 src/index.css           токены :root, база, глобальные классы (см. 10)
 src/lib/motion.ts       токены анимаций: EASE_OUT/EASE_IN_OUT/EASE_DRAWER, DURATION, SPRING, VIEWPORT, fadeUp/fade, staggerContainer
@@ -123,7 +123,7 @@ src/components/
   Roadmap.tsx/.css          #roadmap — 4 карточки + призыв «предложить идею»
   Footer.tsx/.css           футер
   BackToTop.tsx/.css        кнопка «наверх» с кольцом прогресса
-  DownloadModal.tsx/.css    модалка доступа (lazy): Stars / промокод → APK + QR
+  DownloadModal.tsx/.css    модалка доступа (lazy): Stars / промокод → API бота → APK + код установки + QR
   AppDetailsModal.tsx/.css  модалка «Все возможности» (lazy): спеки, фичи, changelog
   ui/Modal.tsx              оболочка диалога: портал, фокус-трап, Esc/клик по фону, блок скролла, возврат фокуса
   ui/SegmentedControl.tsx   доступные вкладки с «едущей» плашкой (variant bar|pills, size sm|md, idPrefix → aria)
@@ -163,7 +163,7 @@ src/components/
 | Версия, размер, описание, фичи, changelog приложения | `src/data.ts` → `APPS_DATA` |
 | Иконка фичи (`iconName`) | имя из `FEATURE_ICONS` в AppsShowcase.tsx; неизвестное имя превращается в Sparkles |
 | Ссылки на APK | `src/data.ts` → `DOWNLOAD_URLS` (⚠ 0.5) |
-| Промокоды | `src/data.ts` → `INITIAL_VALID_COUPONS` (⚠ 0.5, раздел 9) |
+| Проверка промокода, код установки | DownloadModal.tsx (`handleActivateCoupon` → `API_BASE/api/redeem-coupon`); адрес API — `VITE_ANDO_API` или `https://api.ando.uz` |
 | Строки сравнения | `src/data.ts` → `TELEGRAM_COMPARISON` / `INSTAGRAM_COMPARISON` |
 | Цена и тексты модалки доступа | `translations.modal` + DownloadModal.tsx `getLabels()` |
 | Ссылка на бота | DownloadModal.tsx (`?start=buy_<appId>`), Footer.tsx, Roadmap.tsx |
@@ -190,11 +190,11 @@ src/components/
 
 ## 9. Доступ, оплата, скачивание (DownloadModal)
 - Переключатели: приложение (AndoGram / Andusta) и способ доступа.
-  - **Stars**: ссылка `https://t.me/ando_stars_bot?start=buy_<appId>`, цена 1000 Telegram Stars, подпись «после оплаты бот пришлёт код».
-  - **Промокод**: ввод нормализуется (`trim` + верхний регистр) и сверяется с `INITIAL_VALID_COUPONS`.
-- При успехе пишутся localStorage `ando_app_unlocked='true'` и код в `ando_redeemed_coupons` (повтор того же кода выдаёт «уже активирован»), затем конфетти. После этого экран показывает кнопку скачивания (`DOWNLOAD_URLS[app]`), QR-код (`qrcode.react`, логотип в центре) и «скопировать ссылку». Разблокировка одна на оба приложения и бессрочная.
-- В dev-режиме (`import.meta.env.DEV`) под формой выводятся первые 3 промокода.
-- ⚠ **Вся проверка идёт на клиенте**: список кодов лежит в публичном репо и в бандле, признак доступа — флаг в localStorage, APK — публичные ассеты релиза. Реальной защиты доступа нет. Коды, которые выдаёт бот, работают, только если они есть в `INITIAL_VALID_COUPONS`. Настоящее решение требует серверной проверки (функция Vercel, одноразовые или подписанные ссылки). Делать его только по решению пользователя (0.5).
+  - **Stars**: ссылка `https://t.me/ando_stars_bot?start=buy_<appId>`, цена 1000 Telegram Stars, подпись «после оплаты бот пришлёт код установки».
+  - **Промокод**: ввод нормализуется (`trim` + верхний регистр) и отправляется на **реальный API бота** `POST ${API_BASE}/api/redeem-coupon` (`API_BASE` = `VITE_ANDO_API` или `https://api.ando.uz`). Сервер сжигает купон и возвращает `{ success, app, apk_url, activation_code }`. Статусы: успех → разблокировка; `already_used` → «уже активирован»; прочее → «неверный»; сеть/CORS недоступны → ошибка связи (все на 3 языках).
+- При успехе результат (`{app, apkUrl, code}`) пишется в localStorage `ando_activation` (переживает рефреш — чтобы не потерять одноразовый код), затем конфетти. Экран показывает: кнопку(и) скачивания APK (из `apk_url`, для `all` — обе), **карточку кода установки с копированием в один клик** (`.dl-code-*`), QR-код и «скопировать ссылку».
+- **Код установки** — это одноразовый код, который вводится в приложении при первом запуске (привязка к устройству, см. CLAUDE.md бота andouzbot). Сайт его только показывает; проверяет и привязывает его API бота `/api/activate`.
+- Проверка купона теперь **серверная** (бот + БД). Если API недоступен (бот не развёрнут / нет сети), купон не проверится — показывается ошибка связи, кнопка не разблокирует. Захардкоженного списка кодов на клиенте больше нет.
 
 ## 10. Дизайн-система и анимации
 **Токены** (`src/index.css` `:root`):
@@ -241,7 +241,7 @@ src/components/
 - `aria-current` в меню; декор помечен `aria-hidden`.
 
 ## 11. Известные проблемы и долги
-1. Платный доступ проверяется только на клиенте (раздел 9).
+1. Платный доступ теперь проверяется на сервере (API бота). Но APK-ссылки по-прежнему публичные (GitHub-релиз) — купон/код защищают запуск приложения, а не скачивание файла. API бота должен быть развёрнут на `api.ando.uz`, иначе промокод-вкладка не работает.
 2. Размер Andusta: в data.ts `82.4 MB`, а APK в релизе весит 387 707 487 Б ≈ 369.7 MiB. Сайт пишет MiB как «MB»: у AndoGram 101 211 974 Б = 96.5 MiB, совпадает.
 3. SEO-мета в index.html только на русском и не меняется при смене языка.
 4. Главный JS-чанк ~505 kB (gzip ~164 kB), Vite предупреждает о превышении 500 kB.
@@ -263,3 +263,4 @@ src/components/
 |---|---|---|
 | 2026-10-28 | Создан CLAUDE.md по полному разбору проекта (main `b672fc5`); build и lint чистые | CLAUDE.md |
 | 2026-10-28 | Домен: только https://ando.uz. canonical, og:url, og:image и twitter:image переведены на него, зеркало убрано из README, добавлено правило 0.6 | index.html, README.md, CLAUDE.md |
+| 2026-10-28 | Промокод-вкладка теперь ходит в API бота (`/api/redeem-coupon`): сервер сжигает купон и возвращает APK + одноразовый код установки; добавлена карточка кода с копированием в один клик; захардкоженный список `INITIAL_VALID_COUPONS` удалён (ветка `feat/license-activation`); build+lint чистые | DownloadModal.tsx/.css, data.ts, CLAUDE.md |
