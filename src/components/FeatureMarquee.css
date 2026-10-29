@@ -16,11 +16,11 @@
 .marquee-inner {
   display: flex;
   flex-shrink: 0;
-  animation: marquee 48s linear infinite;
+  animation: marquee 72s linear infinite; /* 9 chips; scale with the chip count to keep the reading speed */
 }
 .marquee-row--reverse .marquee-inner {
   animation-direction: reverse;
-  animation-duration: 56s;
+  animation-duration: 84s;
 }
 
 @keyframes marquee {

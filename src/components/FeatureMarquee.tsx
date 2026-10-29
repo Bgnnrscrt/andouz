@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, Lock, Ghost, Shield, Eye, Sparkles, Smartphone, FolderDown, Zap, Download } from 'lucide-react';
+import { Archive, Lock, Ghost, Shield, Eye, Sparkles, Smartphone, FolderDown, Zap, Download, Mic, MapPin, FileText, UserMinus, Music, History } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Language } from '../types';
 import './FeatureMarquee.css';
@@ -20,14 +20,20 @@ const ROW_A: Chip[] = [
   { Icon: Download, color: '#00b4d8', label: { ru: 'Обход No-Forwards', uz: 'Saqlash taqiqini chetlash', en: 'No-Forwards bypass' } },
   { Icon: FolderDown, color: '#00b4d8', label: { ru: 'Сортировка медиа по размеру', uz: 'Mediani hajm bo‘yicha saralash', en: 'Media size sorter' } },
   { Icon: Sparkles, color: '#00f59b', label: { ru: '3D AR-маски', uz: '3D AR-niqoblar', en: '3D AR masks' } },
+  { Icon: Mic, color: '#00b4d8', label: { ru: 'Смена голоса', uz: 'Ovozni o‘zgartirish', en: 'Voice changer' } },
+  { Icon: MapPin, color: '#00f59b', label: { ru: 'Подмена геопозиции', uz: 'Soxta geolokatsiya', en: 'Location spoofing' } },
+  { Icon: FileText, color: '#00b4d8', label: { ru: 'Заметки к контактам', uz: 'Kontakt eslatmalari', en: 'Contact notes' } },
   { Icon: Smartphone, color: '#00f59b', label: { ru: 'Без Root-прав', uz: 'Root talab qilinmaydi', en: 'No root required' } },
 ];
 
 const ROW_B: Chip[] = [
   { Icon: Ghost, color: '#ff007f', label: { ru: 'Ghost Mode', uz: 'Arvoh rejimi', en: 'Ghost Mode' } },
   { Icon: Shield, color: '#ff007f', label: { ru: 'Анти-удаление в Direct', uz: 'Directda o‘chirishga qarshi', en: 'Direct anti-unsend' } },
+  { Icon: Music, color: '#f59e0b', label: { ru: 'Своя музыка в Stories', uz: 'Stories uchun o‘z musiqangiz', en: 'Your music on Stories' } },
   { Icon: Eye, color: '#ff007f', label: { ru: 'Бесконечный View-Once', uz: 'Cheksiz View-Once', en: 'Unlimited view-once' } },
+  { Icon: History, color: '#ff007f', label: { ru: 'История правок в Direct', uz: 'Direct tahrir tarixi', en: 'Direct edit history' } },
   { Icon: Download, color: '#f59e0b', label: { ru: 'Загрузчик Reels и Stories', uz: 'Reels va Stories yuklovchi', en: 'Reels & Stories downloader' } },
+  { Icon: UserMinus, color: '#ff007f', label: { ru: 'Трекер отписок', uz: 'Obunadan chiqqanlar', en: 'Unfollowers tracker' } },
   { Icon: Zap, color: '#f59e0b', label: { ru: 'Без рекламы', uz: 'Reklamasiz', en: 'Zero ads' } },
   { Icon: Lock, color: '#00f59b', label: { ru: 'Данные остаются на телефоне', uz: 'Ma’lumotlar telefonda qoladi', en: 'Data stays on your phone' } },
 ];
