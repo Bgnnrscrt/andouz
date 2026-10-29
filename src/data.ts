@@ -27,19 +27,19 @@ export const APPS_DATA: AppInfo[] = [
     gradient: "linear-gradient(135deg, #00b4d8 0%, #0077b6 100%)",
     features: [
       {
-        id: "archive_bridge",
-        iconName: "Archive",
+        id: "honeypot",
+        iconName: "Lock",
         title: {
-          ru: "Личный Архив & Мост (A-B-C)",
-          uz: "Shaxsiy Arxiv & Ko'prik (A-B-C)",
-          en: "Personal Archive & Bridge (A-B-C)"
+          ru: "Honeypot-пароли (Принуждение)",
+          uz: "Honeypot parollari (Majburlash)",
+          en: "Duress Passcodes (Honeypot)"
         },
         description: {
-          ru: "Автоматическое дублирование всех личных диалогов в закрытый форум. Возможность отвечать собеседникам со второго телефона от имени основного аккаунта 24/7.",
-          uz: "Barcha shaxsiy yozishmalarni yopiq forumga avtomatik ko'chirish. Ikkinchi telefondan turib asosiy akkaunt nomidan 24/7 javob qaytarish imkoniyati.",
-          en: "Live mirroring of private chats to a secure forum topic. Reply to contacts from a secondary device as Account A through the background bridge 24/7."
+          ru: "Специальные аварийные пароли разблокировки. При вводе ложного пароля открывается пустой или фейковый профиль, а реальные секретные чаты и мосты бесследно скрываются.",
+          uz: "Maxsus xavfsizlik parollari. Soxta parol kiritilganda begona shaxsga faqat bo'sh profil ko'rsatiladi, haqiqiy yozishmalar esa butunlay yashiriladi.",
+          en: "Emergency duress passcodes. Unlocking with a fake pin displays safe dummy profile data while sensitive private chats and bridge topics remain completely hidden."
         },
-        tag: { ru: "Эксклюзив", uz: "Eksklyuziv", en: "Exclusive" }
+        tag: { ru: "Безопасность", uz: "Xavfsizlik", en: "Security" }
       },
       {
         id: "no_forwards_bypass",
@@ -57,33 +57,19 @@ export const APPS_DATA: AppInfo[] = [
         tag: { ru: "Без ограничений", uz: "Cheklovlarsiz", en: "Unrestricted" }
       },
       {
-        id: "honeypot",
-        iconName: "Lock",
+        id: "archive_bridge",
+        iconName: "Archive",
         title: {
-          ru: "Honeypot-пароли (Принуждение)",
-          uz: "Honeypot parollari (Majburlash)",
-          en: "Duress Passcodes (Honeypot)"
+          ru: "Личный Архив & Мост (A-B-C)",
+          uz: "Shaxsiy Arxiv & Ko'prik (A-B-C)",
+          en: "Personal Archive & Bridge (A-B-C)"
         },
         description: {
-          ru: "Специальные аварийные пароли разблокировки. При вводе ложного пароля открывается пустой или фейковый профиль, а реальные секретные чаты и мосты бесследно скрываются.",
-          uz: "Maxsus xavfsizlik parollari. Soxta parol kiritilganda begona shaxsga faqat bo'sh profil ko'rsatiladi, haqiqiy yozishmalar esa butunlay yashiriladi.",
-          en: "Emergency duress passcodes. Unlocking with a fake pin displays safe dummy profile data while sensitive private chats and bridge topics remain completely hidden."
+          ru: "Автоматическое дублирование всех личных диалогов в закрытый форум. Возможность отвечать собеседникам со второго телефона от имени основного аккаунта 24/7.",
+          uz: "Barcha shaxsiy yozishmalarni yopiq forumga avtomatik ko'chirish. Ikkinchi telefondan turib asosiy akkaunt nomidan 24/7 javob qaytarish imkoniyati.",
+          en: "Live mirroring of private chats to a secure forum topic. Reply to contacts from a secondary device as Account A through the background bridge 24/7."
         },
-        tag: { ru: "Безопасность", uz: "Xavfsizlik", en: "Security" }
-      },
-      {
-        id: "media_sort",
-        iconName: "FolderDown",
-        title: {
-          ru: "Сортировка медиа по размеру",
-          uz: "Mediani hajm bo'yicha saralash",
-          en: "Sort Media by File Size"
-        },
-        description: {
-          ru: "Мгновенное упорядочивание гигабайтов фото, видео и голосовых сообщений от самых увесистых к лёгким. Облачный сканер истории MTProto без ручного пролистывания.",
-          uz: "Gigabaytlab foto, video va ovozli xabarlarni kattasidan kichigiga qarab saralash. MTProto bulutli to'liq skaneri.",
-          en: "Instantly sort gigabytes of channel and chat media by actual file size. Integrated batch cloud indexer scans MTProto history seamlessly."
-        }
+        tag: { ru: "Эксклюзив", uz: "Eksklyuziv", en: "Exclusive" }
       },
       {
         id: "ar_masks",
@@ -98,6 +84,21 @@ export const APPS_DATA: AppInfo[] = [
           uz: "468 ta yuz nuqtasini real vaqtda kuzatuvchi MediaPipe AR-dvijogi: yorug'lik effektlari, soqolni yashirish va kinematografik filtrlar.",
           en: "MediaPipe 468-landmark facial engine with rigid 3D models, facial concealment, and real-time cinematic post-processing pipeline."
         }
+      },
+      {
+        id: "voice_changer",
+        iconName: "Mic",
+        title: {
+          ru: "Смена голоса в аудиосообщениях",
+          uz: "Ovozli xabarlarda ovozni o'zgartirish",
+          en: "Voice Changer for Voice Memos"
+        },
+        description: {
+          ru: "Профессиональный C++ вокодер прямо в записи голосовых: глубокий мужской бас, робот, аниме/женский голос, студийное эхо без искажения темпа речи.",
+          uz: "Ovozli xabarlarda real vaqtdagi professional C++ vokoder: chuqur erkak ovozi, robot, ayol ovozi, studiya effekti.",
+          en: "Studio-grade C++/WORLD vocoder in voice messages: deep bass, robot, high pitch, and studio clarity without tempo distortion."
+        },
+        tag: { ru: "Приватность", uz: "Maxfiylik", en: "Privacy" }
       }
     ],
     changelog: [
@@ -171,6 +172,36 @@ export const APPS_DATA: AppInfo[] = [
         tag: { ru: "Приватность", uz: "Maxfiylik", en: "Privacy" }
       },
       {
+        id: "unfollowers_tracker",
+        iconName: "UserMinus",
+        title: {
+          ru: "Детектор отписок (Кто отписался)",
+          uz: "Obunani bekor qilganlar (Kim ketdi)",
+          en: "On-Device Unfollowers Tracker"
+        },
+        description: {
+          ru: "100% безопасный локальный анализ подписчиков без передачи пароля сторонним сервисам. Бейдж взаимной подписки прямо в профиле человека.",
+          uz: "Parol bermasdan ishlaydigan xavfsiz tahlil: kim obunani bekor qilganini va o'zaro obuna holatini bevosita profilda ko'ring.",
+          en: "100% credential-free on-device follower analysis. Unmask who unfollowed you and see mutual follow badges directly in profiles."
+        },
+        tag: { ru: "Безопасность", uz: "Xavfsizlik", en: "Security" }
+      },
+      {
+        id: "music_unlocker",
+        iconName: "Music",
+        title: {
+          ru: "Своя музыка на видео & Снятие гео-блока",
+          uz: "Videoga o'z musiqangizni qo'yish & Cheklovni yechish",
+          en: "Custom Audio Muxer & Music Region Bypass"
+        },
+        description: {
+          ru: "Наложение любого MP3/M4A с телефона на Stories и Reels с заменой или микшированием звука, плюс разблокировка недоступной в регионе музыки.",
+          uz: "Telefondan istalgan MP3-ni Stories/Reels-ga qo'yish va 'Musiqa mintaqangizda mavjud emas' cheklovlarini butunlay olib tashlash.",
+          en: "Attach local MP3 audio files onto Stories and Reels with audio mixing, plus full bypass of regional music lockouts."
+        },
+        tag: { ru: "Свобода", uz: "Erkinlik", en: "Freedom" }
+      },
+      {
         id: "anti_unsend",
         iconName: "Shield",
         title: {
@@ -199,48 +230,6 @@ export const APPS_DATA: AppInfo[] = [
           en: "Replay expiring view-once photos and videos indefinitely, bypass screenshot blocks without notifying the sender, and save them straight to storage."
         },
         tag: { ru: "Свобода", uz: "Erkinlik", en: "Freedom" }
-      },
-      {
-        id: "downloader",
-        iconName: "Download",
-        title: {
-          ru: "Универсальный загрузчик медиа",
-          uz: "Barcha mediani to'liq yuklab oluvchi",
-          en: "Universal Media Downloader"
-        },
-        description: {
-          ru: "Скачивайте Reels, Stories, посты с каруселью, IGTV и аватарки в оригинальном качестве в 1 клик прямо в галерею телефона.",
-          uz: "Reels, Stories, postlar, karusel va profil rasmlarini bir marta bosish orqali asl sifatda to'g'ridan-to'g'ri galereyaga yuklab olish.",
-          en: "Download Reels, Stories, carousels, voice memos, and avatar photos in original master quality directly into your device gallery."
-        }
-      },
-      {
-        id: "fake_camera",
-        iconName: "Camera",
-        title: {
-          ru: "Подмена камеры (Fake Live Camera)",
-          uz: "Soxta kamera (Fake Live Camera)",
-          en: "Fake Live Camera"
-        },
-        description: {
-          ru: "Возможность легко отправить сохраненное фото из галереи как живой снимок, только что сделанный камерой в режиме реального времени.",
-          uz: "Galereyadagi istalgan rasmni huddi hozirgina kameradan olingan jonli rasm sifatida Directga yuborish imkoniyati.",
-          en: "Send pre-selected photos from your gallery pretending they were just captured live through the camera."
-        }
-      },
-      {
-        id: "ad_blocker",
-        iconName: "Zap",
-        title: {
-          ru: "Блокировка рекламы и промопостов",
-          uz: "Reklama va homiylik postlarini bloklash",
-          en: "Ad & Sponsored Blocker"
-        },
-        description: {
-          ru: "Полная очистка ленты и Stories от рекламных объявлений, спонсорских интеграций и навязчивых трекеров.",
-          uz: "Lenta va Stories ichidagi barcha reklama postlarini va ortiqcha trekerlarni butunlay olib tashlash.",
-          en: "Completely strips out feed ads, sponsored story interruptions, shopping tags, and background telemetry trackers."
-        }
       }
     ],
     changelog: [
@@ -311,6 +300,30 @@ export const TELEGRAM_COMPARISON: ComparisonRow[] = [
     official: { ru: "Отсутствует", uz: "Mavjud emas", en: "Not available" },
     ando: { ru: "Полное инкогнито чтения и набора", uz: "To'liq anonim o'qish va yozish", en: "Read & type without delivery receipts" },
     isWin: true
+  },
+  {
+    feature: { ru: "Смена голоса в голосовых сообщениях", uz: "Ovozli xabarlarda ovozni o'zgartirish", en: "Voice changer for voice messages" },
+    official: { ru: "Отсутствует", uz: "Mavjud emas", en: "Not available" },
+    ando: { ru: "C++ вокодер: бас, робот, высокий голос, студия", uz: "C++ vokoder: bas, robot, baland ovoz, studiya", en: "C++ vocoder: bass, robot, high pitch, studio" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Подмена геопозиции и Live Location", uz: "Geolokatsiya va Live Location soxtasi", en: "Location & Live Location spoofing" },
+    official: { ru: "Только реальный GPS", uz: "Faqat haqiqiy GPS", en: "Real GPS only" },
+    ando: { ru: "Любая точка и виртуальные маршруты без root", uz: "Istalgan nuqta va virtual marshrutlar, rootsiz", en: "Any point & simulated routes, no root" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Заметки к контактам", uz: "Kontaktlarga eslatmalar", en: "Contact notes" },
+    official: { ru: "Отсутствует", uz: "Mavjud emas", en: "Not available" },
+    ando: { ru: "Приватная заметка в шапке чата, только на устройстве", uz: "Chat sarlavhasida maxfiy eslatma, faqat qurilmada", en: "Private note in the chat header, on-device only" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Эргономика главного экрана", uz: "Asosiy ekran ergonomikasi", en: "Home screen ergonomics" },
+    official: { ru: "Базовый список чатов", uz: "Oddiy chatlar ro'yxati", en: "Basic chat list" },
+    ando: { ru: "Карусель историй, поиск-пилюля, иконки папок со счётчиками", uz: "Stories karuseli, qidiruv-tabletka, hisoblagichli jild ikonkalari", en: "Stories carousel, pill search, folder icons with counters" },
+    isWin: true
   }
 ];
 
@@ -343,6 +356,42 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
     feature: { ru: "Установка поверх официального клиента", uz: "Asli yoniga ikkinchi ilova sifatida", en: "Install alongside official app" },
     official: { ru: "Только замена оригинального", uz: "Faqat bittasi o'rnatiladi", en: "Replaces original only" },
     ando: { ru: "com.andusta.android — независимый клон", uz: "com.andusta.android mustaqil klon", en: "Autonomous parallel package com.andusta.android" },
+    isWin: true
+  },
+  {
+    feature: { ru: "История правок сообщений в Direct", uz: "Direct xabarlari tahrir tarixi", en: "Direct message edit history" },
+    official: { ru: "Только текущий текст", uz: "Faqat joriy matn", en: "Current text only" },
+    ando: { ru: "Вся история правок: Было / Стало", uz: "Barcha tahrirlar: Dastlab / O'zgartirildi", en: "Full edit history: before / after" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Своя музыка на Stories и Reels", uz: "Stories va Reels uchun o'z musiqangiz", en: "Your own music on Stories & Reels" },
+    official: { ru: "Ограничения по регионам", uz: "Mintaqaviy cheklovlar", en: "Region-locked tracks" },
+    ando: { ru: "Любой MP3 с телефона + снятие гео-блока", uz: "Telefondagi istalgan MP3 + geo-blokni yechish", en: "Any MP3 from your phone + region bypass" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Детектор отписок", uz: "Obunani bekor qilganlar", en: "Unfollowers tracker" },
+    official: { ru: "Нет / риск бана через сторонние сервисы", uz: "Yo'q / begona servislar orqali ban xavfi", en: "None / ban risk via third-party apps" },
+    ando: { ru: "100% безопасный локальный анализ без пароля", uz: "Parolsiz 100% xavfsiz lokal tahlil", en: "100% safe on-device analysis, no password" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Голосовой чейнджер в Direct", uz: "Directda ovozni o'zgartirish", en: "Voice changer in Direct" },
+    official: { ru: "Отсутствует", uz: "Mavjud emas", en: "Not available" },
+    ando: { ru: "Смена тембра + отправка MP3 как голосового", uz: "Tembrni o'zgartirish + MP3 ni ovozli xabar qilib yuborish", en: "Voice presets + send any MP3 as a voice note" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Эмодзи и шрифты", uz: "Emoji va shriftlar", en: "Emojis & fonts" },
+    official: { ru: "Системные Android", uz: "Tizimdagi Android", en: "Stock Android" },
+    ando: { ru: "Оригинальные Apple iOS Emoji + свои .ttf", uz: "Asl Apple iOS Emoji + o'z .ttf shriftlaringiz", en: "Authentic Apple iOS emojis + custom .ttf" },
+    isWin: true
+  },
+  {
+    feature: { ru: "Аватарки в Full HD", uz: "Full HD profil rasmlari", en: "Full HD avatars" },
+    official: { ru: "Сжатая превью 150×150", uz: "Siqilgan 150×150 eskiz", en: "Compressed 150×150 preview" },
+    ando: { ru: "Оригинал в полном разрешении с зумом", uz: "To'liq o'lchamdagi asl rasm, kattalashtirish bilan", en: "Full-resolution original with zoom" },
     isWin: true
   }
 ];

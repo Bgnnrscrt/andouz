@@ -1,7 +1,7 @@
 # CLAUDE.md — ANDO / andouz
 
 > **Читать первым.** Это главный и достаточный источник контекста по проекту. Новая сессия Claude, субагент или человек: прочитай файл целиком, и изучать весь репозиторий заново не понадобится.
-> Актуально на **2026-10-28**. Проверка свежести: `git log --oneline $(git log -1 --format=%h -- CLAUDE.md)..HEAD` выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
+> Актуально на **2026-10-29**. Проверка свежести: `git log --oneline $(git log -1 --format=%h -- CLAUDE.md)..HEAD` выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
 
 ---
 
@@ -154,7 +154,7 @@ src/components/
 - Меню хедера построено по `SECTION_IDS = ['apps','demo','compare','install','roadmap']`. Чтобы добавить пункт: id у секции, затем `SECTION_IDS`, затем `navLabel()` в Header.tsx. Полное меню показывается от 960px (`DESKTOP_QUERY`, синхронно с Header.css), ниже — бургер. Стекло хедера включается после 12px скролла.
 - Интро hero длится ~1.3 с. После 1.9 с смена языка не перезапускает интро, а делает только кроссфейд.
 - Демо листает сцены каждые 6.5 с, пока секция видна и пользователь не кликнул вкладку. На паузе: при скрытой вкладке браузера и при reduced-motion.
-- На карточке приложения видны первые 4 фичи (`features.slice(0, 4)`), в модалке — все фичи и changelog.
+- На карточке приложения видны первые 4 фичи (`features.slice(0, 4)`), в модалке — все фичи и changelog. Решение владельца (2026-10-29): у каждого приложения ровно **5 фич** (топ, а не все), порядок = приоритет. AndoGram: `honeypot`, `no_forwards_bypass`, `archive_bridge`, `ar_masks`, `voice_changer`. Andusta: `ghost_mode`, `unfollowers_tracker`, `music_unlocker`, `anti_unsend`, `view_once`. Широта функций — в таблицах сравнения и бегущей строке.
 - BackToTop появляется после прокрутки на 90% высоты экрана.
 
 ## 7. Где что менять
@@ -162,6 +162,7 @@ src/components/
 |---|---|
 | Версия, размер, описание, фичи, changelog приложения | `src/data.ts` → `APPS_DATA` |
 | Иконка фичи (`iconName`) | имя из `FEATURE_ICONS` в AppsShowcase.tsx; неизвестное имя превращается в Sparkles |
+| Откуда брать тексты фич | `ECOSYSTEM_FEATURES.md` в репозитории дирижёра `Bgnnrscrt/andouzcto`: полный список фич обоих приложений на ru/uz/en. На карточки идёт только топ-5 (раздел 6), остальное — в сравнение и бегущую строку |
 | Ссылки на APK | `src/data.ts` → `DOWNLOAD_URLS` (⚠ 0.5) |
 | Проверка промокода, код установки | DownloadModal.tsx (`handleActivateCoupon` → `API_BASE/api/redeem-coupon`); адрес API — `VITE_ANDO_API` или `https://api.ando.uz` |
 | Строки сравнения | `src/data.ts` → `TELEGRAM_COMPARISON` / `INSTAGRAM_COMPARISON` |
@@ -244,7 +245,7 @@ src/components/
 1. Платный доступ теперь проверяется на сервере (API бота). Но APK-ссылки по-прежнему публичные (GitHub-релиз) — купон/код защищают запуск приложения, а не скачивание файла. API бота должен быть развёрнут на `api.ando.uz`, иначе промокод-вкладка не работает.
 2. Размер Andusta: в data.ts `82.4 MB`, а APK в релизе весит 387 707 487 Б ≈ 369.7 MiB. Сайт пишет MiB как «MB»: у AndoGram 101 211 974 Б = 96.5 MiB, совпадает.
 3. SEO-мета в index.html только на русском и не меняется при смене языка.
-4. Главный JS-чанк ~505 kB (gzip ~164 kB), Vite предупреждает о превышении 500 kB.
+4. Главный JS-чанк ~511 kB (gzip ~166 kB), Vite предупреждает о превышении 500 kB.
 5. Мёртвые ключи в translations.ts (раздел 8). Неиспользуемый `public/logo.jpg` (644 КБ) попадает в `dist`.
 6. В спеках AppDetailsModal архитектура `ARM64-v8a` захардкожена для обоих приложений.
 7. «Сообщество» и «Предложить идею» ведут на бота оплаты: отдельного канала нет, хотя ключ `footer.channelLink` есть.
@@ -264,3 +265,4 @@ src/components/
 | 2026-10-28 | Создан CLAUDE.md по полному разбору проекта (main `b672fc5`); build и lint чистые | CLAUDE.md |
 | 2026-10-28 | Домен: только https://ando.uz. canonical, og:url, og:image и twitter:image переведены на него, зеркало убрано из README, добавлено правило 0.6 | index.html, README.md, CLAUDE.md |
 | 2026-10-28 | Промокод-вкладка теперь ходит в API бота (`/api/redeem-coupon`): сервер сжигает купон и возвращает APK + одноразовый код установки; добавлена карточка кода с копированием в один клик; захардкоженный список `INITIAL_VALID_COUPONS` удалён (ветка `feat/license-activation`); build+lint чистые | DownloadModal.tsx/.css, data.ts, CLAUDE.md |
+| 2026-10-29 | Фичи по `ECOSYSTEM_FEATURES.md` (andouzcto): топ-5 фич на приложение — AndoGram +`voice_changer`, `media_sort` снят с карточек; Andusta +`unfollowers_tracker` +`music_unlocker`, `downloader`/`fake_camera`/`ad_blocker` сняты с карточек. Сравнение: Telegram +4 строки (голос, гео/Live Location, заметки, главный экран), Instagram +6 (история правок, своя музыка, отписки, голос, iOS-эмодзи/шрифты, Full HD аватарки). Бегущая строка: +3 чипа в каждый ряд, длительности 72/84 с под 9 чипов. `FEATURE_ICONS` + Mic/Music/UserMinus. Версия Andusta 1.0.0 не менялась (решение владельца). build+lint чистые | data.ts, FeatureMarquee.tsx/.css, AppsShowcase.tsx, CLAUDE.md |

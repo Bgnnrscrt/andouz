@@ -1,7 +1,7 @@
 import React, { useId } from 'react';
 import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from 'motion/react';
 import type { MotionStyle, Variants } from 'motion/react';
-import { Archive, ArrowRight, Camera, Download, Eye, FolderDown, Ghost, Lock, Shield, Smartphone, Sparkles, Zap } from 'lucide-react';
+import { Archive, ArrowRight, Camera, Download, Eye, FolderDown, Ghost, Lock, Mic, Music, Shield, Smartphone, Sparkles, UserMinus, Zap } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Language, AppId, AppInfo } from '../types';
 import { APPS_DATA } from '../data';
@@ -56,7 +56,7 @@ const COPY: Record<Language, ShowcaseCopy> = {
 
 /* ---------- Shared pieces (also used by AppDetailsModal) ---------- */
 
-const FEATURE_ICONS: Record<string, LucideIcon> = { Archive, Camera, Download, Eye, FolderDown, Ghost, Lock, Shield, Sparkles, Zap };
+const FEATURE_ICONS: Record<string, LucideIcon> = { Archive, Camera, Download, Eye, FolderDown, Ghost, Lock, Mic, Music, Shield, Sparkles, UserMinus, Zap };
 
 /** Lucide icon for a feature's `iconName` in data.ts; unknown names fall back to Sparkles. */
 export const FeatureIcon: React.FC<{ name: string; size?: number }> = ({ name, size = 18 }) => {
