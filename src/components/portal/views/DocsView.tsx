@@ -27,7 +27,7 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
   const faqItems = lang === 'uz' ? [
     {
       q: "ANDO ilovalaridan foydalanish akkaunt uchun xavfsizsizmi? Bloklanish xavfi bormi?",
-      a: "AndoGram va Andusta rasmiy API va protokollarga to‘liq mos holda ishlaydi. Ular rasmiy mijozlar bilan bir xil MTProto va GraphQL so‘rovlarini yuboradi, shuning uchun Telegram yoki Instagram serverlari tomonidan bloklanish yoki cheklovlar xavfi mutlaqo yo‘q (Anti-ban 99.98%)."
+      a: "AndoGram va Andusta rasmiy API va protokollarga mos holda ishlaydi — rasmiy mijozlar bilan bir xil MTProto va GraphQL so‘rovlarini yuboradi, shuning uchun bloklanish xavfi sezilarli darajada kamayadi. Lekin hech bir norasmiy mijoz 100% kafolat bera olmaydi, shuning uchun ehtiyotkorlik bilan foydalaning."
     },
     {
       q: "Rasmiy Telegram yoki Instagram ilovalarini o‘chirib tashlash kerakmi?",
@@ -48,7 +48,7 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
   ] : lang === 'ru' ? [
     {
       q: "Безопасно ли использовать моды ANDO? Есть ли риск блокировки аккаунта?",
-      a: "AndoGram и Andusta отправляют абсолютно легитимные запросы через оригинальные протоколы MTProto и Meta GraphQL. Серверы распознают их как стандартные клиенты. За всё время работы не зафиксировано ни одной блокировки пользователей за использование наших сборок."
+      a: "AndoGram и Andusta работают через те же протоколы MTProto и Meta GraphQL, что и официальные клиенты, поэтому риск ограничений заметно ниже. Но ни один неофициальный клиент не может дать 100% гарантии — используйте осознанно."
     },
     {
       q: "Нужно ли удалять официальные приложения Telegram или Instagram?",
@@ -69,7 +69,7 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
   ] : [
     {
       q: "Is it safe to use ANDO mods? Can my account get banned?",
-      a: "AndoGram and Andusta interact strictly through authentic MTProto and GraphQL API protocols without altering server signatures. Accounts remain 100% safe from bans and restrictions."
+      a: "AndoGram and Andusta use the same MTProto and GraphQL protocols as the official clients, which significantly lowers the risk of restrictions. Still, no unofficial client can be guaranteed 100% ban-proof — use at your own discretion."
     },
     {
       q: "Do I need to uninstall the original Telegram or Instagram apps?",
@@ -119,11 +119,13 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
               <Lock size={20} />
             </div>
             <h3 className="ptl-security-title">
-              {lang === 'uz' ? 'Mahalliy shifrlash' : 'Локальное хранение'}
+              {lang === 'uz' ? 'Mahalliy shifrlash' : lang === 'en' ? 'Local Storage' : 'Локальное хранение'}
             </h3>
             <p className="ptl-security-desc">
               {lang === 'uz'
                 ? 'Sessiya kalitlari va shaxsiy ma’lumotlar faqat qurilmangizning xavfsiz xotirasida (KeyStore) saqlanadi va begona serverlarga uzatilmaydi.'
+                : lang === 'en'
+                ? 'Session keys and auth tokens are stored only in the device’s secure Android Keystore and never sent to third-party servers.'
                 : 'Ключи сессий и токены авторизации хранятся исключительно во внутреннем защищенном хранилище Android Keystore.'}
             </p>
           </div>
@@ -133,12 +135,14 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
               <HardDrive size={20} />
             </div>
             <h3 className="ptl-security-title">
-              {lang === 'uz' ? 'No-Root arxitekturasi' : 'Без вмешательства в ОС'}
+              {lang === 'uz' ? 'No-Root arxitekturasi' : lang === 'en' ? 'No-Root Architecture' : 'Без вмешательства в ОС'}
             </h3>
             <p className="ptl-security-desc">
               {lang === 'uz'
-                ? 'Ilovalar tizim fayllarini o‘zgartirmaydi, bu esa banking ilovalari (Click, Payme, Uzum) bilan 100% muammosiz ishlashini ta’minlaydi.'
-                : 'Не нарушает целостность системы и SafetyNet/Play Integrity: банковские клиенты и сервисы бесконтактной оплаты продолжают работать без сбоев.'}
+                ? 'Ilovalar tizim fayllarini o‘zgartirmaydi, shuning uchun banking ilovalari (Click, Payme, Uzum) odatda muammosiz ishlayveradi.'
+                : lang === 'en'
+                ? 'The apps don’t modify system files, so banking apps (Click, Payme, Uzum) and contactless payments generally keep working.'
+                : 'Не изменяет системные файлы, поэтому банковские приложения (Click, Payme, Uzum) и бесконтактная оплата, как правило, продолжают работать.'}
             </p>
           </div>
 
@@ -152,6 +156,8 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
             <p className="ptl-security-desc">
               {lang === 'uz'
                 ? 'Ilovalardan barcha tashqi reklama trekerlari, analitika skriptlari va ortiqcha foniy jarayonlar butunlay olib tashlangan.'
+                : lang === 'en'
+                ? 'All third-party ad trackers, analytics scripts and background processes are stripped from the apps.'
                 : 'Полная очистка от маркетинговой телеметрии Facebook/Meta, рекламных идентификаторов и сторонних трекеров.'}
             </p>
           </div>

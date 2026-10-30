@@ -127,26 +127,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <h3 className="ptl-prod-name">AndoGram</h3>
             <div className="ptl-prod-tagline">
-              {lang === 'uz' ? 'Telegram ustidan 100% nazorat' : 'Автономный клиент Telegram на базе AyuGram'}
+              {lang === 'uz' ? 'Telegram ustidan 100% nazorat' : lang === 'en' ? 'Autonomous Telegram client based on AyuGram' : 'Автономный клиент Telegram на базе AyuGram'}
             </div>
             <p className="ptl-prod-desc">
               {lang === 'uz'
                 ? 'Shaxsiy Arxiv ko‘prigi (A-B-C), No-Forwards cheklovini aylanib o‘tish, favqulodda PIN-kod (Honeypot) va og‘ir mediani saralash.'
+                : lang === 'en'
+                ? 'Two-way mirroring of your chats into a private forum 24/7, bypassing forward restrictions, hiding chats under duress.'
                 : 'Двустороннее дублирование диалогов в приватный форум 24/7, обход запрета на пересылку, скрытие чатов под принуждением.'}
             </p>
 
             <div className="ptl-prod-features-mini">
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Shaxsiy Arxiv Ko‘prigi (A-B-C)' : 'Личный Архив & Мост 24/7'}</span>
+                <span>{lang === 'uz' ? 'Shaxsiy Arxiv Ko‘prigi (A-B-C)' : lang === 'en' ? 'Personal Archive & Bridge (A-B-C)' : 'Личный Архив & Мост 24/7'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'No-Forwards va FLAG_SECURE cheklovini yechish' : 'Обход No-Forwards и FLAG_SECURE'}</span>
+                <span>{lang === 'uz' ? 'No-Forwards va FLAG_SECURE cheklovini yechish' : lang === 'en' ? 'Bypass No-Forwards and FLAG_SECURE' : 'Обход No-Forwards и FLAG_SECURE'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Honeypot: majburiy vaziyatlarda maxfiy chatlar' : 'Honeypot аварийный пин-код'}</span>
+                <span>{lang === 'uz' ? 'Honeypot: majburiy vaziyatlarda maxfiy chatlar' : lang === 'en' ? 'Honeypot: emergency PIN for hidden chats' : 'Honeypot аварийный пин-код'}</span>
               </div>
             </div>
 
@@ -156,7 +158,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 className="ptl-card-btn-view"
                 onClick={() => onNavigate('projects', 'andogram')}
               >
-                <span>{lang === 'uz' ? 'Batafsil ko‘rish' : 'Подробнее о фичах'}</span>
+                <span>{lang === 'uz' ? 'Batafsil ko‘rish' : lang === 'en' ? 'View features' : 'Подробнее о фичах'}</span>
                 <ArrowRight size={15} />
               </button>
 
@@ -186,26 +188,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <h3 className="ptl-prod-name">Andusta</h3>
             <div className="ptl-prod-tagline">
-              {lang === 'uz' ? 'Cheklovlarsiz va reklamasiz Instagram' : 'Автономный клон Instagram без Root-доступа'}
+              {lang === 'uz' ? 'Cheklovlarsiz va reklamasiz Instagram' : lang === 'en' ? 'Autonomous Instagram clone without Root' : 'Автономный клон Instagram без Root-доступа'}
             </div>
             <p className="ptl-prod-desc">
               {lang === 'uz'
                 ? 'Arvoh rejimi (Ghost Mode), o‘chirilgan xabarlarni saqlab qolish, o‘chuvchi fotosuratlarni cheksiz ko‘rish va Reels yuklash.'
+                : lang === 'en'
+                ? 'Ghost Mode, keeping deleted Direct messages, unlimited viewing of disappearing photos and Reels downloads.'
                 : 'Анонимный просмотр Stories и эфиров, сохранение удалённых сообщений в Direct, бесконечный просмотр View-Once фото/видео.'}
             </p>
 
             <div className="ptl-prod-features-mini">
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Ghost Mode: anonim Stories va efirlar' : 'Ghost Mode: анонимные Stories'}</span>
+                <span>{lang === 'uz' ? 'Ghost Mode: anonim Stories va efirlar' : lang === 'en' ? 'Ghost Mode: anonymous Stories & lives' : 'Ghost Mode: анонимные Stories'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Anti-Unsend: o‘chirilgan xabarlar saqlanadi' : 'Anti-Unsend: сохранение удалённых Direct'}</span>
+                <span>{lang === 'uz' ? 'Anti-Unsend: o‘chirilgan xabarlar saqlanadi' : lang === 'en' ? 'Anti-Unsend: keep deleted Direct messages' : 'Anti-Unsend: сохранение удалённых Direct'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? '1-klikda Reels va postlarni asl sifatda yuklash' : 'Скачивание Reels и Stories в 1 клик'}</span>
+                <span>{lang === 'uz' ? '1-klikda Reels va postlarni asl sifatda yuklash' : lang === 'en' ? 'Download Reels and Stories in 1 tap' : 'Скачивание Reels и Stories в 1 клик'}</span>
               </div>
             </div>
 
@@ -215,7 +219,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 className="ptl-card-btn-view"
                 onClick={() => onNavigate('projects', 'andusta')}
               >
-                <span>{lang === 'uz' ? 'Batafsil ko‘rish' : 'Подробнее о фичах'}</span>
+                <span>{lang === 'uz' ? 'Batafsil ko‘rish' : lang === 'en' ? 'View features' : 'Подробнее о фичах'}</span>
                 <ArrowRight size={15} />
               </button>
 

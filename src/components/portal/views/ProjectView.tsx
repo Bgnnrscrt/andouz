@@ -143,6 +143,8 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
           <p className="ptl-section-subtitle">
             {lang === 'uz'
               ? `${app.name} ilovasida mavjud bo‘lgan barcha imkoniyatlar va eksklyuziv sozlamalar`
+              : lang === 'en'
+              ? `All exclusive features and settings available in ${app.name}`
               : `Эксклюзивный функционал и настройки, доступные в ${app.name}`}
           </p>
         </div>

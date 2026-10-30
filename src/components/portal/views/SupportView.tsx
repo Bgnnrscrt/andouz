@@ -74,7 +74,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ lang }) => {
             style={{ background: 'linear-gradient(135deg, #00b4d8, #0077b6)' }}
           >
             <MessageSquare size={16} />
-            <span>{lang === 'uz' ? 'G‘oya yo‘llash' : 'Предложить фичу'}</span>
+            <span>{lang === 'uz' ? 'G‘oya yo‘llash' : lang === 'en' ? 'Suggest a feature' : 'Предложить фичу'}</span>
             <ExternalLink size={14} />
           </a>
         </div>

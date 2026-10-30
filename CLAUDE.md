@@ -51,7 +51,7 @@
 ---
 
 ## 1. Что это
-**ANDO** (ando.uz) — одностраничный лендинг (SPA без роутинга, без бэкенда) экосистемы Android-приложений владельца:
+**ANDO** (ando.uz) — веб-портал (SPA с хеш-навигацией по разделам, без бэкенда) экосистемы Android-приложений владельца:
 
 | Продукт | Суть | На сайте |
 |---|---|---|
@@ -59,7 +59,7 @@
 | **Andusta** | мод/клон Instagram, пакет `com.andusta.android`, ставится рядом с оригиналом | v1.0.0 |
 | AndoTube / AndoVPN | только карточки в Roadmap («в разработке 60%» / «в планах») | — |
 
-Задача сайта: показать фичи, сравнить с официальными клиентами, продать доступ (1000 Telegram Stars или промокод), выдать APK и QR-код. Языки: `ru` (по умолчанию), `uz` (латиница), `en`. Тема только тёмная, стиль «неон-киберпанк».
+Задача сайта: показать фичи, сравнить с официальными клиентами, продать доступ (1000 Telegram Stars или промокод), выдать APK и QR-код. Языки: `uz` (по умолчанию, латиница), `ru`, `en`. Тема только тёмная, стиль «неон-киберпанк».
 
 ## 2. Инфраструктура
 | | |
@@ -69,7 +69,7 @@
 | Хостинг | Vercel (`vercel.json`): `npm run build` → `dist`. На 2026-10-28 сайт отдаёт сборку текущего `main`, поэтому считай, что push в `main` = продакшн |
 | Домен | **https://ando.uz** — единственный рабочий адрес (0.6). Сертификат Let's Encrypt выпускает и продлевает Vercel. HSTS на 2 года. `http://` → 308 на https, `www` → 307 на ando.uz. DNS: aHOST.uz (по README). Зеркало `andouz.vercel.app` отдаёт тот же деплой, не используем |
 | APK | GitHub Release `v1.0.0` этого репо: `Andogram-arm64-v8a-27102026.apk` (101 211 974 Б), `Andusta-v1.0.0.apk` (387 707 487 Б). Обе ссылки отдают 200 |
-| Telegram | `@ando_stars_bot`: оплата Stars и кнопка «предложить идею». Бот живёт вне этого репо |
+| Telegram | `@Andouzbot`: оплата Stars (deep-link `?start=buy_<app>`), промокоды, поддержка. Бот вне этого репо (`/root/Apps/andouzbot`), API на `api.ando.uz`. Карточки «канал»/«чат» в Community пока тоже ведут на бота — отдельных канала/чата ещё нет |
 | vercel.json | SPA-rewrite: всё → `/index.html`. `/assets/*` кешируется на год (immutable). Заголовки: `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy` (camera/mic/geo off) |
 
 ## 3. Команды
@@ -86,7 +86,7 @@ npm run preview   # раздать dist/
 - `motion` (`motion/react`) — все JS-анимации. `lucide-react` v1 — иконки; брендовых иконок нет, поэтому GitHub в футере нарисован своим SVG. `qrcode.react` — QR-код. `canvas-confetti` грузится динамически при активации промокода.
 - **Стили — ванильный CSS**: глобальный `src/index.css` и отдельный `.css` у каждого компонента (импортируется в самом компоненте). Без Tailwind и CSS-модулей. У классов префикс компонента: `hdr-`, `hero-`, `marquee-`, `apps-`/`app-`, `demo-`/`phone-`, `cmp-`, `install-`, `rm-`, `footer-`, `to-top`, `dl-`, `adm-`.
 - Шрифты подключены в `index.html` через Google Fonts: Outfit (заголовки), Inter (текст), JetBrains Mono.
-- Нет: роутера, стейт-менеджера, контекстов, API, env-переменных, тестов, аналитики. Язык передаётся пропом `lang` из `App` во все секции.
+- Роутинг свой: по `window.location.hash` (`#/projects/andogram`, `#/docs`, …) в `PortalLayout`; библиотеки-роутера нет. Нет стейт-менеджера, контекстов, бэкенда, env-переменных, тестов, аналитики. Язык — проп `lang` из `App` во все разделы.
 - tsconfig.app: `noUnusedLocals`/`noUnusedParameters` выключены, `allowImportingTsExtensions` включён.
 
 ## 5. Карта файлов
@@ -98,15 +98,27 @@ public/                 favicon.svg · logo-96.webp (хедер, центр QR) 
                         site.webmanifest · logo.jpg (644 КБ, нигде не используется)
 README.md, CHANGELOG.md документация для людей (RU): фичи приложений, стек, история релизов
 src/main.tsx            вход (StrictMode)
-src/App.tsx             каркас: язык (state + localStorage), порядок секций, ленивые модалки, PAGE_TITLES, skip-link
+src/App.tsx             каркас: язык (state+localStorage, по умолчанию uz), рендерит PortalLayout, ленивые модалки, PAGE_TITLES, skip-link
 src/types.ts            Language, AppId, AppFeature, AppInfo, ComparisonRow
-src/data.ts             APPS_DATA, TELEGRAM_COMPARISON, INSTAGRAM_COMPARISON, DOWNLOAD_URLS (купоны теперь серверные)
-src/translations.ts     словарь translations.<секция>.<ключ>[lang]
+src/data.ts             APPS_DATA (расширен: tagline, minAndroid, updatedAt, features[].tag, changelog[].items), *_COMPARISON, DOWNLOAD_URLS
+src/translations.ts     словарь старых переиспользуемых секций translations.<секция>.<ключ>[lang]
+src/portalTypes.ts      PortalSection = 'home'|'projects'|'stats'|'docs'|'support'|'community'
+src/portalTranslations.ts  portalI18n[lang] — весь текст портала (сайдбар/топбар/разделы), 3 языка
 src/index.css           токены :root, база, глобальные классы (см. 10)
 src/lib/motion.ts       токены анимаций: EASE_OUT/EASE_IN_OUT/EASE_DRAWER, DURATION, SPRING, VIEWPORT, fadeUp/fade, staggerContainer
 src/hooks/useMediaQuery.ts  useMediaQuery, useCanHover (hover:hover + pointer:fine)
 src/hooks/useTilt.ts        3D-наклон за мышью (владеет transform элемента)
 src/components/
+  portal/                   КАРКАС ПОРТАЛА (рендерится из App):
+    PortalLayout.tsx        сайдбар+топбар+активный раздел; хеш-роутинг (#/projects/andogram…), back/forward, общий Footer+BackToTop
+    Sidebar.tsx             боковое меню (сворачивание, мобильный оверлей), подменю Проектов (AndoTube «в разработке», другие «в планах»)
+    Topbar.tsx              хлебные крошки + переключатель языка (бейдж статуса и кнопка «Скачать APK» убраны 30.10)
+    views/HomeView          баннер, 3 стата, FeatureMarquee, 2 карточки продуктов, PhoneMockup
+    views/ProjectView       вкладки AndoGram/Andusta: спеки, все фичи (из data.ts), ComparisonTable, changelog
+    views/DocsView          InstallGuide + карточка безопасности + FAQ (3 языка)
+    views/SupportView       карточки → @Andouzbot + статус-бар
+    views/CommunityView     канал/чат (заглушки на бота) + бот оплаты @Andouzbot + GitHub
+    views/StatsView         ⛔ ВЫКЛЮЧЕН (не смонтирован): цифры были выдуманы, вернуть на реальных данных API бота
   Header.tsx/.css           шапка: меню + scroll-spy, язык, CTA, бургер-панель <960px, полоса прогресса скролла
   header/useActiveSection.ts  SECTION_IDS + scroll-spy (pin при клике)
   Hero.tsx/.css             первый экран: STATS, тайминги интро T
@@ -133,29 +145,26 @@ src/components/
   fx/spotlight.ts           trackSpotlight — подсветка за курсором (--mx/--my)
 ```
 
-## 6. Страница (порядок в App.tsx)
-| # | Блок | id / якорь | Откуда текст |
-|---|---|---|---|
-| — | skip-link | → `#main` | App.tsx `SKIP_LINK` |
-| 1 | Header | — | `translations.nav` + Header.tsx `LABELS` |
-| 2 | Hero | aria `hero-title` | `translations.hero` + Hero.tsx (`STATS[].sub`, `LABELS`) |
-| 3 | FeatureMarquee | — | FeatureMarquee.tsx `ROW_A`/`ROW_B` |
-| 4 | AppsShowcase | `#apps`, `#app-andogram`, `#app-andusta` | data.ts `APPS_DATA` + AppsShowcase.tsx `COPY` |
-| 5 | PhoneMockup | `#demo` | `translations.mockup` + demo/copy.ts |
-| 6 | ComparisonTable | `#compare` | data.ts `*_COMPARISON` + ComparisonTable.tsx `getLabels()` |
-| 7 | InstallGuide | `#install` | `translations.install` + InstallGuide.tsx `getNotice()` |
-| 8 | Roadmap | `#roadmap` | `translations.roadmap` + Roadmap.tsx `getCards()` |
-| 9 | Footer | — | Footer.tsx `getColTitles()` + `translations.footer.disclaimer` |
-| 10 | BackToTop | — | BackToTop.tsx `LABEL` |
-| — | DownloadModal, AppDetailsModal | — | lazy-чанки, монтируются после первого открытия (`modalsRequested`) |
+**Сейчас НЕ смонтированы** (остались от старого лендинга, порталом не используются; удалять по согласованию): `Header`+`header/`, `Hero`+`hero/`, `Roadmap`, `AppDetailsModal` (его роль теперь у ProjectView) и `AppsShowcase` (нужен только AppDetailsModal). Порталом переиспользуются: `PhoneMockup`, `ComparisonTable`, `InstallGuide`, `FeatureMarquee`, `Footer`, `BackToTop`.
+
+## 6. Портал (разделы и навигация)
+Единый экран `PortalLayout`: слева `Sidebar`, сверху `Topbar`, в центре активный раздел, снизу общий `Footer` + `BackToTop`. Навигация — свой хеш-роутер; работает back/forward, при переходе скролл наверх.
+
+| Раздел | hash | Что внутри |
+|---|---|---|
+| Home | `#/` | баннер, 3 стата, `FeatureMarquee`, 2 карточки продуктов, интерактивное демо `PhoneMockup` |
+| Projects | `#/projects/andogram`·`/andusta` | вкладки приложений, спеки, все фичи (из `data.ts`), `ComparisonTable`, changelog |
+| Docs | `#/docs` | `InstallGuide`, карточка «Архитектура безопасности», FAQ |
+| Support | `#/support` | карточки → бот `@Andouzbot`, статус-бар |
+| Community | `#/community` | канал/чат (пока заглушки на бота), бот оплаты `@Andouzbot`, GitHub |
+| ~~Stats~~ | — | ВЫКЛЮЧЕН 30.10 (цифры были выдуманы; вернуть только на реальных данных API бота) |
 
 Поведение:
-- Все кнопки «Скачать», «Получить доступ» и «1000 Stars» открывают DownloadModal через `onOpenDownload(appId)` (по умолчанию `andogram`). «Изучить приложения» ведёт на `#apps`. «Все возможности» на карточке открывает AppDetailsModal, а её кнопка скачивания — DownloadModal для этого приложения.
-- Меню хедера построено по `SECTION_IDS = ['apps','demo','compare','install','roadmap']`. Чтобы добавить пункт: id у секции, затем `SECTION_IDS`, затем `navLabel()` в Header.tsx. Полное меню показывается от 960px (`DESKTOP_QUERY`, синхронно с Header.css), ниже — бургер. Стекло хедера включается после 12px скролла.
-- Интро hero длится ~1.3 с. После 1.9 с смена языка не перезапускает интро, а делает только кроссфейд.
-- Демо листает сцены каждые 6.5 с, пока секция видна и пользователь не кликнул вкладку. На паузе: при скрытой вкладке браузера и при reduced-motion.
-- На карточке приложения видны первые 4 фичи (`features.slice(0, 4)`), в модалке — все фичи и changelog. Решение владельца (2026-10-29): у каждого приложения ровно **5 фич** (топ, а не все), порядок = приоритет. AndoGram: `honeypot`, `no_forwards_bypass`, `archive_bridge`, `ar_masks`, `voice_changer`. Andusta: `ghost_mode`, `unfollowers_tracker`, `music_unlocker`, `anti_unsend`, `view_once`. Широта функций — в таблицах сравнения и бегущей строке.
-- BackToTop появляется после прокрутки на 90% высоты экрана.
+- Весь текст портала — в `portalTranslations.ts` (3 языка); часть ручного текста во вью — инлайн тернаром на 3 языка (§8).
+- Все кнопки «Скачать»/«Получить доступ»/«1000 Stars» открывают `DownloadModal` (`onOpenDownload(appId)`, по умолчанию `andogram`). Оплата Stars ведёт на `@Andouzbot` (`?start=buy_<app>`).
+- Решение владельца: у каждого приложения ровно **5 фич** (топ, порядок = приоритет). AndoGram: `honeypot`, `no_forwards_bypass`, `archive_bridge`, `ar_masks`, `voice_changer`. Andusta: `ghost_mode`, `unfollowers_tracker`, `music_unlocker`, `anti_unsend`, `view_once`. На карточках Home — превью, в ProjectView — все (из `data.ts`). Широта — в сравнении и бегущей строке.
+- Подменю «Проекты» декоративно показывает будущее: **AndoTube — в разработке**, другие — в планах.
+- `PhoneMockup` листает сцены сам; пауза вне экрана и при reduced-motion.
 
 ## 7. Где что менять
 | Что | Где |
@@ -180,11 +189,12 @@ src/components/
 - `DOWNLOAD_URLS` и ассет релиза.
 
 ## 8. i18n
-- `Language = 'ru' | 'uz' | 'en'`. Выбор хранится в localStorage `ando_lang`, по умолчанию `ru`. App выставляет `<html lang>` и `document.title`.
-- Тексты лежат в трёх местах:
-  1. `translations.ts`: `translations.<секция>.<ключ>[lang]`;
-  2. локальные словари в компонентах: `COPY`, `LABELS`, `getLabels()`, `switch (lang)`;
-  3. `data.ts` и `demo/copy.ts`: поля `Record<Language, string>`.
+- `Language = 'ru' | 'uz' | 'en'`. Выбор хранится в localStorage `ando_lang`, по умолчанию `uz`. App выставляет `<html lang>` и `document.title`.
+- Тексты лежат в нескольких местах:
+  1. `portalTranslations.ts`: `portalI18n[lang].<раздел>.<ключ>` — весь текст портала (сайдбар, топбар, разделы);
+  2. `translations.ts`: `translations.<секция>.<ключ>[lang]` — для переиспользованных старых секций (демо, сравнение, установка);
+  3. локальные словари/тернары в компонентах: вью портала местами держат текст инлайн тернаром `lang === 'uz' ? … : lang === 'en' ? … : …` (все 3 языка; `en` не забывать — раньше падал в русский);
+  4. `data.ts` и `demo/copy.ts`: поля `Record<Language, string>`.
   Новый текст клади рядом с соседними, в том же стиле.
 - **Каждый видимый текст и aria-label пишется сразу на трёх языках.** Узбекский — латиница; в нём встречается и `'`, и `‘` (o‘, g‘).
 - Мёртвые ключи `translations.ts`, не используются нигде: вся секция `apps`, вся секция `compare`, `install.playProtectNotice`, `footer.copyright`, `footer.communityTitle`, `footer.channelLink`, `footer.botLink`. Прежде чем править текст, найди по разделу 6, какой источник реально выводится.
@@ -244,11 +254,12 @@ src/components/
 ## 11. Известные проблемы и долги
 1. Платный доступ теперь проверяется на сервере (API бота). Но APK-ссылки по-прежнему публичные (GitHub-релиз) — купон/код защищают запуск приложения, а не скачивание файла. API бота должен быть развёрнут на `api.ando.uz`, иначе промокод-вкладка не работает.
 2. Размер Andusta: в data.ts `82.4 MB`, а APK в релизе весит 387 707 487 Б ≈ 369.7 MiB. Сайт пишет MiB как «MB»: у AndoGram 101 211 974 Б = 96.5 MiB, совпадает.
-3. SEO-мета в index.html только на русском и не меняется при смене языка.
-4. Главный JS-чанк ~511 kB (gzip ~166 kB), Vite предупреждает о превышении 500 kB.
+3. SEO-мета в index.html только на русском, не меняется при смене языка и описывает старый лендинг (не портал).
+4. Главный JS-чанк ~536 kB (gzip ~172 kB), один бандл; Vite предупреждает о >500 kB. Code-split по вью не делали (скоро большой редизайн).
 5. Мёртвые ключи в translations.ts (раздел 8). Неиспользуемый `public/logo.jpg` (644 КБ) попадает в `dist`.
 6. В спеках AppDetailsModal архитектура `ARM64-v8a` захардкожена для обоих приложений.
-7. «Сообщество» и «Предложить идею» ведут на бота оплаты: отдельного канала нет, хотя ключ `footer.channelLink` есть.
+7. Community (канал/чат) и Support ведут на бота `@Andouzbot`: отдельных Telegram-канала/чата/Instagram пока нет — ждём реальные ссылки владельца.
+8. Stats-раздел выключен 30.10 (были выдуманные метрики). Вернуть только на реальных данных (API бота `api.ando.uz` / статистика andouzbot), иначе не возвращать.
 
 ## 12. Журнал
 История до CLAUDE.md (2026-10-27, `d14fdff`…`b672fc5`):
@@ -267,3 +278,4 @@ src/components/
 | 2026-10-28 | Промокод-вкладка теперь ходит в API бота (`/api/redeem-coupon`): сервер сжигает купон и возвращает APK + одноразовый код установки; добавлена карточка кода с копированием в один клик; захардкоженный список `INITIAL_VALID_COUPONS` удалён (ветка `feat/license-activation`); build+lint чистые | DownloadModal.tsx/.css, data.ts, CLAUDE.md |
 | 2026-10-29 | Фичи по `ECOSYSTEM_FEATURES.md` (andouzcto): топ-5 фич на приложение — AndoGram +`voice_changer`, `media_sort` снят с карточек; Andusta +`unfollowers_tracker` +`music_unlocker`, `downloader`/`fake_camera`/`ad_blocker` сняты с карточек. Сравнение: Telegram +4 строки (голос, гео/Live Location, заметки, главный экран), Instagram +6 (история правок, своя музыка, отписки, голос, iOS-эмодзи/шрифты, Full HD аватарки). Бегущая строка: +3 чипа в каждый ряд, длительности 72/84 с под 9 чипов. `FEATURE_ICONS` + Mic/Music/UserMinus. Версия Andusta 1.0.0 не менялась (решение владельца). build+lint чистые | data.ts, FeatureMarquee.tsx/.css, AppsShowcase.tsx, CLAUDE.md |
 | 2026-10-30 | Трансформация в веб-портал с боковым меню (сайдбар), разделами (Главная, Проекты [AndoGram, Andusta], Статистика, Документы, Поддержка, В сети), адаптивной локализацией на узбекский язык (без БД/Clerk); build+lint чистые | src/App.tsx, src/components/portal/*, src/portalTranslations.ts, src/portalTypes.ts, CLAUDE.md |
+| 2026-10-30 | Правки портала (ветка `feat/portal-fixes`): Stats скрыт (цифры были выдуманы); смягчены абсолютные обещания («100% анти-бан», «99.98%», «банки работают 100%») в Home/Docs; английский в ручном тексте вью доведён до 3 языков (Home/Project/Docs/Support — EN раньше падал в русский); бот оплаты `@ando_stars_bot`→`@Andouzbot` (DownloadModal, Footer, карточка оплаты в Community; канал/чат/Support оставлены до реальных ссылок); подменю «Проекты» → AndoTube «в разработке» + другие «в планах»; из топбара убраны «Экосистема онлайн» и «Скачать APK»; футер: мёртвые якоря `#apps/#compare/#install` → хеш-разделы портала (`#/projects/*`, `#/docs`). §1/§2/§4/§5/§6/§8/§11 синхронизированы. build+lint чистые | portalTranslations.ts, portal/{PortalLayout,Sidebar,Topbar}, portal/views/*, DownloadModal.tsx, Footer.tsx, CLAUDE.md |

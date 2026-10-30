@@ -391,7 +391,7 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
                   </div>
 
                   <a
-                    href={`https://t.me/ando_stars_bot?start=buy_${selectedApp}`}
+                    href={`https://t.me/andouzbot?start=buy_${selectedApp}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-stars btn-shine dl-wide"

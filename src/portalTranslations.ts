@@ -10,7 +10,9 @@ export interface PortalTranslations {
     projects: string;
     andogram: string;
     andusta: string;
-    inDev: string;
+    inDevelopment: string;
+    planned: string;
+    others: string;
     stats: string;
     docs: string;
     support: string;
@@ -129,7 +131,9 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       projects: 'Проекты',
       andogram: 'AndoGram',
       andusta: 'Andusta',
-      inDev: 'В планах',
+      inDevelopment: 'В разработке',
+      planned: 'В планах',
+      others: 'Другие',
       stats: 'Статистика',
       docs: 'Документы',
       support: 'Техподдержка',
@@ -153,8 +157,8 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       btnDownload: 'Скачать приложения',
       statMods: '2 Флагмана',
       statModsDesc: 'AndoGram и Andusta',
-      statSafe: '100% Анти-бан',
-      statSafeDesc: 'Полная совместимость с MTProto и Meta',
+      statSafe: 'Защита от бана',
+      statSafeDesc: 'Совместимость с протоколами MTProto и Meta',
       statPrivacy: 'Zero-Telemetry',
       statPrivacyDesc: 'Данные остаются только в твоём телефоне',
       flagshipHeading: 'Продукты экосистемы',
@@ -231,7 +235,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       chatDesc: 'Обсуждение модов, помощь новичкам, обмен опытом и общение с единомышленниками.',
       githubTitle: 'Открытый репозиторий портала',
       githubDesc: 'Исходный код официального веб-портала ando.uz на GitHub.',
-      starsBotTitle: 'Бот доступа и оплаты (@ando_stars_bot)',
+      starsBotTitle: 'Бот доступа и оплаты (@Andouzbot)',
       starsBotDesc: 'Получение мгновенного доступа к закрытым сборкам за Telegram Stars.',
       joinBtn: 'Перейти'
     }
@@ -246,7 +250,9 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       projects: 'Loyihalar',
       andogram: 'AndoGram',
       andusta: 'Andusta',
-      inDev: 'Rejadagi ilovalar',
+      inDevelopment: 'Ishlanmoqda',
+      planned: 'Rejada',
+      others: 'Boshqalar',
       stats: 'Statistika',
       docs: "Qo'llanmalar",
       support: 'Texnik yordam',
@@ -270,8 +276,8 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       btnDownload: 'APK fayllarni olish',
       statMods: '2 ta Flagman',
       statModsDesc: 'AndoGram va Andusta ilovalari',
-      statSafe: '100% Xavfsiz',
-      statSafeDesc: 'Bloklanishlardan to‘liq himoyalangan',
+      statSafe: 'Bloklanishdan himoya',
+      statSafeDesc: 'MTProto va Meta protokollari bilan moslik',
       statPrivacy: 'Maxfiylik kafolati',
       statPrivacyDesc: 'Barcha ma’lumotlar faqat o‘z telefoningizda qoladi',
       flagshipHeading: 'Ekotizim loyihalari',
@@ -348,7 +354,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       chatDesc: 'Fikr almashish, yangi kelganlarga yordam va savol-javoblar.',
       githubTitle: 'Portal ochiq kodli repozitoriysi',
       githubDesc: 'ando.uz rasmiy veb-portalining GitHubdagi ochiq kodi.',
-      starsBotTitle: 'To‘lov va ruxsat boti (@ando_stars_bot)',
+      starsBotTitle: 'To‘lov va ruxsat boti (@Andouzbot)',
       starsBotDesc: 'Telegram Stars orqali tezkor litsenziya olish imkoniyati.',
       joinBtn: 'Kirish'
     }
@@ -363,7 +369,9 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       projects: 'Projects',
       andogram: 'AndoGram',
       andusta: 'Andusta',
-      inDev: 'Upcoming Apps',
+      inDevelopment: 'In Development',
+      planned: 'Planned',
+      others: 'Others',
       stats: 'Analytics',
       docs: 'Docs & Guides',
       support: 'Support',
@@ -387,8 +395,8 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       btnDownload: 'Get APK Files',
       statMods: '2 Flagship Apps',
       statModsDesc: 'AndoGram and Andusta',
-      statSafe: '100% Anti-Ban Safe',
-      statSafeDesc: 'Fully compliant with MTProto and Meta protocols',
+      statSafe: 'Anti-Ban Protection',
+      statSafeDesc: 'Compatible with MTProto and Meta protocols',
       statPrivacy: 'Zero-Telemetry',
       statPrivacyDesc: 'Your private data never leaves your device',
       flagshipHeading: 'Ecosystem Products',
@@ -465,7 +473,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       chatDesc: 'Connect with fellow power users, share tips and ask questions.',
       githubTitle: 'Open Source Web Portal',
       githubDesc: 'Source code for the ando.uz ecosystem portal on GitHub.',
-      starsBotTitle: 'Access & Licensing Bot (@ando_stars_bot)',
+      starsBotTitle: 'Access & Licensing Bot (@Andouzbot)',
       starsBotDesc: 'Instant license unlocks via Telegram Stars.',
       joinBtn: 'Open'
     }

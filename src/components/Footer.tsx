@@ -77,10 +77,10 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
           <StaggerItem>
             <div className="footer-title">{c.nav}</div>
             <ul className="footer-links">
-              <li><a href="#apps" className="footer-link" style={{ '--link-color': '#00b4d8' } as React.CSSProperties}>AndoGram (Telegram Mod)</a></li>
-              <li><a href="#apps" className="footer-link" style={{ '--link-color': '#ff007f' } as React.CSSProperties}>Andusta (Instagram Mod)</a></li>
-              <li><a href="#compare" className="footer-link">{c.compare}</a></li>
-              <li><a href="#install" className="footer-link">{c.guide}</a></li>
+              <li><a href="#/projects/andogram" className="footer-link" style={{ '--link-color': '#00b4d8' } as React.CSSProperties}>AndoGram (Telegram Mod)</a></li>
+              <li><a href="#/projects/andusta" className="footer-link" style={{ '--link-color': '#ff007f' } as React.CSSProperties}>Andusta (Instagram Mod)</a></li>
+              <li><a href="#/projects/andogram" className="footer-link">{c.compare}</a></li>
+              <li><a href="#/docs" className="footer-link">{c.guide}</a></li>
             </ul>
           </StaggerItem>
 
@@ -89,13 +89,13 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
             <div className="footer-title">{c.comm}</div>
             <div className="footer-actions">
               <a
-                href="https://t.me/ando_stars_bot"
+                href="https://t.me/andouzbot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline footer-btn"
               >
                 <Star size={16} color="#f59e0b" fill="#f59e0b" />
-                <span>{c.bot}: @ando_stars_bot</span>
+                <span>{c.bot}: @Andouzbot</span>
               </a>
 
               <a

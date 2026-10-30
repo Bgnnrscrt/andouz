@@ -64,13 +64,13 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ lang }) => {
           </div>
 
           <a
-            href="https://t.me/ando_stars_bot"
+            href="https://t.me/andouzbot"
             target="_blank"
             rel="noopener noreferrer"
             className="ptl-community-btn"
             style={{ color: '#f59e0b', borderColor: 'rgba(245,158,11,0.3)' }}
           >
-            <span>@ando_stars_bot</span>
+            <span>@Andouzbot</span>
             <ExternalLink size={14} />
           </a>
         </div>

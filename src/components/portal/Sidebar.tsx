@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import {
   Home,
   Layers,
-  BarChart3,
   FileText,
   Headphones,
   Globe,
   ChevronRight,
   PanelLeftClose,
-  PanelLeftOpen,
-  Sparkles
+  PanelLeftOpen
 } from 'lucide-react';
 import { Language, AppId } from '../../types';
 import { PortalSection } from '../../portalTypes';
@@ -153,34 +151,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <span className="ptl-badge-pill" style={{ fontSize: '0.6rem', padding: '1px 5px', color: '#ff007f', borderColor: 'rgba(255,0,127,0.3)', background: 'rgba(255,0,127,0.1)' }}>v1.0</span>
                   </button>
 
-                  <button
-                    type="button"
-                    className="ptl-sub-item"
-                    style={{ opacity: 0.6 }}
-                    onClick={() => handleItemClick('home')}
-                  >
+                  <div className="ptl-sub-item" style={{ opacity: 0.7, cursor: 'default' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span className="ptl-sub-dot" style={{ background: '#f59e0b' }} />
-                      <span>{t.inDev}</span>
+                      <span>AndoTube</span>
                     </div>
-                    <Sparkles size={12} color="#f59e0b" />
-                  </button>
+                    <span className="ptl-badge-pill" style={{ fontSize: '0.6rem', padding: '1px 5px', color: '#f59e0b', borderColor: 'rgba(245,158,11,0.3)', background: 'rgba(245,158,11,0.1)' }}>{t.inDevelopment}</span>
+                  </div>
+
+                  <div className="ptl-sub-item" style={{ opacity: 0.5, cursor: 'default' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span className="ptl-sub-dot" />
+                      <span>{t.others}</span>
+                    </div>
+                    <span className="ptl-badge-pill" style={{ fontSize: '0.6rem', padding: '1px 5px' }}>{t.planned}</span>
+                  </div>
                 </div>
               )}
             </div>
-
-            {/* Stats */}
-            <button
-              type="button"
-              className={`ptl-nav-item ${activeSection === 'stats' ? 'active' : ''}`}
-              onClick={() => handleItemClick('stats')}
-              title={t.stats}
-            >
-              <span className="ptl-nav-icon">
-                <BarChart3 size={19} />
-              </span>
-              <span className="ptl-nav-text">{t.stats}</span>
-            </button>
           </div>
 
           {/* Group 2: Help & Resources */}

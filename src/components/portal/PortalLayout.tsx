@@ -5,7 +5,6 @@ import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { HomeView } from './views/HomeView';
 import { ProjectView } from './views/ProjectView';
-import { StatsView } from './views/StatsView';
 import { DocsView } from './views/DocsView';
 import { SupportView } from './views/SupportView';
 import { CommunityView } from './views/CommunityView';
@@ -32,9 +31,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
     }
     if (hash.startsWith('projects')) {
       return { section: 'projects', project: 'andogram' };
-    }
-    if (hash.startsWith('stats')) {
-      return { section: 'stats' };
     }
     if (hash.startsWith('docs')) {
       return { section: 'docs' };
@@ -120,7 +116,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           activeSection={activeSection}
           activeProject={activeProject}
           onToggleSidebar={toggleMobileSidebar}
-          onOpenDownload={() => onOpenDownload(activeProject || 'andogram')}
         />
 
         <main className="ptl-content-container">
@@ -141,8 +136,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
               onSelectApp={(appId) => handleNavigate('projects', appId)}
             />
           )}
-
-          {activeSection === 'stats' && <StatsView lang={lang} />}
 
           {activeSection === 'docs' && <DocsView lang={lang} />}
 

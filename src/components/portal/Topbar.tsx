@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Download } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Language, AppId } from '../../types';
 import { PortalSection } from '../../portalTypes';
 import { portalI18n } from '../../portalTranslations';
@@ -11,7 +11,6 @@ interface TopbarProps {
   activeSection: PortalSection;
   activeProject?: AppId;
   onToggleSidebar: () => void;
-  onOpenDownload: () => void;
 }
 
 const LANGUAGES: Language[] = ['uz', 'ru', 'en'];
@@ -22,7 +21,6 @@ export const Topbar: React.FC<TopbarProps> = ({
   activeSection,
   activeProject,
   onToggleSidebar,
-  onOpenDownload,
 }) => {
   const t = portalI18n[lang];
 
@@ -62,11 +60,6 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {/* Right: Status, Languages, Quick CTA */}
       <div className="ptl-topbar-right">
-        <div className="ptl-system-badge">
-          <span className="ptl-pulse-dot" />
-          <span>{t.topbar.systemStatus}</span>
-        </div>
-
         {/* Language switch */}
         <div className="ptl-lang-switcher" role="group" aria-label="Choose language">
           {LANGUAGES.map((l) => (
@@ -81,15 +74,6 @@ export const Topbar: React.FC<TopbarProps> = ({
           ))}
         </div>
 
-        {/* Download APK CTA */}
-        <button
-          type="button"
-          className="ptl-quick-download-btn"
-          onClick={onOpenDownload}
-        >
-          <Download size={16} />
-          <span>{t.topbar.downloadBtn}</span>
-        </button>
       </div>
     </header>
   );
