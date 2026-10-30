@@ -1,0 +1,41 @@
+/* PORTAL LAYOUT - ANDO */
+.ptl-layout {
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  position: relative;
+}
+
+.ptl-main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-left: 280px;
+  transition: margin-left 0.3s var(--ease-out);
+  width: calc(100% - 280px);
+  position: relative;
+}
+
+.ptl-layout.sidebar-collapsed .ptl-main-wrapper {
+  margin-left: 76px;
+  width: calc(100% - 76px);
+}
+
+.ptl-content-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Mobile Layout */
+@media (max-width: 900px) {
+  .ptl-main-wrapper,
+  .ptl-layout.sidebar-collapsed .ptl-main-wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+

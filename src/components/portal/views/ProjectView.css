@@ -1,0 +1,308 @@
+/* PROJECT VIEW - ANDO PORTAL */
+.ptl-project-view {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 32px 32px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* App Switcher Tabs */
+.ptl-project-tabs {
+  display: flex;
+  align-items: center;
+  background: rgba(16, 20, 32, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 5px;
+  width: fit-content;
+  gap: 6px;
+}
+
+.ptl-project-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill, 9999px);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+}
+
+.ptl-project-tab-btn:hover {
+  color: #fff;
+}
+
+.ptl-project-tab-btn.active.gram {
+  background: linear-gradient(135deg, rgba(0, 180, 216, 0.25), rgba(0, 119, 182, 0.25));
+  color: #00b4d8;
+  border: 1px solid rgba(0, 180, 216, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.2);
+}
+
+.ptl-project-tab-btn.active.usta {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.25), rgba(221, 42, 123, 0.25));
+  color: #ff007f;
+  border: 1px solid rgba(255, 0, 127, 0.4);
+  box-shadow: 0 4px 16px rgba(255, 0, 127, 0.2);
+}
+
+/* App Banner */
+.ptl-app-banner {
+  border-radius: var(--radius-lg, 24px);
+  background: rgba(16, 20, 32, 0.85);
+  border: 1px solid var(--border-subtle);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.ptl-app-banner-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.ptl-app-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ptl-app-main-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.ptl-app-main-icon.gram {
+  background: linear-gradient(135deg, #0088cc, #00b4d8);
+  color: #fff;
+  border: 2px solid rgba(0, 180, 216, 0.4);
+}
+
+.ptl-app-main-icon.usta {
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+  color: #fff;
+  border: 2px solid rgba(255, 0, 127, 0.4);
+}
+
+.ptl-app-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.ptl-app-name {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.ptl-app-tagline {
+  font-size: 1rem;
+  color: var(--accent-ando);
+  font-weight: 600;
+}
+
+.ptl-app-banner.usta .ptl-app-tagline {
+  color: var(--accent-usta);
+}
+
+.ptl-app-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 900px;
+  margin-bottom: 30px;
+}
+
+/* Specs pills row */
+.ptl-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.ptl-spec-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+}
+
+.ptl-spec-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.ptl-spec-val {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Actions */
+.ptl-app-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Features Grid */
+.ptl-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.ptl-feature-card {
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(16, 20, 32, 0.7);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s var(--ease-out);
+}
+
+.ptl-feature-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 245, 155, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.ptl-feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.ptl-feature-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(0, 245, 155, 0.1);
+  color: var(--accent-ando);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ptl-feature-card.usta .ptl-feature-icon {
+  background: rgba(255, 0, 127, 0.1);
+  color: var(--accent-usta);
+}
+
+.ptl-feature-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0, 245, 155, 0.1);
+  border: 1px solid rgba(0, 245, 155, 0.25);
+  color: var(--accent-ando);
+}
+
+.ptl-feature-card.usta .ptl-feature-tag {
+  background: rgba(255, 0, 127, 0.1);
+  border-color: rgba(255, 0, 127, 0.25);
+  color: var(--accent-usta);
+}
+
+.ptl-feature-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.ptl-feature-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Changelog card */
+.ptl-changelog-card {
+  padding: 28px;
+  border-radius: 16px;
+  background: rgba(16, 20, 32, 0.6);
+  border: 1px solid var(--border-subtle);
+}
+
+.ptl-changelog-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.ptl-changelog-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+}
+
+.ptl-changelog-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-ando);
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .ptl-project-view {
+    padding: 20px 16px 60px;
+  }
+
+  .ptl-app-banner {
+    padding: 24px 18px;
+  }
+
+  .ptl-app-main-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ptl-app-name {
+    font-size: 1.7rem;
+  }
+}
+

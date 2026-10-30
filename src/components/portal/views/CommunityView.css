@@ -1,0 +1,106 @@
+/* COMMUNITY VIEW - ANDO PORTAL */
+.ptl-community-view {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 32px 32px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ptl-community-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.ptl-community-card {
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(16, 20, 32, 0.75);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s var(--ease-out);
+}
+
+.ptl-community-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 245, 155, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.ptl-community-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(0, 180, 216, 0.12);
+  color: #00b4d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.ptl-community-icon.github {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.ptl-community-icon.stars {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.ptl-community-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.ptl-community-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.ptl-community-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.ptl-community-btn:hover {
+  background: rgba(0, 245, 155, 0.15);
+  border-color: rgba(0, 245, 155, 0.3);
+  color: var(--accent-ando);
+}
+
+@media (max-width: 768px) {
+  .ptl-community-view {
+    padding: 20px 16px 60px;
+  }
+
+  .ptl-community-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

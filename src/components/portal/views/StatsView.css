@@ -1,0 +1,234 @@
+/* STATS VIEW - ANDO PORTAL */
+.ptl-stats-view {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 32px 32px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Key Metrics Cards */
+.ptl-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.ptl-metric-card {
+  padding: 24px;
+  border-radius: 18px;
+  background: rgba(16, 20, 32, 0.75);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s var(--ease-out);
+}
+
+.ptl-metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 245, 155, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.ptl-metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ptl-metric-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(0, 245, 155, 0.1);
+  color: var(--accent-ando);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ptl-metric-icon.blue {
+  background: rgba(0, 180, 216, 0.1);
+  color: #00b4d8;
+}
+
+.ptl-metric-icon.pink {
+  background: rgba(255, 0, 127, 0.1);
+  color: #ff007f;
+}
+
+.ptl-metric-icon.amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.ptl-metric-growth {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-ando);
+  background: rgba(0, 245, 155, 0.1);
+  border: 1px solid rgba(0, 245, 155, 0.2);
+  padding: 3px 8px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ptl-metric-value {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.ptl-metric-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Charts & Breakdown section */
+.ptl-analytics-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.ptl-analytics-card {
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(16, 20, 32, 0.7);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.ptl-analytics-header {
+  margin-bottom: 24px;
+}
+
+.ptl-analytics-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.ptl-analytics-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* Bar Chart */
+.ptl-chart-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 220px;
+  padding: 20px 10px 0;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 12px;
+}
+
+.ptl-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.ptl-bar-tooltip {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-ando);
+  opacity: 0.8;
+}
+
+.ptl-bar-fill {
+  width: 100%;
+  max-width: 48px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, var(--accent-ando), rgba(0, 180, 216, 0.4));
+  transition: all 0.3s;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0, 245, 155, 0.15);
+}
+
+.ptl-bar-fill:hover {
+  background: linear-gradient(180deg, #fff, var(--accent-ando));
+  box-shadow: 0 0 20px rgba(0, 245, 155, 0.4);
+}
+
+.ptl-bar-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Geo and Device Distribution Bars */
+.ptl-dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ptl-dist-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ptl-dist-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+}
+
+.ptl-dist-name {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.ptl-dist-percent {
+  color: var(--accent-ando);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.ptl-dist-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.ptl-dist-bar {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--accent-ando), #00b4d8);
+}
+
+@media (max-width: 900px) {
+  .ptl-stats-view {
+    padding: 20px 16px 60px;
+  }
+
+  .ptl-analytics-row {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,121 @@
+/* SUPPORT VIEW - ANDO PORTAL */
+.ptl-support-view {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 32px 32px 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ptl-support-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.ptl-support-card {
+  padding: 32px;
+  border-radius: 20px;
+  background: rgba(16, 20, 32, 0.75);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s var(--ease-out);
+}
+
+.ptl-support-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 245, 155, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.ptl-support-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(0, 245, 155, 0.1);
+  color: var(--accent-ando);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.ptl-support-icon.blue {
+  background: rgba(0, 180, 216, 0.1);
+  color: #00b4d8;
+}
+
+.ptl-support-icon.amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.ptl-support-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.ptl-support-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.ptl-support-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-ando), #00b4d8);
+  color: #08090e;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  width: fit-content;
+}
+
+.ptl-support-link-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 245, 155, 0.4);
+}
+
+.ptl-support-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-radius: 14px;
+  background: rgba(0, 245, 155, 0.05);
+  border: 1px solid rgba(0, 245, 155, 0.2);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .ptl-support-view {
+    padding: 20px 16px 60px;
+  }
+
+  .ptl-support-cards {
+    grid-template-columns: 1fr;
+  }
+}
+

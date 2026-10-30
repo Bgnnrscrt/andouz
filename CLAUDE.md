@@ -1,7 +1,7 @@
 # CLAUDE.md — ANDO / andouz
 
 > **Читать первым.** Это главный и достаточный источник контекста по проекту. Новая сессия Claude, субагент или человек: прочитай файл целиком, и изучать весь репозиторий заново не понадобится.
-> Актуально на **2026-10-29**. Проверка свежести: `git log --oneline $(git log -1 --format=%h -- CLAUDE.md)..HEAD` выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
+> Актуально на **2026-10-30**. Проверка свежести: git log --oneline cc1fd5a..HEAD выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
 
 ---
 
@@ -266,3 +266,4 @@ src/components/
 | 2026-10-28 | Домен: только https://ando.uz. canonical, og:url, og:image и twitter:image переведены на него, зеркало убрано из README, добавлено правило 0.6 | index.html, README.md, CLAUDE.md |
 | 2026-10-28 | Промокод-вкладка теперь ходит в API бота (`/api/redeem-coupon`): сервер сжигает купон и возвращает APK + одноразовый код установки; добавлена карточка кода с копированием в один клик; захардкоженный список `INITIAL_VALID_COUPONS` удалён (ветка `feat/license-activation`); build+lint чистые | DownloadModal.tsx/.css, data.ts, CLAUDE.md |
 | 2026-10-29 | Фичи по `ECOSYSTEM_FEATURES.md` (andouzcto): топ-5 фич на приложение — AndoGram +`voice_changer`, `media_sort` снят с карточек; Andusta +`unfollowers_tracker` +`music_unlocker`, `downloader`/`fake_camera`/`ad_blocker` сняты с карточек. Сравнение: Telegram +4 строки (голос, гео/Live Location, заметки, главный экран), Instagram +6 (история правок, своя музыка, отписки, голос, iOS-эмодзи/шрифты, Full HD аватарки). Бегущая строка: +3 чипа в каждый ряд, длительности 72/84 с под 9 чипов. `FEATURE_ICONS` + Mic/Music/UserMinus. Версия Andusta 1.0.0 не менялась (решение владельца). build+lint чистые | data.ts, FeatureMarquee.tsx/.css, AppsShowcase.tsx, CLAUDE.md |
+| 2026-10-30 | Трансформация в веб-портал с боковым меню (сайдбар), разделами (Главная, Проекты [AndoGram, Andusta], Статистика, Документы, Поддержка, В сети), адаптивной локализацией на узбекский язык (без БД/Clerk); build+lint чистые | src/App.tsx, src/components/portal/*, src/portalTranslations.ts, src/portalTypes.ts, CLAUDE.md |

@@ -1,0 +1,172 @@
+/* TOPBAR - ANDO PORTAL STYLES */
+.ptl-topbar {
+  position: sticky;
+  top: 0;
+  height: var(--header-h, 74px);
+  background: rgba(8, 9, 14, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 80;
+  gap: 16px;
+}
+
+.ptl-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ptl-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm, 10px);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ptl-menu-trigger:hover {
+  background: rgba(0, 245, 155, 0.1);
+  border-color: rgba(0, 245, 155, 0.3);
+  color: var(--accent-ando);
+}
+
+.ptl-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.ptl-breadcrumb-root {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.ptl-breadcrumb-sep {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.ptl-breadcrumb-active {
+  color: #fff;
+}
+
+/* Right Section */
+.ptl-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ptl-system-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 245, 155, 0.06);
+  border: 1px solid rgba(0, 245, 155, 0.2);
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  color: var(--accent-ando);
+  font-weight: 500;
+}
+
+.ptl-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-ando);
+  box-shadow: 0 0 8px var(--accent-ando);
+  animation: ptl-pulse 2s infinite ease-in-out;
+}
+
+/* Lang switcher */
+.ptl-lang-switcher {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.ptl-lang-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ptl-lang-btn:hover {
+  color: #fff;
+}
+
+.ptl-lang-btn.active {
+  background: var(--accent-ando);
+  color: #08090e;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(0, 245, 155, 0.3);
+}
+
+/* Quick download CTA button */
+.ptl-quick-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--accent-ando), #00b4d8);
+  color: #08090e;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  box-shadow: 0 4px 16px rgba(0, 245, 155, 0.25);
+  white-space: nowrap;
+}
+
+.ptl-quick-download-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 245, 155, 0.4);
+}
+
+@media (max-width: 768px) {
+  .ptl-topbar {
+    padding: 0 14px;
+  }
+
+  .ptl-system-badge {
+    display: none;
+  }
+
+  .ptl-quick-download-btn span {
+    display: none;
+  }
+
+  .ptl-quick-download-btn {
+    padding: 8px 12px;
+  }
+}
+
