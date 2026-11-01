@@ -65,10 +65,17 @@
   color: #fff;
 }
 
-/* Three crumbs (ANDO / AndoGram / Мост A-B-C) don't fit on phones: drop the middle one. */
+/* Three crumbs (ANDO / AndoGram / Обход No-Forwards) don't fit on phones: only
+   the last one stays, and it may take two lines instead of pushing the language
+   switcher off the screen. */
 @media (max-width: 600px) {
-  .ptl-breadcrumb-mid {
+  .ptl-breadcrumb-up {
     display: none;
+  }
+
+  .ptl-topbar-left,
+  .ptl-breadcrumb {
+    min-width: 0;
   }
 }
 

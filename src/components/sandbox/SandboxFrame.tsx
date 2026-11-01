@@ -58,7 +58,7 @@ export function DockedHint<S extends string>({ sb }: { sb: Sandbox<S> }) {
   if (!sb.docked || !sb.hint) return null;
   const { spot } = sb;
   return (
-    <div key={sb.step} className={`sbx-dock sbx-dock--${sb.dockSide}${sb.spotReady ? ' is-ready' : ''}`}>
+    <div key={`dock-${sb.step}`} className={`sbx-dock sbx-dock--${sb.dockSide}${sb.spotReady ? ' is-ready' : ''}`}>
       <HintBox
         text={sb.hint}
         button={sb.hintButton}
@@ -254,6 +254,7 @@ export function SandboxFrame<S extends string>({
   const {
     step,
     initial,
+    run,
     fit,
     spot,
     spotReady,
@@ -307,7 +308,8 @@ export function SandboxFrame<S extends string>({
           >
             <span className="sbx-camera" aria-hidden="true" />
             {status && <StatusBar time={status.time} tone={status.tone} />}
-            <div key={viewKey} className="sbx-view sbx-view--enter">
+            {/* Keys are prefixed: they share one sibling list with the hint. */}
+            <div key={`view-${viewKey}-${run}`} className="sbx-view sbx-view--enter">
               {children}
             </div>
 
@@ -327,7 +329,7 @@ export function SandboxFrame<S extends string>({
 
             {hint && !docked && hintPos && spotReady && (
               <div
-                key={step}
+                key={`hint-${step}`}
                 className="sbx-hint"
                 style={{ width: hintPos.width, left: hintPos.left, top: hintPos.top, bottom: hintPos.bottom }}
               >

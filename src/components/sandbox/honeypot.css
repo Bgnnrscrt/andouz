@@ -1,0 +1,705 @@
+/*
+ * Honeypot sandbox («Проверь сам», duress PIN codes): the phone's home screen,
+ * AndoGram's PIN lock screen and the side menu with the accounts. Prefix hp-.
+ * It lives inside .sbx: the Telegram palette (--tg-*) and the reduced-motion
+ * rules of sandbox.css apply here too. Only transform and opacity animate.
+ * Layers: the side menu and its scrim (5) stay under the spotlight (20) and
+ * the hint (21); the outro dim is 22.
+ * Single-class selectors are enough for buttons: the button reset in
+ * sandbox.css has zero specificity.
+ */
+
+/* ── Home screen (Android launcher) ────────────────────────────────────── */
+.sbx-screen.hp-screen--home {
+  background:
+    radial-gradient(85% 50% at 88% 6%, rgba(0, 180, 216, 0.34), transparent 70%),
+    radial-gradient(95% 55% at 8% 96%, rgba(122, 82, 236, 0.42), transparent 70%),
+    radial-gradient(60% 40% at 40% 52%, rgba(255, 0, 127, 0.12), transparent 70%),
+    linear-gradient(170deg, #0c1530 0%, #130f2b 52%, #07070e 100%);
+}
+
+.hp-home {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px 8px;
+  color: #fff;
+}
+
+.hp-clock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 26px 12px 0;
+}
+
+.hp-clock-time {
+  font-family: var(--font-body);
+  font-size: 66px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.hp-clock-date {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.hp-apps {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  row-gap: 12px;
+}
+
+.hp-dock {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 18px;
+  padding: 9px 0;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+/* Android's gesture bar. */
+.hp-handle {
+  flex: none;
+  align-self: center;
+  width: 108px;
+  height: 4px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hp-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 4px 2px;
+  border-radius: 16px;
+}
+
+.hp-tile {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  overflow: hidden;
+  border-radius: 17px;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s var(--ease-out);
+}
+
+.hp-app:active .hp-tile {
+  transform: scale(0.93);
+}
+
+.hp-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Generic glyphs on coloured tiles: no brand logos. */
+.hp-tile--andogram {
+  background: #05070b;
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 155, 0.25),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.hp-tile--instagram {
+  background: linear-gradient(45deg, #f8a13b, #e3306c 50%, #8a3ab9);
+}
+
+.hp-tile--tiktok {
+  background: #111216;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.hp-tile--youtube {
+  background: linear-gradient(160deg, #ff5a4f, #cf1d13);
+}
+
+.hp-tile--gallery {
+  background: linear-gradient(150deg, #6a8cff, #9b5cf6);
+}
+
+.hp-tile--clock {
+  background: linear-gradient(150deg, #2b3652, #151c2c);
+  color: #9cc8ff;
+}
+
+.hp-tile--weather {
+  background: linear-gradient(160deg, #52b5ff, #2b6cd8);
+}
+
+.hp-tile--settings {
+  background: linear-gradient(150deg, #6c7484, #414856);
+}
+
+.hp-tile--phone {
+  background: linear-gradient(150deg, #3ccf6e, #1f9d4b);
+}
+
+.hp-tile--messages {
+  background: linear-gradient(150deg, #5d9bff, #2b63e0);
+}
+
+.hp-tile--browser {
+  background: linear-gradient(150deg, #36b6d9, #1e6fb8);
+}
+
+.hp-tile--camera {
+  background: linear-gradient(150deg, #555d6d, #2d323d);
+}
+
+.hp-app-label {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Lock screen ───────────────────────────────────────────────────────── */
+.sbx-screen.hp-screen--lock {
+  background: #000;
+}
+
+/* A size container: on low phones the logo goes and the keys get shorter, so
+   the hint over the keypad never reaches the PIN boxes. */
+.hp-lock {
+  container: hp-lock / size;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  color: #fff;
+}
+
+/* Opened from the home screen: the app grows out of its icon (first in the grid). */
+.hp-lock--launch {
+  transform-origin: 18% 64%;
+  animation: hp-launch 0.3s var(--ease-out) backwards;
+}
+
+@keyframes hp-launch {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+}
+
+/* The legend: our instruction (ANDO green), not part of AndoGram. */
+.hp-legend {
+  --row-h: 25px;
+  flex: none;
+  margin: 10px 12px 0;
+  padding: 9px 10px 8px;
+  border: 1px solid rgba(0, 245, 155, 0.38);
+  border-radius: 14px;
+  background: rgba(0, 245, 155, 0.06);
+  font-family: var(--font-body);
+}
+
+.hp-legend-title {
+  display: block;
+  margin: 0 0 3px 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent-ando);
+}
+
+.hp-legend-rows {
+  position: relative;
+}
+
+.hp-legend-rows ul {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hp-legend-row {
+  height: var(--row-h);
+  padding: 0 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: var(--row-h);
+  font-size: 13px;
+  color: #e9edf2;
+  opacity: 0.55;
+}
+
+.hp-legend-row.is-current {
+  font-weight: 600;
+  color: #fff;
+  opacity: 1;
+}
+
+/* The next round: the rows swap brightness as the highlight slides over. */
+.hp-legend--move .hp-legend-row.is-current {
+  animation: hp-row-on 0.3s var(--ease-out) 0.2s backwards;
+}
+
+.hp-legend--move .hp-legend-row.was-current {
+  animation: hp-row-off 0.3s var(--ease-out) 0.2s backwards;
+}
+
+@keyframes hp-row-on {
+  from {
+    opacity: 0.55;
+  }
+}
+
+@keyframes hp-row-off {
+  from {
+    opacity: 1;
+  }
+}
+
+.hp-legend-pin {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+/* The same colours as the PIN badges on the page. */
+.hp-legend-pin--1 {
+  color: var(--accent-ando);
+}
+
+.hp-legend-pin--2 {
+  color: #faa774;
+}
+
+.hp-legend-pin--3 {
+  color: #5aa5e8;
+}
+
+.hp-legend-pin--4 {
+  color: #e56bd6;
+}
+
+.hp-legend-pick {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--row-h);
+  border-radius: 8px;
+  background: rgba(0, 245, 155, 0.13);
+  box-shadow: inset 0 0 0 1px rgba(0, 245, 155, 0.34);
+  transform: translateY(calc(var(--row, 0) * var(--row-h)));
+}
+
+/* The next round: the highlight slides down from the previous PIN. */
+.hp-legend--move .hp-legend-pick {
+  animation: hp-pick 0.3s var(--ease-out) 0.2s backwards;
+}
+
+@keyframes hp-pick {
+  from {
+    transform: translateY(calc((var(--row, 0) - 1) * var(--row-h)));
+  }
+}
+
+.hp-lock-main {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.hp-lock-logo {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 12px;
+}
+
+.hp-lock-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #05070b;
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 155, 0.3),
+    0 0 22px rgba(0, 245, 155, 0.16);
+}
+
+/* Only the shield: the logo's lettering stays outside the circle. */
+.hp-lock-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.7);
+  transform-origin: 50% 35%;
+}
+
+.hp-lock-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2a2c33;
+  color: #fff;
+  box-shadow: 0 0 0 2px #000;
+}
+
+.hp-lock--ok .hp-lock-badge {
+  background: var(--tg-btn);
+  animation: hp-pop 0.24s var(--ease-out) backwards;
+}
+
+.hp-lock-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.hp-boxes {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.hp-box {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1.5px solid #353841;
+  border-radius: 10px;
+  background: #141518;
+}
+
+.hp-box.is-filled {
+  border-color: #5b606c;
+}
+
+.hp-box-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  animation: hp-pop 0.18s var(--ease-out) backwards;
+}
+
+/* The right PIN: the boxes light up in the app's blue and bounce once. */
+.hp-box::after {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border: 2px solid var(--tg-btn);
+  border-radius: 10px;
+  opacity: 0;
+}
+
+.hp-lock--ok .hp-box::after {
+  opacity: 1;
+  animation: hp-fade-in 0.2s var(--ease-out) backwards;
+}
+
+.hp-lock--ok .hp-boxes {
+  animation: hp-bounce 0.3s var(--ease-out);
+}
+
+.hp-forgot {
+  margin-top: 16px;
+  padding: 4px 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--tg-accent);
+}
+
+/* Digits-only keyboard at the bottom, like the one of a number field. */
+.hp-keypad {
+  flex: none;
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px 6px;
+  padding: 9px 8px 12px;
+  border-radius: 20px 20px 0 0;
+  background: #1a1b1f;
+}
+
+.hp-key {
+  display: grid;
+  place-items: center;
+  height: clamp(42px, 7.4cqh, 54px);
+  border-radius: 999px;
+  background: #2d2f35;
+  color: #f2f3f5;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  transition: transform 0.12s var(--ease-out);
+}
+
+.hp-key--del {
+  background: #393e4c;
+}
+
+.hp-key:active {
+  transform: scale(0.95);
+}
+
+@container hp-lock (max-height: 580px) {
+  .hp-legend {
+    --row-h: 23px;
+  }
+
+  .hp-lock-main {
+    padding-top: 14px;
+  }
+
+  .hp-lock-logo {
+    display: none;
+  }
+
+  .hp-boxes {
+    margin-top: 12px;
+  }
+
+  .hp-box {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hp-forgot {
+    margin-top: 10px;
+  }
+}
+
+/* ── Side menu (drawer) ────────────────────────────────────────────────── */
+.hp-drawer-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.hp-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  animation: hp-fade-in 0.28s var(--ease-out) backwards;
+}
+
+.hp-drawer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 86%;
+  overflow: hidden;
+  background: var(--tg-bg);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.45);
+  animation: hp-drawer-in 0.28s var(--ease-out) backwards;
+}
+
+@keyframes hp-drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+/* The outro: the menu slides back out before the screen dims. */
+.hp-drawer-layer.is-closing .hp-drawer {
+  animation: hp-drawer-out 0.26s var(--ease-in-out) forwards;
+}
+
+.hp-drawer-layer.is-closing .hp-scrim {
+  animation: hp-fade-out 0.26s var(--ease-in-out) forwards;
+}
+
+@keyframes hp-drawer-out {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.hp-drawer-head {
+  position: relative;
+  flex: none;
+  padding: 16px 16px 12px;
+  background: var(--tg-bar);
+}
+
+.hp-drawer-theme {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  color: #fff;
+}
+
+.hp-drawer-who {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+  color: #fff;
+}
+
+.hp-drawer-id {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hp-drawer-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 15.5px;
+  font-weight: 600;
+}
+
+.hp-drawer-phone {
+  font-size: 13.5px;
+  color: var(--tg-sub);
+}
+
+.hp-accs {
+  flex: none;
+  padding: 4px 0;
+}
+
+/* Names and labels line up at 66px, as in Telegram. */
+.hp-acc,
+.hp-acc-add,
+.hp-drawer-item {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 16px;
+  font-size: 15px;
+}
+
+.hp-acc-avatar {
+  position: relative;
+  flex: none;
+}
+
+.hp-acc-check {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--tg-badge);
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--tg-bg);
+}
+
+.hp-acc-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.hp-acc-plus {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  color: var(--tg-sub);
+}
+
+.hp-drawer-divider {
+  flex: none;
+  height: 1px;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.hp-drawer-item {
+  gap: 22px;
+  height: 46px;
+  padding: 0 22px;
+}
+
+.hp-drawer-item svg {
+  flex: none;
+  color: var(--tg-sub);
+}
+
+/* ── Shared keyframes ──────────────────────────────────────────────────── */
+@keyframes hp-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes hp-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes hp-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes hp-bounce {
+  45% {
+    transform: scale(1.06);
+  }
+}
+
+/* The finale: the list's pencil button would show through the end buttons. */
+.hp-fab-out {
+  animation: hp-fade-out 0.3s var(--ease-in-out) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* sandbox.css zeroes the durations; the delayed legend motion would still wait. */
+  .sbx .hp-legend--move .hp-legend-pick,
+  .sbx .hp-legend--move .hp-legend-row {
+    animation: none;
+  }
+}

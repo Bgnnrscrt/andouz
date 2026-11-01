@@ -232,6 +232,8 @@ export interface RowData {
   lifted?: boolean;
   /** A channel or a group: a small icon before the name, as in Telegram. */
   kind?: 'channel' | 'group';
+  /** A picture instead of the initials (a channel's logo). */
+  avatar?: React.ReactNode;
 }
 
 export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
@@ -245,7 +247,7 @@ export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
       onClick={() => tap(row.sbx)}
       aria-label={`${row.name}: ${row.typing ?? row.previewText}`}
     >
-      <Avatar name={row.name} color={row.color} saved={row.saved} />
+      {row.avatar ?? <Avatar name={row.name} color={row.color} saved={row.saved} />}
       <span className="sbx-row-main">
         <span className="sbx-row-line">
           <span className="sbx-row-name">
@@ -352,8 +354,14 @@ function Meta({ m, editedLabel }: { m: MsgData; editedLabel: string }) {
   return (
     <>
       {m.edited && (
-        <span className={m.flash ? 'sbx-edited sbx-edited--flash' : 'sbx-edited'} data-label={editedLabel}>
+        <span className={m.flash ? 'sbx-edited sbx-edited--flash' : 'sbx-edited'}>
           {editedLabel}
+          {/* The white copy over the glow; hidden from screen readers (no «изменено изменено»). */}
+          {m.flash && (
+            <span className="sbx-edited-copy" aria-hidden="true">
+              {editedLabel}
+            </span>
+          )}
         </span>
       )}
       <span>{m.time}</span>

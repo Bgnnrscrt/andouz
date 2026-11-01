@@ -92,7 +92,7 @@
   }
 }
 
-/* Wider screens (BridgeSandbox «fit»): a phone-shaped 360 × 648…740 px phone,
+/* Wider screens (useSandbox «fit»): a phone-shaped 360 × 648…740 px phone,
    scaled as a whole to the window height. .sbx-fit has the scaled size;
    JS sets --fit-k (scale), the logical height and --fit-w (scaled width). */
 .sbx--fit .sbx-phone {
@@ -109,9 +109,9 @@
   width: var(--fit-w, 360px);
 }
 
-/* Room beside the phone (BridgeSandbox «rail»): the caption and the controls
+/* Room beside the phone (useSandbox «rail»): the caption and the controls
    sit in a 132px rail on the left, the phone takes the window height.
-   RAIL_W / RAIL_GAP in BridgeSandbox.tsx match these. */
+   RAIL_W / RAIL_GAP in useSandbox.ts match these. */
 .sbx--rail {
   display: grid;
   /* One row as tall as the phone: the caption sits at its top, the controls
@@ -161,6 +161,12 @@
 .sbx--rail .sbx-progress {
   flex: none;
   width: 100%;
+}
+
+/* «Начать заново» / «Qaytadan boshlash» are wider than the rail: one line,
+   growing to the left into the free space (the controls are right-aligned). */
+.sbx--rail .sbx-restart {
+  white-space: nowrap;
 }
 
 .sbx-phone--enter {
@@ -806,7 +812,7 @@
 }
 
 .sbx-swap-new {
-  animation: sbx-swap-in 0.35s var(--ease-out) backwards;
+  animation: sbx-swap-in 0.3s var(--ease-out) backwards;
 }
 
 @keyframes sbx-swap-in {
@@ -816,14 +822,15 @@
 }
 
 /* The label glows twice and fades out (opacity/transform only): a green pill
-   behind it (::before) and a white copy of its text on top (::after). */
+   behind it (::before) and a white copy of its text on top (.sbx-edited-copy,
+   aria-hidden). The pill stays inside the 3px gap before the time. */
 .sbx-edited--flash {
   position: relative;
   isolation: isolate;
 }
 
 .sbx-edited--flash::before,
-.sbx-edited--flash::after {
+.sbx-edited-copy {
   position: absolute;
   pointer-events: none;
   opacity: 0;
@@ -831,7 +838,7 @@
 
 .sbx-edited--flash::before {
   content: '';
-  inset: -2px -5px;
+  inset: -2px -3px;
   z-index: -1;
   border-radius: 6px;
   background: rgba(0, 245, 155, 0.5);
@@ -839,8 +846,7 @@
   animation: sbx-edited-glow 2.8s var(--ease-out) 0.1s both;
 }
 
-.sbx-edited--flash::after {
-  content: attr(data-label);
+.sbx-edited-copy {
   inset: 0;
   color: #fff;
   animation: sbx-edited-text 2.8s var(--ease-out) 0.1s both;
@@ -853,7 +859,7 @@
   }
   12% {
     opacity: 1;
-    transform: scale(1.18);
+    transform: scale(1.06);
   }
   24% {
     transform: scale(1);
@@ -863,7 +869,7 @@
   }
   55% {
     opacity: 1;
-    transform: scale(1.08);
+    transform: scale(1.03);
   }
   68% {
     transform: scale(1);
@@ -1254,7 +1260,7 @@
 }
 
 .sbx-tagline-text {
-  transition: transform 0.5s var(--ease-out);
+  transition: transform 0.3s var(--ease-out);
   font-family: var(--font-heading);
   font-size: 23px;
   font-weight: 800;
@@ -1309,7 +1315,9 @@
   margin-top: 0;
 }
 
-/* Over the dimmed screen at its bottom (the line stays above it). */
+/* Over the dimmed screen at its bottom (the line stays above it). A darker
+   backdrop under the buttons, so the screen doesn't show through the
+   outlined ones. */
 .sbx-end--over {
   position: absolute;
   right: 0;
@@ -1317,7 +1325,7 @@
   left: 0;
   z-index: 24;
   border-top: 0;
-  background: transparent;
+  background: linear-gradient(to bottom, rgba(2, 4, 8, 0), rgba(2, 4, 8, 0.86) 40px);
 }
 
 .sbx-screen .sbx-more,
@@ -1406,6 +1414,10 @@
     border-color 0.2s var(--ease-out);
 }
 
+.sbx-restart svg {
+  flex: none;
+}
+
 .sbx-restart:focus-visible {
   outline: 2px solid var(--accent-ando);
   outline-offset: 2px;
@@ -1450,9 +1462,19 @@
     transition-duration: 0.01ms !important;
   }
 
+  /* An opacity fade is not motion: the outro still dims as slowly as without
+     reduced motion; the line appears whole at the same moment. */
+  .sbx .sbx-dim {
+    transition-duration: var(--dim-out, 1s) !important;
+  }
+
+  .sbx .sbx-dim.is-on {
+    transition-duration: var(--dim-in, 3s) !important;
+  }
+
   /* No glow motion: the «изменено» label is simply lit while its step lasts. */
   .sbx .sbx-edited--flash::before,
-  .sbx .sbx-edited--flash::after {
+  .sbx .sbx-edited-copy {
     animation: none !important;
     opacity: 1;
   }

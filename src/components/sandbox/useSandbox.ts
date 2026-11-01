@@ -92,6 +92,11 @@ export interface SandboxSetup<S extends string> {
 export interface Sandbox<S extends string> {
   step: S;
   initial: S;
+  /**
+   * Bumped by every go(): a restart on the step already on screen still
+   * restarts its timers and re-enters the screen (SandboxFrame keys on it).
+   */
+  run: number;
   /** Start (over) at a step: a new run, so no hint counts as already shown. */
   go: (s: S) => void;
   /** go(), then bring the sandbox into view (the start button). */
@@ -144,6 +149,7 @@ export function useSandbox<S extends string>({
   const [fit, setFit] = useState<Fit | null>(null);
   /** Taps on a multi-tap target, for the step they were made on. */
   const [tapped, setTapped] = useState<{ step: S; n: number } | null>(null);
+  const [run, setRun] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const stepStartRef = useRef(0);
@@ -163,6 +169,7 @@ export function useSandbox<S extends string>({
     setHintStep(null);
     setShaking(false);
     setTapped(null);
+    setRun((r) => r + 1);
     setStep(s);
   };
   const next = () => {
@@ -198,7 +205,7 @@ export function useSandbox<S extends string>({
   // When the step started; runs before the measuring layout effect below.
   useLayoutEffect(() => {
     stepStartRef.current = performance.now();
-  }, [step]);
+  }, [step, run]);
 
   // Timed steps.
   useEffect(() => {
@@ -209,14 +216,14 @@ export function useSandbox<S extends string>({
       setStep(stepAfter(flow.steps, step));
     }, ms);
     return () => window.clearTimeout(id);
-  }, [step, flow]);
+  }, [step, flow, run]);
 
   // A hint waits so the visitor can read the screen first.
   useEffect(() => {
     if (!hasHint) return undefined;
     const id = window.setTimeout(() => setHintStep(step), flow.hintDelayAt?.[step] ?? flow.hintDelay);
     return () => window.clearTimeout(id);
-  }, [step, hasHint, flow]);
+  }, [step, hasHint, flow, run]);
 
   // A wrong tap shakes the hint once.
   useEffect(() => {
@@ -262,7 +269,8 @@ export function useSandbox<S extends string>({
   // hint shown early is measured again after the enter animation and only then
   // revealed. A measurement made for another target/screen is ignored.
   const spotOn = hintOn && focusKey !== undefined;
-  const spotKey = `${focusKey ?? ''}|${view}|${lang}|${spotOn ? 'on' : ''}|${fit?.h ?? ''}`;
+  // Step and run are in the key: after a restart the old run's measurement is stale.
+  const spotKey = `${run}|${String(step)}|${focusKey ?? ''}|${view}|${lang}|${spotOn ? 'on' : ''}|${fit?.h ?? ''}`;
   useLayoutEffect(() => {
     const scr = screenRef.current;
     if (!scr || !focusKey || !spotOn) return undefined;
@@ -346,6 +354,7 @@ export function useSandbox<S extends string>({
   return {
     step,
     initial,
+    run,
     go,
     start,
     next,

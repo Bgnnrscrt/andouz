@@ -1,9 +1,8 @@
 import type { Language } from '../../types';
 import type { PhoneId, Step } from './bridgeFlow';
-import type { DemoPageCopy } from './commonCopy';
 
 /*
- * All text of the A-B-C bridge sandbox and its page, in 3 languages.
+ * All text of the A-B-C bridge sandbox, in 3 languages (its page: demoPages.ts).
  * Names (owner's choice 2026-11-01): you = Максим / Aziz / Max,
  * friend = Даниль / Sanjar / Alex, ex = Лиза💔 / Sabina💔 / Molly💔.
  * Archive cards follow the format of the current AndoGram code
@@ -343,38 +342,3 @@ const EN: BridgeCopy = {
 const COPY: Record<Language, BridgeCopy> = { ru: RU, uz: UZ, en: EN };
 
 export const getBridgeCopy = (lang: Language): BridgeCopy => COPY[lang];
-
-const PAGE: Record<Language, DemoPageCopy> = {
-  ru: {
-    title: 'Личный архив и мост A-B-C',
-    lead: 'AndoGram сам копирует личные переписки в закрытую группу «Личный архив» — по отдельной теме на каждого собеседника. Там остаётся даже то, что потом изменили или удалили. А из архива можно отвечать со второго телефона от имени основного аккаунта.',
-    rolesTitle: 'Кто есть кто',
-    roles: [
-      { badge: 'A', tone: 'a', who: 'Ты — Максим.', what: 'Телефон с AndoGram' },
-      { badge: 'B', tone: 'b', who: 'Твой второй аккаунт.', what: 'Любой Telegram, даже официальный' },
-      { badge: 'C', tone: 'c', who: 'Даниль.', what: 'Обычный собеседник' },
-    ],
-  },
-  uz: {
-    title: 'Shaxsiy arxiv va A-B-C ko‘prigi',
-    lead: 'AndoGram shaxsiy yozishmalarni «Shaxsiy arxiv» yopiq guruhiga o‘zi nusxalaydi — har bir suhbatdosh uchun alohida mavzu bilan. Keyin tahrirlangan yoki o‘chirilgan xabarlar ham saqlanib qoladi. Arxivdan esa ikkinchi telefondan asosiy akkaunt nomidan javob berish mumkin.',
-    rolesTitle: 'Kim kim',
-    roles: [
-      { badge: 'A', tone: 'a', who: 'Siz — Aziz.', what: 'AndoGram o‘rnatilgan telefon' },
-      { badge: 'B', tone: 'b', who: 'Ikkinchi akkauntingiz.', what: 'Istalgan Telegram, hatto rasmiysi ham' },
-      { badge: 'C', tone: 'c', who: 'Sanjar.', what: 'Oddiy suhbatdosh' },
-    ],
-  },
-  en: {
-    title: 'Personal archive & the A-B-C bridge',
-    lead: 'AndoGram copies your private chats into a closed “Personal archive” group by itself — one topic per contact. Even messages edited or deleted later stay there. And from the archive you can reply from a second phone as your main account.',
-    rolesTitle: 'Who is who',
-    roles: [
-      { badge: 'A', tone: 'a', who: 'You — Max.', what: 'The phone with AndoGram' },
-      { badge: 'B', tone: 'b', who: 'Your second account.', what: 'Any Telegram, even the official one' },
-      { badge: 'C', tone: 'c', who: 'Alex.', what: 'A regular contact' },
-    ],
-  },
-};
-
-export const getBridgePageCopy = (lang: Language): DemoPageCopy => PAGE[lang];

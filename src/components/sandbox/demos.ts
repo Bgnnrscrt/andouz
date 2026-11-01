@@ -17,7 +17,8 @@ const DEMO_APP: Record<DemoId, AppId> = {
 /** Third breadcrumb in the Topbar while a demo page is open. */
 export const DEMO_CRUMBS: Record<DemoId, Record<Language, string>> = {
   honeypot: { ru: 'Honeypot-пароли', uz: 'Honeypot parollari', en: 'Duress passcodes' },
-  no_forwards_bypass: { ru: 'Обход No-Forwards', uz: 'No-Forwards’ni chetlab o‘tish', en: 'No-Forwards bypass' },
+  // U+2011 (non-breaking hyphen): «No‑Forwards» never splits at the end of a line.
+  no_forwards_bypass: { ru: 'Обход No\u2011Forwards', uz: 'No\u2011Forwards’ni chetlab o‘tish', en: 'No\u2011Forwards bypass' },
   archive_bridge: { ru: 'Мост A-B-C', uz: 'A-B-C ko‘prigi', en: 'A-B-C bridge' },
 };
 

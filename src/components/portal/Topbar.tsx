@@ -55,12 +55,12 @@ export const Topbar: React.FC<TopbarProps> = ({
         </button>
 
         <div className="ptl-breadcrumb">
-          <span className="ptl-breadcrumb-root">{t.sidebar.brand}</span>
-          <span className="ptl-breadcrumb-sep">/</span>
+          <span className={extraCrumb ? 'ptl-breadcrumb-root ptl-breadcrumb-up' : 'ptl-breadcrumb-root'}>{t.sidebar.brand}</span>
+          <span className={extraCrumb ? 'ptl-breadcrumb-sep ptl-breadcrumb-up' : 'ptl-breadcrumb-sep'}>/</span>
           {extraCrumb ? (
             <>
-              <span className="ptl-breadcrumb-root ptl-breadcrumb-mid">{currentTitle}</span>
-              <span className="ptl-breadcrumb-sep ptl-breadcrumb-mid">/</span>
+              <span className="ptl-breadcrumb-root ptl-breadcrumb-up">{currentTitle}</span>
+              <span className="ptl-breadcrumb-sep ptl-breadcrumb-up">/</span>
               <span className="ptl-breadcrumb-active">{extraCrumb}</span>
             </>
           ) : (

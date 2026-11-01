@@ -1,19 +1,15 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import type { AppId, Language } from '../../../types';
 import type { DemoId } from '../../sandbox/demos';
-import { getCommonCopy, type DemoPageCopy } from '../../sandbox/commonCopy';
-import { BridgeSandbox } from '../../sandbox/BridgeSandbox';
-import { getBridgePageCopy } from '../../sandbox/bridgeCopy';
-import { HoneypotSandbox } from '../../sandbox/HoneypotSandbox';
-import { getHoneypotPageCopy } from '../../sandbox/honeypotCopy';
-import { NoForwardsSandbox } from '../../sandbox/NoForwardsSandbox';
-import { getNoForwardsPageCopy } from '../../sandbox/noForwardsCopy';
+import { getCommonCopy } from '../../sandbox/commonCopy';
+import { getDemoPageCopy } from '../../sandbox/demoPages';
 import './DemoView.css';
 
 /*
  * «Как работает» page of one AndoGram feature (#/projects/andogram/<feature id>):
- * a plain-words explanation plus its «Проверь сам» sandbox. Loaded lazily.
+ * a plain-words explanation plus its «Проверь сам» sandbox. Loaded lazily; each
+ * sandbox is a chunk of its own, so a demo page loads only its own sandbox.
  */
 
 interface SandboxProps {
@@ -21,10 +17,10 @@ interface SandboxProps {
   onBuy: () => void;
 }
 
-const DEMOS: Record<DemoId, { page: (lang: Language) => DemoPageCopy; Sandbox: React.ComponentType<SandboxProps> }> = {
-  honeypot: { page: getHoneypotPageCopy, Sandbox: HoneypotSandbox },
-  no_forwards_bypass: { page: getNoForwardsPageCopy, Sandbox: NoForwardsSandbox },
-  archive_bridge: { page: getBridgePageCopy, Sandbox: BridgeSandbox },
+const SANDBOXES: Record<DemoId, React.LazyExoticComponent<React.ComponentType<SandboxProps>>> = {
+  honeypot: lazy(() => import('../../sandbox/HoneypotSandbox')),
+  no_forwards_bypass: lazy(() => import('../../sandbox/NoForwardsSandbox')),
+  archive_bridge: lazy(() => import('../../sandbox/BridgeSandbox')),
 };
 
 /** Words that never break at their hyphens in a title. */
@@ -37,8 +33,8 @@ interface DemoViewProps {
 }
 
 export const DemoView: React.FC<DemoViewProps> = ({ demo, lang, onOpenDownload }) => {
-  const { page, Sandbox } = DEMOS[demo];
-  const p = page(lang);
+  const Sandbox = SANDBOXES[demo];
+  const p = getDemoPageCopy(demo, lang);
   const common = getCommonCopy(lang).page;
 
   return (
@@ -69,7 +65,7 @@ export const DemoView: React.FC<DemoViewProps> = ({ demo, lang, onOpenDownload }
           <ul>
             {p.roles.map((role) => (
               <li key={role.badge}>
-                <span className={`ptl-demo-role-badge role-${role.tone}`} aria-hidden="true">
+                <span className={`ptl-demo-role-badge role-${role.tone}`}>
                   {role.badge}
                 </span>
                 <span>
@@ -86,7 +82,9 @@ export const DemoView: React.FC<DemoViewProps> = ({ demo, lang, onOpenDownload }
       </div>
 
       <div className="ptl-demo-stage">
-        <Sandbox lang={lang} onBuy={() => onOpenDownload('andogram')} />
+        <Suspense fallback={<div className="ptl-demo-loading" aria-hidden="true" />}>
+          <Sandbox lang={lang} onBuy={() => onOpenDownload('andogram')} />
+        </Suspense>
       </div>
     </div>
   );
