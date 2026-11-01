@@ -198,13 +198,15 @@ export interface RowData {
    * before this row is removed.
    */
   anim?: 'push' | 'shift' | 'gone';
+  /** Shown above the outro dim (the ex's message must be seen through it). */
+  lifted?: boolean;
 }
 
 export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
   return (
     <button
       type="button"
-      className={`sbx-row${row.fresh ? ' sbx-row--new' : ''}${row.anim ? ` sbx-row--${row.anim}` : ''}`}
+      className={`sbx-row${row.fresh ? ' sbx-row--new' : ''}${row.anim ? ` sbx-row--${row.anim}` : ''}${row.lifted ? ' sbx-row--lifted' : ''}`}
       data-sbx={row.sbx}
       data-want={row.sbx !== undefined && want === row.sbx}
       tabIndex={tabFor(want, row.sbx)}
@@ -295,6 +297,8 @@ export interface MsgData {
   fresh?: boolean;
   /** Short highlight (the message was just edited). */
   flash?: boolean;
+  /** Archive card: a wider bubble, so long cards fit the screen. */
+  wide?: boolean;
 }
 
 export interface DateData {
@@ -375,7 +379,7 @@ export function Messages({ items, editedLabel }: { items: ChatItem[]; editedLabe
             <div
               className={`sbx-msg ${item.out ? 'sbx-msg--out' : 'sbx-msg--in'}${item.fresh ? ' sbx-msg--fresh' : ''}${
                 item.flash ? ' sbx-msg--flash' : ''
-              }`}
+              }${item.wide ? ' sbx-msg--wide' : ''}`}
               data-sbx={item.sbx}
             >
               {from && firstOfRun && (

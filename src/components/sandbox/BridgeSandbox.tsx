@@ -3,6 +3,7 @@ import { ArrowRight, LayoutGrid, Play, RotateCcw } from 'lucide-react';
 import type { Language } from '../../types';
 import {
   AUTO_MS,
+  HINT_DELAY_AT,
   HINT_DELAY_MS,
   LOOK,
   NEXT_BUTTON,
@@ -68,7 +69,9 @@ const DOCKED: ReadonlySet<TargetKey> = new Set<TargetKey>(['send', 'msg-edited',
 /*
  * Phone size. Narrow screens: the phone fills the width (fluid, CSS only).
  * Wider screens: it keeps a phone shape, 360 × 648…740 logical px, and the
- * whole phone is scaled down to fit the window height instead of getting squat.
+ * whole phone is scaled to the window height instead of getting squat. When
+ * there is room, the caption and the controls go to a rail on the phone's
+ * left, so the phone takes almost the whole window height (owner, 2026-11-01).
  */
 const PHONE_W = 360;
 const PHONE_H = 740;
@@ -76,17 +79,32 @@ const PHONE_H = 740;
 const PHONE_H_MIN = 648;
 /** Smallest scale; on even lower windows the page scrolls instead. */
 const FIT_MIN = 0.62;
+/** Largest scale, on tall windows. */
+const FIT_MAX = 1.1;
 const FLUID_MAX_W = 560;
-/** Gaps of .sbx (caption ↔ phone ↔ controls) and room above/below. */
-const FIT_GAPS = 2 * 14;
-const FIT_AIR = 24;
+/** Room above (the page padding) and below the phone. */
+const FIT_AIR = 40;
+/** The rail (caption + controls) and its gap; must match sandbox.css. */
+const RAIL_W = 132;
+const RAIL_GAP = 20;
+/** Without the rail: caption + controls + gaps above and below the phone. */
+const STACK_CHROME = 46 + 36 + 2 * 14;
 
 interface Fit {
   /** Scale of the whole phone. */
   k: number;
   /** Logical phone height before scaling, px. */
   h: number;
+  /** Caption and controls in a rail beside the phone. */
+  rail: boolean;
 }
+
+/** The largest phone for a given height: logical height first, then scale. */
+const sizeFor = (availH: number): { h: number; k: number } => {
+  if (availH >= PHONE_H) return { h: PHONE_H, k: Math.min(FIT_MAX, availH / PHONE_H) };
+  if (availH >= PHONE_H_MIN) return { h: Math.round(availH), k: 1 };
+  return { h: PHONE_H_MIN, k: Math.max(FIT_MIN, availH / PHONE_H_MIN) };
+};
 
 type HintSide = 'above' | 'below';
 
@@ -188,8 +206,6 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
   const [fit, setFit] = useState<Fit | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
-  const captionRef = useRef<HTMLDivElement>(null);
-  const controlsRef = useRef<HTMLDivElement>(null);
   const stepStartRef = useRef(0);
   /** The visitor drives the demo with the keyboard: keep focus on the next target. */
   const keyboardRef = useRef(false);
@@ -251,7 +267,7 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
   // A hint waits so the visitor can read the screen first.
   useEffect(() => {
     if (!hasHint) return undefined;
-    const id = window.setTimeout(() => setHintStep(step), HINT_DELAY_MS);
+    const id = window.setTimeout(() => setHintStep(step), HINT_DELAY_AT[step] ?? HINT_DELAY_MS);
     return () => window.clearTimeout(id);
   }, [step, hasHint]);
 
@@ -287,12 +303,18 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
         return;
       }
       const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 74;
-      const chrome = (captionRef.current?.offsetHeight ?? 46) + (controlsRef.current?.offsetHeight ?? 36) + FIT_GAPS;
-      const avail = Math.max(window.innerHeight - header - chrome - FIT_AIR, PHONE_H_MIN * FIT_MIN);
-      const byHeight = Math.min(1, avail / PHONE_H_MIN);
-      const h = Math.round(Math.min(PHONE_H, avail / byHeight));
-      const k = Math.round(Math.min(byHeight, root.clientWidth / PHONE_W) * 1000) / 1000;
-      setFit((prev) => (prev && prev.k === k && prev.h === h ? prev : { k, h }));
+      const availH = window.innerHeight - header - FIT_AIR;
+      const width = root.clientWidth;
+      // Rail beside the phone vs caption/controls above and below it: take
+      // whichever gives the taller phone.
+      const tall = sizeFor(availH);
+      const railK = Math.min(tall.k, (width - RAIL_W - RAIL_GAP) / PHONE_W);
+      const stack = sizeFor(availH - STACK_CHROME);
+      const stackK = Math.min(stack.k, width / PHONE_W);
+      const rail = railK * tall.h >= stackK * stack.h;
+      const h = rail ? tall.h : stack.h;
+      const k = Math.round((rail ? railK : stackK) * 1000) / 1000;
+      setFit((prev) => (prev && prev.k === k && prev.h === h && prev.rail === rail ? prev : { k, h, rail }));
     };
     update();
     const observer = new ResizeObserver(update);
@@ -441,11 +463,11 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
   const editCard = (
     <>
       {editTitle}
-      {'\n'}
+      {'\n\n'}
       {c.card.was} {head}
       <mark className="sbx-mark">{was}</mark>
       {tail}
-      {'\n'}
+      {'\n\n'}
       {c.card.now} {head}
       <mark className="sbx-mark">{now}</mark>
       {tail}
@@ -499,6 +521,7 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
     unread: 1,
     fresh: true,
     anim: outro?.exLeaving ? 'gone' : undefined,
+    lifted: outro !== null,
   };
 
   const listRows: RowData[] =
@@ -585,7 +608,24 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
     {
       id: 'long',
       out: false,
-      text: at('aEdited') ? longEdited : longOriginal,
+      text:
+        step === 'aEditing' ? (
+          <>
+            {head}
+            <span className="sbx-swap-old">{was}</span>
+            {tail}
+          </>
+        ) : step === 'aEdited' ? (
+          <>
+            {head}
+            <span className="sbx-swap-new">{now}</span>
+            {tail}
+          </>
+        ) : at('aEdited') ? (
+          longEdited
+        ) : (
+          longOriginal
+        ),
       time: '18:41',
       edited: at('aEdited'),
       flash: step === 'aEdited',
@@ -601,22 +641,22 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
 
   // Phone 1, right after the edit: AndoGram's own cards in the friend's topic.
   const topicFriendA: ChatItem[] = [
-    { id: 'k1', out: true, text: `${c.card.header(c.friend, '18:41')}\n${longOriginal}`, time: '18:41' },
-    { id: 'k2', out: true, text: editCard, time: '18:41', sbx: 'card-edit' },
+    { id: 'k1', out: true, text: `${c.card.header(c.friend, '18:41')}\n${longOriginal}`, time: '18:41', wide: true },
+    { id: 'k2', out: true, text: editCard, time: '18:41', sbx: 'card-edit', wide: true },
   ];
 
   // Phone 2: the friend's topic. The cards come in from A (Максим).
   const fromMe = { name: c.me, color: ME_COLOR };
   const topicB: ChatItem[] = [
-    { id: 'k1', out: false, from: fromMe, text: `${c.card.header(c.friend, '18:41')}\n${longOriginal}`, time: '18:41' },
-    { id: 'k2', out: false, from: fromMe, text: editCard, time: '18:41' },
+    { id: 'k1', out: false, from: fromMe, text: `${c.card.header(c.friend, '18:41')}\n${longOriginal}`, time: '18:41', wide: true },
+    { id: 'k2', out: false, from: fromMe, text: editCard, time: '18:41', wide: true },
   ];
   if (at('bSent')) topicB.push({ id: 'b1', out: true, text: c.msg.tease, time: '18:43', sbx: 'msg-sent', fresh: step === 'bSent' });
 
   // Phone 1, the end: the ex's topic still has her deleted message.
   const topicEx: ChatItem[] = [
-    { id: 'x1', out: true, text: `${c.card.header(c.ex, '18:45')}\n${c.msg.ex}`, time: '18:45' },
-    { id: 'x2', out: true, text: `${deleteTitle}\n${c.card.deleteBody(c.msg.ex, '18:45', '18:45')}`, time: '18:45' },
+    { id: 'x1', out: true, text: `${c.card.header(c.ex, '18:45')}\n${c.msg.ex}`, time: '18:45', wide: true },
+    { id: 'x2', out: true, text: `${deleteTitle}\n\n${c.card.deleteBody(c.msg.ex, '18:45', '18:45')}`, time: '18:45', wide: true },
   ];
 
   // ── Screen ───────────────────────────────────────────────────────────────
@@ -753,7 +793,7 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
 
   return (
     <div
-      className={`sbx${fit ? ' sbx--fit' : ''}`}
+      className={`sbx${fit ? ' sbx--fit' : ''}${fit?.rail ? ' sbx--rail' : ''}`}
       ref={rootRef}
       style={fit ? ({ '--fit-w': `${Math.round(PHONE_W * fit.k)}px` } as React.CSSProperties) : undefined}
       onKeyDown={() => {
@@ -763,8 +803,15 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
         keyboardRef.current = false;
       }}
     >
-      <div className="sbx-caption" ref={captionRef}>
-        <span className="sbx-caption-title">{caption.title}</span>
+      <div key={`caption-${phone}`} className="sbx-caption sbx-caption--enter">
+        <span className="sbx-caption-title">
+          {caption.title.split(' · ').map((part, i) => (
+            <span key={part} className="sbx-caption-part">
+              {i > 0 && <span className="sbx-caption-sep"> · </span>}
+              {part}
+            </span>
+          ))}
+        </span>
         <span className="sbx-caption-sub">{caption.sub}</span>
       </div>
 
@@ -831,7 +878,7 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
         {spotReady && hint ? hint : outro && outro.chars > 0 ? c.tagline : ''}
       </p>
 
-      <div className="sbx-controls" ref={controlsRef}>
+      <div className="sbx-controls">
         <span className="sbx-progress" aria-hidden="true">
           <span style={{ '--p': progressOf(step, outro ? outroT / OUTRO_AT.end : 0) } as React.CSSProperties} />
         </span>

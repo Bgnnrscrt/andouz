@@ -6,8 +6,9 @@
  * for a tap on one element (TAP), or waits for the button in the hint
  * (NEXT_BUTTON). Every transition goes to the next step in STEPS.
  * A hint shows HINT_DELAY_MS after its step starts, so the visitor can read the
- * screen first; the target can be tapped earlier. The outro (dim, tagline, the
- * ex's message that gets deleted) runs on its own timeline (OUTRO).
+ * screen first (HINT_DELAY_AT: sooner on some steps); the target can be tapped
+ * earlier. The outro (dim, tagline, the ex's message that gets deleted) runs on
+ * its own timeline (OUTRO).
  */
 
 export type PhoneId = 'a' | 'b';
@@ -21,6 +22,7 @@ export const STEPS = [
   'aTyping',
   'aOpenChat',
   'aRead',
+  'aEditing',
   'aEdited',
   // Still phone 1: back to the list, the new «Личный архив», the friend's topic
   'aArchiveIn',
@@ -72,13 +74,20 @@ export const progressOf = (s: Step, within = 0): number =>
 /** A hint appears this long after its step starts (owner's spec: 3 s). */
 export const HINT_DELAY_MS = 3000;
 
+/** Steps whose hint comes sooner. After the outro: at once (owner, 2026-11-01). */
+export const HINT_DELAY_AT: Partial<Record<Step, number>> = {
+  aOpenArchive: 0,
+};
+
 /** Timed steps: go to the next step after N ms (delays from the owner's spec). */
 export const AUTO_MS: Partial<Record<Step, number>> = {
   aSplash: 1300,
   aList: 2000,
   aTyping: 2000,
-  /** «утопил» becomes «потерял» 1 s after the chat opens. */
+  /** «утопил» becomes «потерял» 1 s after the chat opens: first it is struck out… */
   aRead: 1000,
+  /** …then the new word replaces it (owner: the change must be seen). */
+  aEditing: 700,
   bSplash: 1300,
   aBack: 1200,
   aFriendTyping: 2000,
@@ -128,6 +137,7 @@ export const screenOf = (s: Step): ScreenId => {
     case 'aOpenArchive':
       return 'list';
     case 'aRead':
+    case 'aEditing':
     case 'aEdited':
     case 'aBack':
     case 'aFriendTyping':
@@ -143,27 +153,27 @@ export const screenOf = (s: Step): ScreenId => {
   }
 };
 
-/** The outro after the visitor leaves the chat, in ms (owner's spec). */
+/**
+ * The outro after the visitor leaves the chat, in ms (owner's spec, 2026-11-01):
+ * the list dims to 85%, the tagline types; once it is fully on screen the ex's
+ * message arrives and 0.5 s later her chat is gone. Then the tagline slowly
+ * erases, and within 1 s after it the screen is back and the hint shows at once.
+ */
 export const OUTRO = {
   /** The chat list («Личный архив» on top with the latest card), before the screen dims. */
   calm: 1000,
-  /** The chat list slowly dims to ~70%. */
+  /** The chat list slowly dims to 85%. */
   dimIn: 3000,
   /** The tagline types out. */
   type: 2500,
-  /** The whole tagline stays on screen. */
+  /** The whole tagline stays on screen: the ex's message comes and goes meanwhile. */
   hold: 1200,
   /** The tagline erases letter by letter from the end; its first letter goes last. */
   erase: 2500,
-  /**
-   * The tagline is gone: at that moment the ex's chat vanishes. The dim stays,
-   * empty, and the screen comes back about 4 s later (+ dimOut).
-   */
-  rest: 3500,
-  /** The dim fades out. */
+  /** The dim fades out right after the tagline is gone. */
   dimOut: 1000,
-  /** The ex's message arrives this long after the tagline starts typing. */
-  exArrives: 800,
+  /** The ex's chat stays this long after it arrives (with the full tagline). */
+  exStay: 500,
   /** Fade-out of the ex's row before it leaves the list. */
   exLeave: 280,
 } as const;
@@ -174,10 +184,9 @@ export const OUTRO_AT = (() => {
   const type = dim + OUTRO.dimIn;
   const hold = type + OUTRO.type;
   const erase = hold + OUTRO.hold;
-  const rest = erase + OUTRO.erase;
-  const undim = rest + OUTRO.rest;
+  const undim = erase + OUTRO.erase;
   const end = undim + OUTRO.dimOut;
-  return { dim, type, hold, erase, rest, undim, end, exIn: type + OUTRO.exArrives };
+  return { dim, type, hold, erase, undim, end, exIn: hold, exOut: hold + OUTRO.exStay };
 })();
 
 export interface OutroState {
@@ -202,17 +211,16 @@ export interface OutroState {
 export const outroAt = (t: number, len: number, instant: boolean): OutroState => {
   const at = OUTRO_AT;
   let chars = 0;
-  if (t >= at.type && t < at.rest) {
+  if (t >= at.type && t < at.undim) {
     if (instant || (t >= at.hold && t < at.erase)) chars = len;
     else if (t < at.hold) chars = Math.min(len, Math.ceil((len * (t - at.type)) / OUTRO.type));
     else chars = Math.max(1, len - Math.floor((len * (t - at.erase)) / OUTRO.erase));
   }
-  // Owner: the ex's chat goes «сразу как только слоган исчез» — when its first letter is erased.
-  const exOut = at.rest;
+  const { exOut } = at;
   return {
     dimmed: t >= at.dim && t < at.undim,
     chars,
-    caret: t >= at.type && t < at.rest,
+    caret: t >= at.type && t < at.undim,
     exIn: t >= at.exIn,
     exLeaving: t >= exOut && t < exOut + OUTRO.exLeave,
     exGone: t >= exOut + OUTRO.exLeave,

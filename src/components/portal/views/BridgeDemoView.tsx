@@ -26,7 +26,18 @@ export const BridgeDemoView: React.FC<BridgeDemoViewProps> = ({ lang, onOpenDown
           {p.back}
         </a>
         <span className="ptl-demo-kicker">{p.kicker}</span>
-        <h1 className="ptl-demo-title">{p.title}</h1>
+        <h1 className="ptl-demo-title">
+          {/* «A-B-C» never breaks at its hyphens. */}
+          {p.title.split(/(A-B-C)/).map((part, i) =>
+            part === 'A-B-C' ? (
+              <span key={i} className="ptl-demo-nowrap">
+                {part}
+              </span>
+            ) : (
+              part
+            ),
+          )}
+        </h1>
         <p className="ptl-demo-lead">{p.lead}</p>
 
         <section className="ptl-demo-roles" aria-labelledby="ptl-demo-roles-title">

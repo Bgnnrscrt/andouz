@@ -144,7 +144,7 @@ const RU: BridgeCopy = {
     // Only Лиза deletes here, so «удалила». The app itself writes «удалил … Статус: удален» for everyone.
     deleteTitle: (name) => `Пользователь ${name} удалила сообщение:`,
     deleteBody: (text, sent, deleted) =>
-      `Сообщение: ${text} • время отправки ${sent}\nСтатус: удалено, время удаления — ${deleted}`,
+      `Сообщение: ${text} • время отправки ${sent}\n\nСтатус: удалено, время удаления — ${deleted}`,
   },
   chatsA: [
     { id: 'mom', name: 'Мама', preview: 'Не забудь позвонить бабушке ❤️', time: '17:20', color: '#ee7aae' },
@@ -168,7 +168,7 @@ const RU: BridgeCopy = {
     bSent: 'Ушло Данилю от твоего основного аккаунта',
     aSecret: 'Раскрой секрет',
     aSecretSent: 'Выйди из чата',
-    aOpenArchive: 'Открой «Личный архив»',
+    aOpenArchive: 'Лиза💔 удалила сообщение. Хочешь прочитать, что там было? Открой «Личный архив»',
     aOpenTopic: 'Открой тему «Лиза💔»',
   },
   buttons: {
@@ -235,7 +235,7 @@ const UZ: BridgeCopy = {
     now: 'Endi:',
     deleteTitle: (name) => `Foydalanuvchi ${name} xabarni o‘chirdi:`,
     deleteBody: (text, sent, deleted) =>
-      `Xabar: ${text} • yuborilgan vaqti ${sent}\nHolati: o‘chirilgan, o‘chirilgan vaqti — ${deleted}`,
+      `Xabar: ${text} • yuborilgan vaqti ${sent}\n\nHolati: o‘chirilgan, o‘chirilgan vaqti — ${deleted}`,
   },
   chatsA: [
     { id: 'mom', name: 'Onam', preview: 'Buvingga qo‘ng‘iroq qilishni unutma ❤️', time: '17:20', color: '#ee7aae' },
@@ -259,7 +259,7 @@ const UZ: BridgeCopy = {
     bSent: 'Sanjarga asosiy akkauntingizdan ketdi',
     aSecret: 'Sirni oshkor qiling',
     aSecretSent: 'Chatdan chiqing',
-    aOpenArchive: '«Shaxsiy arxiv»ni oching',
+    aOpenArchive: 'Sabina💔 xabarini o‘chirib yubordi. Nima yozganini o‘qishni xohlaysizmi? «Shaxsiy arxiv»ni oching',
     aOpenTopic: '«Sabina💔» mavzusini oching',
   },
   buttons: {
@@ -325,7 +325,7 @@ const EN: BridgeCopy = {
     was: 'Was:',
     now: 'Now:',
     deleteTitle: (name) => `User ${name} deleted a message:`,
-    deleteBody: (text, sent, deleted) => `Message: ${text} • sent at ${sent}\nStatus: deleted, deleted at ${deleted}`,
+    deleteBody: (text, sent, deleted) => `Message: ${text} • sent at ${sent}\n\nStatus: deleted, deleted at ${deleted}`,
   },
   chatsA: [
     { id: 'mom', name: 'Mom', preview: 'Don’t forget to call grandma ❤️', time: '17:20', color: '#ee7aae' },
@@ -349,7 +349,7 @@ const EN: BridgeCopy = {
     bSent: 'Sent to Alex from your main account',
     aSecret: 'Reveal the secret',
     aSecretSent: 'Leave the chat',
-    aOpenArchive: 'Open “Personal archive”',
+    aOpenArchive: 'Molly💔 deleted her message. Want to read what it said? Open “Personal archive”',
     aOpenTopic: 'Open the “Molly💔” topic',
   },
   buttons: {
