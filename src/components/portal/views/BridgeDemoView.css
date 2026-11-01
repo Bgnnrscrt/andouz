@@ -1,0 +1,170 @@
+/* «Как работает» page of a feature (prefix ptl-demo-). */
+.ptl-demo-view {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+  align-items: start;
+  gap: 48px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+}
+
+.ptl-demo-intro {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 28px;
+}
+
+.ptl-demo-back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s var(--ease-out);
+}
+
+.ptl-demo-back:focus-visible {
+  outline: 2px solid var(--accent-ando);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.ptl-demo-kicker {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 245, 155, 0.25);
+  border-radius: 6px;
+  background: rgba(0, 245, 155, 0.1);
+  color: var(--accent-ando);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ptl-demo-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.ptl-demo-lead {
+  max-width: 58ch;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.ptl-demo-roles {
+  margin-top: 6px;
+  padding: 18px 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  background: rgba(16, 20, 32, 0.7);
+}
+
+.ptl-demo-roles-title {
+  margin-bottom: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ptl-demo-roles ul {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+
+.ptl-demo-roles li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.ptl-demo-roles strong {
+  font-weight: 600;
+  color: #fff;
+}
+
+.ptl-demo-role-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: #04130c;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.ptl-demo-role-badge.role-a {
+  background: var(--accent-ando);
+}
+
+.ptl-demo-role-badge.role-b {
+  background: #5aa5e8;
+}
+
+.ptl-demo-role-badge.role-c {
+  background: #faa774;
+}
+
+.ptl-demo-buy {
+  align-self: flex-start;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.ptl-demo-stage {
+  display: flex;
+  justify-content: center;
+}
+
+.ptl-demo-loading {
+  min-height: 70vh;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ptl-demo-back:hover {
+    color: #fff;
+  }
+}
+
+@media (max-width: 1000px) {
+  .ptl-demo-view {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    max-width: 640px;
+  }
+
+  .ptl-demo-intro {
+    position: static;
+    padding-top: 0;
+  }
+
+  /* On narrow screens the buy button lives in the sandbox finale. */
+  .ptl-demo-buy {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .ptl-demo-view {
+    padding: 20px 16px 60px;
+  }
+}

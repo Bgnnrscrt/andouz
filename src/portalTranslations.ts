@@ -58,6 +58,7 @@ export interface PortalTranslations {
     updated: string;
     downloadApk: string;
     allFeatures: string;
+    howItWorks: string;
     compareWithOriginal: string;
     changelogHeading: string;
   };
@@ -179,6 +180,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       updated: 'Последнее обновление',
       downloadApk: 'Скачать этот APK',
       allFeatures: 'Все возможности приложения',
+      howItWorks: 'Как работает',
       compareWithOriginal: 'Сравнить с официальным клиентом',
       changelogHeading: 'История обновлений и патчей'
     },
@@ -298,6 +300,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       updated: 'Yangilangan sana',
       downloadApk: 'Ushbu APKni yuklash',
       allFeatures: 'Ilovaning barcha imkoniyatlari',
+      howItWorks: 'Qanday ishlaydi',
       compareWithOriginal: 'Rasmiy versiya bilan taqqoslash',
       changelogHeading: 'O‘zgarishlar va yangiliklar tarixi'
     },
@@ -417,6 +420,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       updated: 'Last Updated',
       downloadApk: 'Download APK',
       allFeatures: 'All Features & Capabilities',
+      howItWorks: 'How it works',
       compareWithOriginal: 'Compare with Stock App',
       changelogHeading: 'Release Notes & Patch History'
     },

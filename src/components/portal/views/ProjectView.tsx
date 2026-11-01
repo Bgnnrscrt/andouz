@@ -11,11 +11,13 @@ import {
   Zap,
   Sparkles,
   Flame,
-  CheckCircle2
+  CheckCircle2,
+  PlayCircle
 } from 'lucide-react';
 import { Language, AppId } from '../../../types';
 import { APPS_DATA } from '../../../data';
 import { portalI18n } from '../../../portalTranslations';
+import { demoHref, isDemoId } from '../../sandbox/demos';
 import { ComparisonTable } from '../../ComparisonTable';
 import './ProjectView.css';
 
@@ -159,8 +161,13 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
                 <div className="ptl-feature-icon">
                   {renderIcon(feat.iconName)}
                 </div>
-                {feat.tag && (
-                  <span className="ptl-feature-tag">{feat.tag[lang]}</span>
+                {isDemoId(feat.id) ? (
+                  <a className="ptl-feature-demo-btn" href={demoHref(feat.id)}>
+                    <PlayCircle size={15} aria-hidden="true" />
+                    <span>{t.projects.howItWorks}</span>
+                  </a>
+                ) : (
+                  feat.tag && <span className="ptl-feature-tag">{feat.tag[lang]}</span>
                 )}
               </div>
 

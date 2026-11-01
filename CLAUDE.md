@@ -1,7 +1,7 @@
 # CLAUDE.md — ANDO / andouz
 
 > **Читать первым.** Это главный и достаточный источник контекста по проекту. Новая сессия Claude, субагент или человек: прочитай файл целиком, и изучать весь репозиторий заново не понадобится.
-> Актуально на **2026-10-30**. Проверка свежести: git log --oneline cc1fd5a..HEAD выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
+> Актуально на **2026-11-01**. Проверка свежести: `git log --oneline $(git log -1 --format=%h -- CLAUDE.md)..HEAD` выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
 
 ---
 
@@ -112,13 +112,21 @@ src/components/
   portal/                   КАРКАС ПОРТАЛА (рендерится из App):
     PortalLayout.tsx        сайдбар+топбар+активный раздел; хеш-роутинг (#/projects/andogram…), back/forward, общий Footer+BackToTop
     Sidebar.tsx             боковое меню (сворачивание, мобильный оверлей), подменю Проектов (AndoTube «в разработке», другие «в планах»)
-    Topbar.tsx              хлебные крошки + переключатель языка (бейдж статуса и кнопка «Скачать APK» убраны 30.10)
+    Topbar.tsx              хлебные крошки + переключатель языка (бейдж статуса и кнопка «Скачать APK» убраны 30.10); 3-я крошка `extraCrumb` на страницах демо (на телефоне средняя скрыта)
     views/HomeView          баннер, 3 стата, FeatureMarquee, 2 карточки продуктов, PhoneMockup
     views/ProjectView       вкладки AndoGram/Andusta: спеки, все фичи (из data.ts), ComparisonTable, changelog
     views/DocsView          InstallGuide + карточка безопасности + FAQ (3 языка)
     views/SupportView       карточки → @Andouzbot + статус-бар
     views/CommunityView     канал/чат (заглушки на бота) + бот оплаты @Andouzbot + GitHub
     views/StatsView         ⛔ ВЫКЛЮЧЕН (не смонтирован): цифры были выдуманы, вернуть на реальных данных API бота
+    views/BridgeDemoView    «Как работает» моста A-B-C (#/projects/andogram/archive_bridge): объяснение + песочница; грузится лениво
+  sandbox/                  «ПРОВЕРЬ САМ» — интерактивные демо фич (сейчас только мост A-B-C):
+    demos.ts                DEMO_IDS (у каких фич есть демо), demoHref / demoFromHash, DEMO_CRUMBS (3-я крошка топбара)
+    bridgeFlow.ts           сценарий моста: STEPS, тайминги AUTO_MS, ожидаемые тапы TAP, подсветка LOOK, кнопки NEXT_BUTTON
+    bridgeCopy.ts           все тексты песочницы и её страницы на 3 языках (ты: Максим/Aziz/Max, друг: Даниль/Sanjar/Alex)
+    TgUi.tsx                мини-набор «как Telegram» (тёмная тема): аватар, строки чатов и тем, шапки, пузыри, ввод, заставки
+    BridgeSandbox.tsx       оркестратор: 3 телефона, подсветка цели + подсказки (плавающие / встроенные в чат), финал
+    sandbox.css             стили sbx-: палитра --tg-* на .sbx; зелёный ANDO — только наш слой (подсказки, подсветка, CTA)
   Header.tsx/.css           шапка: меню + scroll-spy, язык, CTA, бургер-панель <960px, полоса прогресса скролла
   header/useActiveSection.ts  SECTION_IDS + scroll-spy (pin при клике)
   Hero.tsx/.css             первый экран: STATS, тайминги интро T
@@ -154,6 +162,7 @@ src/components/
 |---|---|---|
 | Home | `#/` | баннер, 3 стата, `FeatureMarquee`, 2 карточки продуктов, интерактивное демо `PhoneMockup` |
 | Projects | `#/projects/andogram`·`/andusta` | вкладки приложений, спеки, все фичи (из `data.ts`), `ComparisonTable`, changelog |
+| Как работает: мост | `#/projects/andogram/archive_bridge` | объяснение простыми словами + песочница «Проверь сам» (`BridgeDemoView`, лениво) |
 | Docs | `#/docs` | `InstallGuide`, карточка «Архитектура безопасности», FAQ |
 | Support | `#/support` | карточки → бот `@Andouzbot`, статус-бар |
 | Community | `#/community` | канал/чат (пока заглушки на бота), бот оплаты `@Andouzbot`, GitHub |
@@ -165,6 +174,8 @@ src/components/
 - Решение владельца: у каждого приложения ровно **5 фич** (топ, порядок = приоритет). AndoGram: `honeypot`, `no_forwards_bypass`, `archive_bridge`, `ar_masks`, `voice_changer`. Andusta: `ghost_mode`, `unfollowers_tracker`, `music_unlocker`, `anti_unsend`, `view_once`. На карточках Home — превью, в ProjectView — все (из `data.ts`). Широта — в сравнении и бегущей строке.
 - Подменю «Проекты» декоративно показывает будущее: **AndoTube — в разработке**, другие — в планах.
 - `PhoneMockup` листает сцены сам; пауза вне экрана и при reduced-motion.
+- **«Как работает» / «Проверь сам»** (решение владельца 01.11: вместо видео — интерактив): у фичи из `DEMO_IDS` на карточке ProjectView вместо тега кнопка «Как работает» (`t.projects.howItWorks`) → страница демо. Сейчас только `archive_bridge`; остальные фичи и Andusta — с тегами, сценарий каждой придумываем с владельцем отдельно.
+- Песочница моста: телефон 1 — AndoGram (ты), телефон 2 — обычный Telegram (второй аккаунт), телефон собеседника. На каждом шаге подсвечена цель (остальное затемнено) + подсказка; неверный тап трясёт подсказку; финал «Купить AndoGram» → DownloadModal. Всё на моках, ничего не отправляется. На страницах демо `BackToTop` не рендерится (налезал на телефон).
 
 ## 7. Где что менять
 | Что | Где |
@@ -181,6 +192,9 @@ src/components/
 | Заголовок вкладки браузера | App.tsx `PAGE_TITLES` |
 | SEO, OG, canonical | `index.html` (только RU, от выбранного языка не зависит; URL только https://ando.uz) |
 | Цвета, радиусы, шрифты | `src/index.css` `:root` |
+| Тексты песочницы моста (имена, сообщения, подсказки, страница) | `src/components/sandbox/bridgeCopy.ts` (3 языка) |
+| Шаги, тайминги, что нажимать в песочнице | `src/components/sandbox/bridgeFlow.ts` |
+| «Как работает» для другой фичи | `sandbox/demos.ts` (`DEMO_IDS`, `DEMO_CRUMBS`) + своя страница и сценарий + рендер в PortalLayout |
 
 **Новая версия приложения** обновляется во всех местах сразу:
 - data.ts: `badge` (3 языка), `version`, `size`, новая запись в `changelog`;
@@ -194,14 +208,15 @@ src/components/
   1. `portalTranslations.ts`: `portalI18n[lang].<раздел>.<ключ>` — весь текст портала (сайдбар, топбар, разделы);
   2. `translations.ts`: `translations.<секция>.<ключ>[lang]` — для переиспользованных старых секций (демо, сравнение, установка);
   3. локальные словари/тернары в компонентах: вью портала местами держат текст инлайн тернаром `lang === 'uz' ? … : lang === 'en' ? … : …` (все 3 языка; `en` не забывать — раньше падал в русский);
-  4. `data.ts` и `demo/copy.ts`: поля `Record<Language, string>`.
+  4. `data.ts` и `demo/copy.ts`: поля `Record<Language, string>`;
+  5. `sandbox/bridgeCopy.ts`: свой словарь песочницы моста и её страницы (по объекту на язык).
   Новый текст клади рядом с соседними, в том же стиле.
 - **Каждый видимый текст и aria-label пишется сразу на трёх языках.** Узбекский — латиница; в нём встречается и `'`, и `‘` (o‘, g‘).
 - Мёртвые ключи `translations.ts`, не используются нигде: вся секция `apps`, вся секция `compare`, `install.playProtectNotice`, `footer.copyright`, `footer.communityTitle`, `footer.channelLink`, `footer.botLink`. Прежде чем править текст, найди по разделу 6, какой источник реально выводится.
 
 ## 9. Доступ, оплата, скачивание (DownloadModal)
 - Переключатели: приложение (AndoGram / Andusta) и способ доступа.
-  - **Stars**: ссылка `https://t.me/ando_stars_bot?start=buy_<appId>`, цена 1000 Telegram Stars, подпись «после оплаты бот пришлёт код установки».
+  - **Stars**: ссылка `https://t.me/andouzbot?start=buy_<appId>` (бот @Andouzbot), цена 1000 Telegram Stars, подпись «после оплаты бот пришлёт код установки».
   - **Промокод**: ввод нормализуется (`trim` + верхний регистр) и отправляется на **реальный API бота** `POST ${API_BASE}/api/redeem-coupon` (`API_BASE` = `VITE_ANDO_API` или `https://api.ando.uz`). Сервер сжигает купон и возвращает `{ success, app, apk_url, activation_code }`. Статусы: успех → разблокировка; `already_used` → «уже активирован»; прочее → «неверный»; сеть/CORS недоступны → ошибка связи (все на 3 языках).
 - При успехе результат (`{app, apkUrl, code}`) пишется в localStorage `ando_activation` (переживает рефреш — чтобы не потерять одноразовый код), затем конфетти. Экран показывает: кнопку(и) скачивания APK (из `apk_url`, для `all` — обе), **карточку кода установки с копированием в один клик** (`.dl-code-*`), QR-код и «скопировать ссылку».
 - **Код установки** — это одноразовый код, который вводится в приложении при первом запуске (привязка к устройству, см. CLAUDE.md бота andouzbot). Сайт его только показывает; проверяет и привязывает его API бота `/api/activate`.
@@ -245,6 +260,11 @@ src/components/
   - вкладки — `SegmentedControl` (с уникальным `layoutId`);
   - диалоги — `ui/Modal`.
 
+**Песочница (`sbx-`):**
+- Своя палитра тёмного Telegram (`--tg-*` на `.sbx`), интерфейс общий андроидный, не копия конкретного клиента. Зелёный ANDO — только наш слой: подсказки, подсветка, кнопки старта и финала.
+- Подсказка у цели внизу чата (кнопка отправки, новые сообщения — `DOCKED`) встраивается в колонку чата между сообщениями и вводом и раздвигает переписку; у остальных целей — плавающая рядом. Подсветка меряется после анимации входа (400 мс).
+- Анимации входа экранов и телефона — `fill-mode: backwards`: с `both` остаётся stacking context, и встроенная подсказка уходит под затемнение.
+
 **Доступность:**
 - skip-link; aria-label на всех трёх языках;
 - tablist/tabpanel связываются через `idPrefix`;
@@ -260,6 +280,8 @@ src/components/
 6. В спеках AppDetailsModal архитектура `ARM64-v8a` захардкожена для обоих приложений.
 7. Community (канал/чат) и Support ведут на бота `@Andouzbot`: отдельных Telegram-канала/чата/Instagram пока нет — ждём реальные ссылки владельца.
 8. Stats-раздел выключен 30.10 (были выдуманные метрики). Вернуть только на реальных данных (API бота `api.ando.uz` / статистика andouzbot), иначе не возвращать.
+9. Песочница моста показывает карточки архива на языке сайта, а приложение пишет их только по-русски (`ArchiveNamingHelper` в andogram).
+10. Описание моста в `data.ts` обещает «24/7», хотя мост работает, только пока телефон A включён и в сети. В песочнице это условие не показываем (решение владельца 01.11).
 
 ## 12. Журнал
 История до CLAUDE.md (2026-10-27, `d14fdff`…`b672fc5`):
@@ -279,3 +301,4 @@ src/components/
 | 2026-10-29 | Фичи по `ECOSYSTEM_FEATURES.md` (andouzcto): топ-5 фич на приложение — AndoGram +`voice_changer`, `media_sort` снят с карточек; Andusta +`unfollowers_tracker` +`music_unlocker`, `downloader`/`fake_camera`/`ad_blocker` сняты с карточек. Сравнение: Telegram +4 строки (голос, гео/Live Location, заметки, главный экран), Instagram +6 (история правок, своя музыка, отписки, голос, iOS-эмодзи/шрифты, Full HD аватарки). Бегущая строка: +3 чипа в каждый ряд, длительности 72/84 с под 9 чипов. `FEATURE_ICONS` + Mic/Music/UserMinus. Версия Andusta 1.0.0 не менялась (решение владельца). build+lint чистые | data.ts, FeatureMarquee.tsx/.css, AppsShowcase.tsx, CLAUDE.md |
 | 2026-10-30 | Трансформация в веб-портал с боковым меню (сайдбар), разделами (Главная, Проекты [AndoGram, Andusta], Статистика, Документы, Поддержка, В сети), адаптивной локализацией на узбекский язык (без БД/Clerk); build+lint чистые | src/App.tsx, src/components/portal/*, src/portalTranslations.ts, src/portalTypes.ts, CLAUDE.md |
 | 2026-10-30 | Правки портала (ветка `feat/portal-fixes`): Stats скрыт (цифры были выдуманы); смягчены абсолютные обещания («100% анти-бан», «99.98%», «банки работают 100%») в Home/Docs; английский в ручном тексте вью доведён до 3 языков (Home/Project/Docs/Support — EN раньше падал в русский); бот оплаты `@ando_stars_bot`→`@Andouzbot` (DownloadModal, Footer, карточка оплаты в Community; канал/чат/Support оставлены до реальных ссылок); подменю «Проекты» → AndoTube «в разработке» + другие «в планах»; из топбара убраны «Экосистема онлайн» и «Скачать APK»; футер: мёртвые якоря `#apps/#compare/#install` → хеш-разделы портала (`#/projects/*`, `#/docs`). §1/§2/§4/§5/§6/§8/§11 синхронизированы. build+lint чистые | portalTranslations.ts, portal/{PortalLayout,Sidebar,Topbar}, portal/views/*, DownloadModal.tsx, Footer.tsx, CLAUDE.md |
+| 2026-11-01 | «Проверь сам» для моста A-B-C (ветка `feat/bridge-sandbox`): на карточке `archive_bridge` вместо тега кнопка «Как работает» → страница `#/projects/andogram/archive_bridge` (лениво, отдельный чанк ~12 kB gzip): объяснение + песочница на 3 телефонах (AndoGram / Telegram / собеседник) по сценарию владельца, 3 языка, подсветка + подсказки, финал «Купить». Топбар: 3-я крошка; BackToTop скрыт на демо. CLAUDE.md: §9 бот оплаты `andouzbot` (было устаревшее `ando_stars_bot`), проверка свежести через `git log -1 -- CLAUDE.md`. build+lint чистые; e2e-проход (Playwright) ru/uz/en, 360–1440 px | src/components/sandbox/*, portal/views/BridgeDemoView.*, PortalLayout.tsx, Topbar.*, ProjectView.*, portalTranslations.ts, CLAUDE.md |

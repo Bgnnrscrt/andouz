@@ -1,0 +1,1121 @@
+/*
+ * «Проверь сам» sandbox: a phone with a Telegram-like dark UI.
+ * Prefix sbx-. The Telegram palette lives on .sbx; the ANDO green is used only
+ * for our own layer (hints, spotlight, start/finale buttons).
+ */
+
+.sbx {
+  --tg-bar: #212d3b;
+  --tg-bg: #1d2733;
+  --tg-divider: rgba(0, 0, 0, 0.24);
+  --tg-text: #f5f6f7;
+  --tg-sub: #8696a7;
+  --tg-time: #6c7883;
+  --tg-accent: #5aa5e8;
+  --tg-badge: #3e88f7;
+  --tg-badge-muted: #4b5866;
+  --tg-chat-bg: #0e1621;
+  --tg-in: #182533;
+  --tg-out: #2b5278;
+  --tg-in-time: #6d8197;
+  --tg-out-time: #8db3da;
+  --tg-input: #1d2733;
+  --tg-btn: #3390ec;
+  --sbx-dim: rgba(3, 6, 12, 0.62);
+  --sbx-hint-bg: var(--accent-ando);
+  --sbx-hint-text: #03130c;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+/* ── Caption above the phone ───────────────────────────────────────────── */
+.sbx-caption {
+  min-height: 46px;
+  text-align: center;
+}
+
+.sbx-caption-title {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.sbx-caption-sub {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+/* ── Phone frame ───────────────────────────────────────────────────────── */
+.sbx-phone {
+  position: relative;
+  width: min(360px, 100%);
+  /* Fits the caption + phone into a laptop screen (topbar, paddings ≈ 200px). */
+  height: min(740px, calc(100vh - 200px));
+  min-height: 560px;
+  padding: 10px;
+  border-radius: 46px;
+  background: #0a0c11;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.09),
+    0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+@supports (height: 1svh) {
+  .sbx-phone {
+    height: min(740px, calc(100svh - 200px));
+  }
+}
+
+.sbx-phone--enter {
+  /* backwards, not both: a filled transform animation keeps a stacking
+     context and would put the docked hint under the spotlight dim. */
+  animation: sbx-phone-in 0.32s var(--ease-out) backwards;
+}
+
+@keyframes sbx-phone-in {
+  from {
+    opacity: 0;
+    transform: translateX(28px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sbx-screen {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 36px;
+  background: var(--tg-bg);
+  color: var(--tg-text);
+  font-family: Roboto, var(--font-body), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.3;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.sbx-camera {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  z-index: 40;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: #05070a;
+  box-shadow: inset 0 0 0 2px #161b23;
+}
+
+/* Buttons inside the phone look like plain UI; zero specificity so the
+   component classes below win. */
+:where(.sbx-screen) button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: inherit;
+  cursor: default;
+  appearance: none;
+}
+
+.sbx-screen [data-want='true'] {
+  cursor: pointer;
+}
+
+.sbx-screen button:focus-visible {
+  outline: 2px solid var(--accent-ando);
+  outline-offset: -2px;
+}
+
+.sbx-status {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  padding: 0 22px 0 26px;
+  background: var(--tg-bar);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sbx-status-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sbx-view {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sbx-view--enter {
+  animation: sbx-view-in 0.26s var(--ease-out) backwards;
+}
+
+@keyframes sbx-view-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sbx-ellipsis {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sbx-accent {
+  color: var(--tg-accent);
+}
+
+.sbx-dim-icon {
+  flex: none;
+  color: var(--tg-sub);
+}
+
+/* ── Top bars ──────────────────────────────────────────────────────────── */
+.sbx-bar {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 56px;
+  padding: 0 16px;
+  background: var(--tg-bar);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.sbx-bar > svg {
+  flex: none;
+}
+
+.sbx-bar-title {
+  flex: 1;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.sbx-bar--chat {
+  gap: 10px;
+  padding: 0 12px 0 4px;
+}
+
+.sbx-screen .sbx-back {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.sbx-bar-head {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sbx-bar-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sbx-bar-sub {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  color: var(--tg-sub);
+}
+
+.sbx-bar-sub.sbx-accent {
+  color: var(--tg-accent);
+}
+
+/* ── Avatars & topic icons ─────────────────────────────────────────────── */
+.sbx-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+  color: #fff;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sbx-topic-icon {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+.sbx-topic-icon svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sbx-topic-icon > span {
+  position: relative;
+  margin-top: -2px;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sbx-topic-icon--general {
+  color: var(--tg-sub);
+}
+
+/* ── Chat list & topic list ────────────────────────────────────────────── */
+.sbx-list {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--tg-bg);
+}
+
+.sbx-screen .sbx-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 70px;
+  padding: 8px 12px 8px 10px;
+}
+
+.sbx-row::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 72px;
+  height: 1px;
+  background: var(--tg-divider);
+}
+
+.sbx-row--new {
+  animation: sbx-row-in 0.42s var(--ease-out) both;
+}
+
+@keyframes sbx-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sbx-screen .sbx-row--topic {
+  gap: 14px;
+  min-height: 64px;
+  padding-left: 16px;
+}
+
+.sbx-row--topic::after {
+  left: 60px;
+}
+
+.sbx-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sbx-row-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sbx-row-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15.5px;
+  font-weight: 600;
+}
+
+.sbx-row-time {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12.5px;
+  color: var(--tg-time);
+}
+
+.sbx-check {
+  color: var(--tg-accent);
+}
+
+.sbx-row-preview {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14.5px;
+  color: var(--tg-sub);
+}
+
+.sbx-from {
+  color: #dfe7ef;
+}
+
+.sbx-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 11px;
+  background: var(--tg-badge);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.sbx-badge--muted {
+  background: var(--tg-badge-muted);
+}
+
+.sbx-typing {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14.5px;
+  color: var(--tg-accent);
+}
+
+.sbx-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.sbx-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: sbx-dot 1.2s ease-in-out infinite;
+}
+
+.sbx-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.sbx-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes sbx-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.sbx-fab {
+  position: absolute;
+  right: 16px;
+  bottom: 18px;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--tg-btn);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Chat ──────────────────────────────────────────────────────────────── */
+.sbx-chat {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(120% 60% at 15% 10%, rgba(90, 165, 232, 0.07), transparent 60%),
+    radial-gradient(90% 50% at 90% 80%, rgba(166, 149, 231, 0.06), transparent 60%),
+    var(--tg-chat-bg);
+}
+
+.sbx-msgs {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 10px 10px 8px;
+}
+
+.sbx-date {
+  align-self: center;
+  margin: 6px 0;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.sbx-msg-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.sbx-msg-row--out {
+  justify-content: flex-end;
+}
+
+.sbx-msg-avatar-gap {
+  flex: none;
+  width: 32px;
+}
+
+.sbx-msg {
+  position: relative;
+  max-width: 84%;
+  padding: 6px 9px 7px 10px;
+  border-radius: 16px;
+  font-size: 14.5px;
+  line-height: 1.32;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.sbx-msg--in {
+  background: var(--tg-in);
+  border-bottom-left-radius: 6px;
+}
+
+.sbx-msg--out {
+  background: var(--tg-out);
+  border-bottom-right-radius: 6px;
+}
+
+.sbx-msg-name {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+/* The ghost copy reserves room for the time at the end of the last line;
+   the real one sits in the bottom-right corner, like in Telegram. */
+.sbx-msg-ghost,
+.sbx-msg-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.sbx-msg-ghost {
+  visibility: hidden;
+  margin-left: 10px;
+}
+
+.sbx-msg-meta {
+  position: absolute;
+  right: 9px;
+  bottom: 5px;
+}
+
+.sbx-msg--in .sbx-msg-meta {
+  color: var(--tg-in-time);
+}
+
+.sbx-msg--out .sbx-msg-meta {
+  color: var(--tg-out-time);
+}
+
+.sbx-msg--out .sbx-msg-meta svg {
+  color: #8cc6ff;
+}
+
+.sbx-msg--fresh {
+  animation: sbx-pop 0.36s var(--ease-out) both;
+}
+
+@keyframes sbx-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sbx-msg--flash::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 2px solid var(--tg-accent);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  animation: sbx-flash 1.3s var(--ease-out);
+}
+
+@keyframes sbx-flash {
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ── Input ─────────────────────────────────────────────────────────────── */
+.sbx-input {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 7px 12px;
+  background: var(--tg-input);
+  color: var(--tg-sub);
+}
+
+.sbx-input > svg {
+  flex: none;
+}
+
+.sbx-input-field {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 15.5px;
+  color: var(--tg-sub);
+}
+
+.sbx-input-field.has-text {
+  color: var(--tg-text);
+}
+
+.sbx-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 1px;
+  vertical-align: -0.18em;
+  background: var(--tg-accent);
+  animation: sbx-caret 1s steps(1) infinite;
+}
+
+@keyframes sbx-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.sbx-screen .sbx-send-btn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 20px;
+  background: var(--tg-btn);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Splash & start ────────────────────────────────────────────────────── */
+.sbx-splash,
+.sbx-start {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.sbx-splash {
+  background: var(--tg-bg);
+}
+
+.sbx-splash-logo {
+  display: grid;
+  place-items: center;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+}
+
+.sbx-splash-logo--andogram {
+  background: #0b1612;
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 155, 0.35),
+    0 0 40px rgba(0, 245, 155, 0.22);
+}
+
+.sbx-splash-logo--andogram img,
+.sbx-start-logo img {
+  display: block;
+  border-radius: 50%;
+}
+
+.sbx-splash-logo--telegram {
+  background: var(--tg-btn);
+  color: #fff;
+}
+
+.sbx-splash-name {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.sbx-start {
+  padding: 32px 26px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(0, 245, 155, 0.16), transparent 60%),
+    var(--tg-bg);
+}
+
+.sbx-start-logo {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: #0b1612;
+  box-shadow:
+    0 0 0 1px rgba(0, 245, 155, 0.35),
+    0 0 48px rgba(0, 245, 155, 0.25);
+}
+
+.sbx-start-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.sbx-start-sub {
+  max-width: 240px;
+  font-size: 14px;
+  color: var(--tg-sub);
+}
+
+.sbx-screen .sbx-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  margin-top: 6px;
+  padding: 0 26px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, var(--accent-ando), #00b4d8);
+  color: #04130c;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 245, 155, 0.3);
+  transition: transform 0.16s var(--ease-out);
+}
+
+.sbx-screen .sbx-cta:active {
+  transform: scale(0.97);
+}
+
+/* ── Spotlight & hint ──────────────────────────────────────────────────── */
+.sbx-spot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  border-radius: 16px;
+  box-shadow: 0 0 0 9999px var(--sbx-dim);
+  outline: 2px solid var(--accent-ando);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.sbx-spot.is-ready {
+  opacity: 1;
+}
+
+.sbx-spot::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--accent-ando);
+  border-radius: inherit;
+  animation: sbx-ring 1.6s var(--ease-out) infinite;
+}
+
+@keyframes sbx-ring {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.07);
+  }
+}
+
+.sbx-hint {
+  position: absolute;
+  z-index: 21;
+  animation: sbx-hint-in 0.28s var(--ease-out) both;
+}
+
+.sbx-hint-box {
+  position: relative;
+  padding: 11px 13px;
+  border-radius: 14px;
+  background: var(--sbx-hint-bg);
+  color: var(--sbx-hint-text);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.sbx-hint-box::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--arrow-x) - 7px);
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+.sbx-hint-box[data-side='below']::before {
+  top: -6px;
+}
+
+.sbx-hint-box[data-side='above']::before {
+  bottom: -6px;
+}
+
+/* Docked hint: part of the chat column (between messages and input), above
+   the spotlight dim. Takes its space from the first frame, fades in later. */
+.sbx-dock {
+  position: relative;
+  z-index: 21;
+  flex: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.sbx-dock.is-ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sbx-dock--above {
+  margin: 6px 12px 14px;
+}
+
+.sbx-dock--below {
+  margin: 14px 12px 10px;
+}
+
+.sbx-hint-text {
+  position: relative;
+}
+
+.sbx-screen .sbx-hint-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 38px;
+  margin-top: 10px;
+  border-radius: 19px;
+  background: #03130c;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sbx-hint-box--shake {
+  animation: sbx-shake 0.42s var(--ease-out);
+}
+
+@keyframes sbx-hint-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sbx-shake {
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* ── Finale ────────────────────────────────────────────────────────────── */
+.sbx-finale {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+  background: var(--sbx-dim);
+  animation: sbx-fade 0.3s var(--ease-out) both;
+}
+
+.sbx-finale-card {
+  width: 100%;
+  padding: 20px 18px 18px;
+  border: 1px solid rgba(0, 245, 155, 0.3);
+  border-radius: 22px;
+  background: #0f151e;
+  text-align: center;
+  animation: sbx-rise 0.38s var(--ease-out) both;
+}
+
+.sbx-finale-title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.sbx-finale-text {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--tg-sub);
+}
+
+.sbx-finale-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sbx-finale .sbx-cta {
+  width: 100%;
+  margin-top: 0;
+}
+
+.sbx-screen .sbx-again {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes sbx-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sbx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Under the phone ───────────────────────────────────────────────────── */
+.sbx-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(360px, 100%);
+  min-height: 36px;
+}
+
+.sbx-progress {
+  flex: 1;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sbx-progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-ando), #00b4d8);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.sbx-restart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition:
+    color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out);
+}
+
+.sbx-restart:focus-visible {
+  outline: 2px solid var(--accent-ando);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sbx-restart:hover {
+    color: #fff;
+    border-color: var(--border-hover);
+  }
+
+  .sbx-screen .sbx-cta:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (max-width: 420px) {
+  .sbx-phone {
+    padding: 7px;
+    border-radius: 38px;
+  }
+
+  .sbx-screen {
+    border-radius: 31px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sbx *,
+  .sbx *::before,
+  .sbx *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

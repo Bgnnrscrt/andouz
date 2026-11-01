@@ -234,6 +234,37 @@
   color: var(--accent-ando);
 }
 
+/* «Как работает» — replaces the tag on features that have a «Проверь сам» page */
+.ptl-feature-demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: var(--accent-ando);
+  color: #04130c;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: transform 0.16s var(--ease-out);
+}
+
+.ptl-feature-demo-btn:active {
+  transform: scale(0.97);
+}
+
+.ptl-feature-demo-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ptl-feature-demo-btn:hover {
+    transform: translateY(-1px);
+  }
+}
+
 .ptl-feature-card.usta .ptl-feature-tag {
   background: rgba(255, 0, 127, 0.1);
   border-color: rgba(255, 0, 127, 0.25);

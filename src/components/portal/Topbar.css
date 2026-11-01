@@ -65,6 +65,13 @@
   color: #fff;
 }
 
+/* Three crumbs (ANDO / AndoGram / Мост A-B-C) don't fit on phones: drop the middle one. */
+@media (max-width: 600px) {
+  .ptl-breadcrumb-mid {
+    display: none;
+  }
+}
+
 /* Right Section */
 .ptl-topbar-right {
   display: flex;

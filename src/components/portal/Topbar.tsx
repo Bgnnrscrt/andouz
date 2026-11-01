@@ -10,6 +10,8 @@ interface TopbarProps {
   setLang: (l: Language) => void;
   activeSection: PortalSection;
   activeProject?: AppId;
+  /** Third breadcrumb, e.g. a feature's «Как работает» page. */
+  extraCrumb?: string;
   onToggleSidebar: () => void;
 }
 
@@ -20,6 +22,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   setLang,
   activeSection,
   activeProject,
+  extraCrumb,
   onToggleSidebar,
 }) => {
   const t = portalI18n[lang];
@@ -54,7 +57,15 @@ export const Topbar: React.FC<TopbarProps> = ({
         <div className="ptl-breadcrumb">
           <span className="ptl-breadcrumb-root">{t.sidebar.brand}</span>
           <span className="ptl-breadcrumb-sep">/</span>
-          <span className="ptl-breadcrumb-active">{currentTitle}</span>
+          {extraCrumb ? (
+            <>
+              <span className="ptl-breadcrumb-root ptl-breadcrumb-mid">{currentTitle}</span>
+              <span className="ptl-breadcrumb-sep ptl-breadcrumb-mid">/</span>
+              <span className="ptl-breadcrumb-active">{extraCrumb}</span>
+            </>
+          ) : (
+            <span className="ptl-breadcrumb-active">{currentTitle}</span>
+          )}
         </div>
       </div>
 
