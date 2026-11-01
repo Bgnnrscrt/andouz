@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import {
   ArrowLeft,
   BatteryMedium,
@@ -116,12 +116,21 @@ export function ListBar({ title }: { title: string }) {
   );
 }
 
+const Dots = () => (
+  <span className="sbx-dots" aria-hidden="true">
+    <i />
+    <i />
+    <i />
+  </span>
+);
+
 /** Header of a chat, a forum or a topic: back, avatar, title, subtitle, ⋮. */
 export function ChatBar({
   title,
   subtitle,
   accent = false,
   muted = false,
+  typing = false,
   avatar,
   backLabel,
   want,
@@ -131,6 +140,8 @@ export function ChatBar({
   subtitle: string;
   accent?: boolean;
   muted?: boolean;
+  /** The contact is typing: animated dots before the subtitle. */
+  typing?: boolean;
   avatar: React.ReactNode;
   backLabel: string;
 } & TapProps) {
@@ -153,20 +164,15 @@ export function ChatBar({
           <span className="sbx-ellipsis">{title}</span>
           {muted && <BellOff size={14} className="sbx-dim-icon" aria-hidden="true" />}
         </span>
-        <span className={`sbx-bar-sub${accent ? ' sbx-accent' : ''}`}>{subtitle}</span>
+        <span className={`sbx-bar-sub${accent ? ' sbx-accent' : ''}`}>
+          {typing && <Dots />}
+          {subtitle}
+        </span>
       </span>
       <EllipsisVertical size={20} aria-hidden="true" />
     </div>
   );
 }
-
-const Dots = () => (
-  <span className="sbx-dots" aria-hidden="true">
-    <i />
-    <i />
-    <i />
-  </span>
-);
 
 export interface RowData {
   id: string;
@@ -186,13 +192,19 @@ export interface RowData {
   sbx?: TargetKey;
   /** Slides in (the row just appeared). */
   fresh?: boolean;
+  /**
+   * One-off list motion: `push` — a row was added above (slide down from where
+   * it was), `shift` — a row above was removed (slide up), `gone` — fade out
+   * before this row is removed.
+   */
+  anim?: 'push' | 'shift' | 'gone';
 }
 
 export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
   return (
     <button
       type="button"
-      className={`sbx-row${row.fresh ? ' sbx-row--new' : ''}`}
+      className={`sbx-row${row.fresh ? ' sbx-row--new' : ''}${row.anim ? ` sbx-row--${row.anim}` : ''}`}
       data-sbx={row.sbx}
       data-want={row.sbx !== undefined && want === row.sbx}
       tabIndex={tabFor(want, row.sbx)}
@@ -270,7 +282,8 @@ export function TopicRow({ row, want, tap }: { row: TopicRowData } & TapProps) {
 export interface MsgData {
   id: string;
   out: boolean;
-  text: string;
+  /** Plain text, or text with marks (archive cards). Line breaks: \n. */
+  text: React.ReactNode;
   time: string;
   edited?: boolean;
   /** Sender name in a group (incoming only); private chats leave it empty. */
@@ -307,9 +320,39 @@ function Meta({ m, editedLabel }: { m: MsgData; editedLabel: string }) {
   );
 }
 
+/**
+ * The conversation. It scrolls (long archive cards) and, like Telegram, stays
+ * on the newest message unless the visitor has scrolled up.
+ */
 export function Messages({ items, editedLabel }: { items: ChatItem[]; editedLabel: string }) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const stickRef = useRef(true);
+
+  useLayoutEffect(() => {
+    const el = listRef.current;
+    if (el && stickRef.current) el.scrollTop = el.scrollHeight;
+  });
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return undefined;
+    const onScroll = () => {
+      stickRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 8;
+    };
+    // The list gets shorter when a hint docks under it: keep the newest message in view.
+    const observer = new ResizeObserver(() => {
+      if (stickRef.current) el.scrollTop = el.scrollHeight;
+    });
+    observer.observe(el);
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      el.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
   return (
-    <div className="sbx-msgs">
+    <div className="sbx-msgs" ref={listRef}>
       {items.map((item, i) => {
         if (isDate(item)) {
           return (

@@ -23,6 +23,15 @@ export const isDemoId = (id: string): id is DemoId =>
 /** Hash route of a demo page, e.g. `#/projects/andogram/archive_bridge`. */
 export const demoHref = (id: DemoId): string => `#/projects/${DEMO_APP[id]}/${id}`;
 
+/**
+ * Hash route of an app's feature list, e.g. `#/projects/andogram/features`
+ * (the sandbox finale's «Другие функции»): the project page, scrolled to its features.
+ */
+export const featuresHref = (app: AppId): string => `#/projects/${app}/features`;
+
+/** True for a features route, given a hash path without `#/`. */
+export const isFeaturesHash = (hashPath: string): boolean => hashPath.split('/')[2] === 'features';
+
 /** Reads a demo id from a hash path without `#/`, e.g. `projects/andogram/archive_bridge`. */
 export const demoFromHash = (hashPath: string): DemoId | undefined => {
   const [, app, id] = hashPath.split('/');

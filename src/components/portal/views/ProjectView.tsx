@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Send,
   Camera,
@@ -24,6 +24,8 @@ import './ProjectView.css';
 interface ProjectViewProps {
   lang: Language;
   initialAppId?: AppId;
+  /** Scroll to the feature list (route `#/projects/<app>/features`). */
+  focusFeatures?: boolean;
   onOpenDownload: (appId: AppId) => void;
   onSelectApp?: (appId: AppId) => void;
 }
@@ -31,10 +33,18 @@ interface ProjectViewProps {
 export const ProjectView: React.FC<ProjectViewProps> = ({
   lang,
   initialAppId = 'andogram',
+  focusFeatures = false,
   onOpenDownload,
   onSelectApp,
 }) => {
   const [localAppId, setLocalAppId] = useState<AppId>(initialAppId);
+  const featuresRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!focusFeatures) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    featuresRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }, [focusFeatures]);
   const selectedAppId = initialAppId || localAppId;
 
   const handleSwitchTab = (appId: AppId) => {
@@ -139,7 +149,7 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
       </div>
 
       {/* 3. Features Grid */}
-      <section>
+      <section ref={featuresRef}>
         <div className="ptl-section-header">
           <h2 className="ptl-section-title">{t.projects.allFeatures}</h2>
           <p className="ptl-section-subtitle">

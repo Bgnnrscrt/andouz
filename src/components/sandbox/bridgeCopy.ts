@@ -4,9 +4,10 @@ import type { PhoneId, Step } from './bridgeFlow';
 /*
  * All text of the A-B-C bridge sandbox and its page, in 3 languages.
  * Names (owner's choice 2026-11-01): you = Максим / Aziz / Max,
- * friend = Даниль / Sanjar / Alex. Archive cards follow the format of the
- * current AndoGram code (ArchiveNamingHelper); the app itself writes them
- * in Russian only, the demo shows them in the visitor's language.
+ * friend = Даниль / Sanjar / Alex, ex = Лиза💔 / Sabina💔 / Molly💔.
+ * Archive cards follow the format of the current AndoGram code
+ * (ArchiveNamingHelper); the app itself writes them in Russian only,
+ * the demo shows them in the visitor's language.
  */
 
 export interface ChatSeed {
@@ -24,6 +25,8 @@ export interface ChatSeed {
 export interface BridgeCopy {
   me: string;
   friend: string;
+  /** Her message arrives during the tagline and is deleted a moment later. */
+  ex: string;
   phones: Record<PhoneId, { title: string; sub: string }>;
   ui: {
     message: string;
@@ -45,15 +48,23 @@ export interface BridgeCopy {
   };
   msg: {
     old: string;
-    ask19: string;
-    ask20: string;
-    myReply: string;
-    fromPhone2: string;
-    friendReply: string;
+    /** The friend's long message: he edits only `was` → `now`, in its last line. */
+    long: { head: string; was: string; now: string; tail: string };
+    /** Sent from phone 2: proves you saw the original. */
+    tease: string;
+    how: string;
+    secret: string;
+    ex: string;
   };
   card: {
     header: (name: string, time: string) => string;
-    edit: (name: string, was: string, now: string) => string;
+    /** «Edited» card: this line, then «was» + old text, then «now» + new text. */
+    editTitle: (name: string) => string;
+    was: string;
+    now: string;
+    /** «Deleted» card: this line, then deleteBody. */
+    deleteTitle: (name: string) => string;
+    deleteBody: (text: string, sent: string, deleted: string) => string;
   };
   /** Other chats on phone 1 (AndoGram). The first two also get archive topics. */
   chatsA: ChatSeed[];
@@ -61,8 +72,10 @@ export interface BridgeCopy {
   chatsB: ChatSeed[];
   hints: Partial<Record<Step, string>>;
   buttons: Partial<Record<Step, string>>;
+  /** Typed over the dimmed screen in the outro; starts with «AndoGram». */
+  tagline: string;
   start: { title: string; sub: string; cta: string };
-  finale: { title: string; text: string; again: string; buy: string };
+  end: { buy: string; more: string; again: string };
   restart: string;
   screenLabel: string;
 }
@@ -88,10 +101,10 @@ const ruPlural = (n: number, one: string, few: string, many: string): string => 
 const RU: BridgeCopy = {
   me: 'Максим',
   friend: 'Даниль',
+  ex: 'Лиза💔',
   phones: {
     a: { title: 'Телефон 1 · AndoGram', sub: 'Это ты — Максим' },
     b: { title: 'Телефон 2 · Telegram', sub: 'Твой второй аккаунт' },
-    c: { title: 'Телефон Даниля · Telegram', sub: 'Твой собеседник' },
   },
   ui: {
     message: 'Сообщение',
@@ -112,15 +125,26 @@ const RU: BridgeCopy = {
   },
   msg: {
     old: 'Окей, договорились 👍',
-    ask19: 'Встречаемся сегодня в 19:00?',
-    ask20: 'Встречаемся сегодня в 20:00?',
-    myReply: 'Да, буду 👍',
-    fromPhone2: 'Ок, тогда в 20:00 👌',
-    friendReply: 'Отлично, до встречи!',
+    long: {
+      head: 'Слушай, спасибо тебе большое, что дал свои наушники в поездку на отпуск! С ними поездка на поезде была шикарной, и звук у твоих наушников просто огонь. Только есть небольшая проблемка: я их ',
+      was: 'утопил',
+      now: 'потерял',
+      tail: ', прости',
+    },
+    tease: 'Утопил, говоришь?😏',
+    how: 'Как?! Я же сразу исправил 😳 Как ты успел прочитать??',
+    secret: 'Я пользуюсь AndoGram 😎',
+    ex: 'Я скучаю по тебе, прочти меня',
   },
   card: {
     header: (name, time) => `${name}, ${time}`,
-    edit: (name, was, now) => `Пользователь ${name} изменил сообщение:\nБыло: ${was}\nСтало: ${now}`,
+    editTitle: (name) => `Пользователь ${name} изменил сообщение:`,
+    was: 'Было:',
+    now: 'Стало:',
+    // Only Лиза deletes here, so «удалила». The app itself writes «удалил … Статус: удален» for everyone.
+    deleteTitle: (name) => `Пользователь ${name} удалила сообщение:`,
+    deleteBody: (text, sent, deleted) =>
+      `Сообщение: ${text} • время отправки ${sent}\nСтатус: удалено, время удаления — ${deleted}`,
   },
   chatsA: [
     { id: 'mom', name: 'Мама', preview: 'Не забудь позвонить бабушке ❤️', time: '17:20', color: '#ee7aae' },
@@ -134,36 +158,30 @@ const RU: BridgeCopy = {
   ],
   hints: {
     aOpenChat: 'Тебе пишет Даниль. Открой чат',
-    aReply: 'Ответь Данилю — нажми «Отправить сообщение»',
-    aBack: 'Даниль изменил сообщение: было 19:00, стало 20:00. Вернись к списку чатов',
-    aOpenArchive: 'AndoGram сам создал «Личный архив». Открой его',
-    aOpenTopic: 'Здесь у каждого собеседника своя тема. Открой «Даниль»',
-    aTopic: 'Даниль исправил сообщение, а архив помнит, как было',
+    aEdited: 'Даниль что-то исправил. Хочешь узнать, что было?',
     bOpenArchive: 'Это второй телефон с обычным Telegram — AndoGram здесь не нужен. Твой второй аккаунт уже в группе. Открой «Личный архив»',
     bOpenTopic: 'Открой тему «Даниль»',
-    bReply: 'Здесь вся переписка с Данилем. Ответь ему прямо отсюда',
-    bSent: 'Отправлено! Посмотрим, что получил Даниль',
-    cIncoming: 'Сообщение пришло от Максима — то есть от тебя. Про второй телефон Даниль не знает',
-    cSent: 'Даниль ответил',
-    bReceived: 'Ответ Даниля уже здесь, на втором телефоне',
+    bReply: 'Вот что он написал на самом деле. Подколи его',
+    bSent: 'Ушло Данилю от твоего основного аккаунта',
+    aSecret: 'Раскрой секрет',
+    aSecretSent: 'Выйди из чата',
+    aOpenArchive: 'Открой «Личный архив»',
+    aOpenTopic: 'Открой тему «Лиза💔»',
   },
   buttons: {
-    aTopic: 'Взять второй телефон',
-    bSent: 'Телефон Даниля',
-    cIncoming: 'Дальше',
-    cSent: 'Вернуться на второй телефон',
-    bReceived: 'Дальше',
+    aEdited: 'Взять второй телефон',
+    bSent: 'Вернуться на первый телефон',
   },
+  tagline: 'AndoGram. Тебе говорили, что это невозможно. Мы покажем обратное.',
   start: {
     title: 'Мост A-B-C',
-    sub: 'Около минуты. Ничего устанавливать не нужно',
+    sub: '1–2 минуты. Ничего устанавливать не нужно',
     cta: 'Проверь сам',
   },
-  finale: {
-    title: 'Это и есть мост A-B-C',
-    text: 'Отвечай с любого телефона — собеседник видит сообщения от твоего основного аккаунта. А «Личный архив» хранит всю переписку, даже изменённые сообщения.',
-    again: 'Пройти ещё раз',
+  end: {
     buy: 'Купить AndoGram',
+    more: 'Другие функции',
+    again: 'Пройти ещё раз',
   },
   restart: 'Начать заново',
   screenLabel: 'Демо AndoGram: мост A-B-C',
@@ -172,10 +190,10 @@ const RU: BridgeCopy = {
 const UZ: BridgeCopy = {
   me: 'Aziz',
   friend: 'Sanjar',
+  ex: 'Sabina💔',
   phones: {
     a: { title: '1-telefon · AndoGram', sub: 'Bu siz — Aziz' },
     b: { title: '2-telefon · Telegram', sub: 'Ikkinchi akkauntingiz' },
-    c: { title: 'Sanjarning telefoni · Telegram', sub: 'Suhbatdoshingiz' },
   },
   ui: {
     message: 'Xabar',
@@ -196,15 +214,25 @@ const UZ: BridgeCopy = {
   },
   msg: {
     old: 'Bo‘pti, kelishdik 👍',
-    ask19: 'Bugun 19:00 da uchrashamizmi?',
-    ask20: 'Bugun 20:00 da uchrashamizmi?',
-    myReply: 'Ha, boraman 👍',
-    fromPhone2: 'Mayli, unda 20:00 da 👌',
-    friendReply: 'Zo‘r, ko‘rishguncha!',
+    long: {
+      head: 'Qara, ta’tilga quloqchinlaringni berib turganing uchun katta rahmat! Ular bilan poyezdda yo‘l zo‘r o‘tdi, ovozi esa bomba. Faqat bitta kichkina muammo bor: ularni ',
+      was: 'cho‘ktirdim',
+      now: 'yo‘qotdim',
+      tail: ', kechir',
+    },
+    tease: 'Cho‘ktirdim, deysanmi?😏',
+    how: 'Qanaqasiga?! Darrov tuzatgandim-ku 😳 Qanday qilib o‘qib ulgurding??',
+    secret: 'Men AndoGram ishlataman 😎',
+    ex: 'Seni sog‘indim, iltimos, o‘qib qo‘y',
   },
   card: {
     header: (name, time) => `${name}, ${time}`,
-    edit: (name, was, now) => `Foydalanuvchi ${name} xabarni tahrirladi:\nOldin: ${was}\nEndi: ${now}`,
+    editTitle: (name) => `Foydalanuvchi ${name} xabarni tahrirladi:`,
+    was: 'Oldin:',
+    now: 'Endi:',
+    deleteTitle: (name) => `Foydalanuvchi ${name} xabarni o‘chirdi:`,
+    deleteBody: (text, sent, deleted) =>
+      `Xabar: ${text} • yuborilgan vaqti ${sent}\nHolati: o‘chirilgan, o‘chirilgan vaqti — ${deleted}`,
   },
   chatsA: [
     { id: 'mom', name: 'Onam', preview: 'Buvingga qo‘ng‘iroq qilishni unutma ❤️', time: '17:20', color: '#ee7aae' },
@@ -218,36 +246,30 @@ const UZ: BridgeCopy = {
   ],
   hints: {
     aOpenChat: 'Sizga Sanjar yozyapti. Chatni oching',
-    aReply: 'Sanjarga javob bering — «Xabar yuborish»ni bosing',
-    aBack: 'Sanjar xabarini tahrirladi: 19:00 edi, 20:00 bo‘ldi. Chatlar ro‘yxatiga qayting',
-    aOpenArchive: 'AndoGram «Shaxsiy arxiv»ni o‘zi yaratdi. Uni oching',
-    aOpenTopic: 'Bu yerda har bir suhbatdoshning alohida mavzusi bor. «Sanjar»ni oching',
-    aTopic: 'Sanjar xabarini o‘zgartirdi, arxiv esa avvalgisini eslab qoldi',
+    aEdited: 'Sanjar nimanidir tuzatdi. Avval nima yozganini bilishni xohlaysizmi?',
     bOpenArchive: 'Bu oddiy Telegram o‘rnatilgan ikkinchi telefon — AndoGram shart emas. Ikkinchi akkauntingiz guruhda bor. «Shaxsiy arxiv»ni oching',
     bOpenTopic: '«Sanjar» mavzusini oching',
-    bReply: 'Sanjar bilan butun yozishma shu yerda. Unga shu yerdan javob bering',
-    bSent: 'Yuborildi! Endi Sanjarga nima kelganini ko‘ramiz',
-    cIncoming: 'Xabar Azizdan, ya’ni sizdan keldi. Sanjar ikkinchi telefon haqida bilmaydi',
-    cSent: 'Sanjar javob berdi',
-    bReceived: 'Sanjarning javobi allaqachon shu yerda — ikkinchi telefonda',
+    bReply: 'Mana u aslida nima yozgan. Unga bir tegishib qo‘ying',
+    bSent: 'Sanjarga asosiy akkauntingizdan ketdi',
+    aSecret: 'Sirni oshkor qiling',
+    aSecretSent: 'Chatdan chiqing',
+    aOpenArchive: '«Shaxsiy arxiv»ni oching',
+    aOpenTopic: '«Sabina💔» mavzusini oching',
   },
   buttons: {
-    aTopic: 'Ikkinchi telefonni olish',
-    bSent: 'Sanjarning telefoni',
-    cIncoming: 'Davom etish',
-    cSent: 'Ikkinchi telefonga qaytish',
-    bReceived: 'Davom etish',
+    aEdited: 'Ikkinchi telefonni olish',
+    bSent: 'Birinchi telefonga qaytish',
   },
+  tagline: 'AndoGram. Sizga bu imkonsiz deyishgan. Biz esa aksini ko‘rsatamiz.',
   start: {
     title: 'A-B-C ko‘prigi',
-    sub: 'Bir daqiqacha. Hech narsa o‘rnatish shart emas',
+    sub: '1–2 daqiqa. Hech narsa o‘rnatish shart emas',
     cta: 'O‘zingiz sinab ko‘ring',
   },
-  finale: {
-    title: 'Bu — A-B-C ko‘prigi',
-    text: 'Istalgan telefondan javob bering — suhbatdosh xabarlarni asosiy akkauntingizdan ko‘radi. «Shaxsiy arxiv» esa butun yozishmani, hatto tahrirlangan xabarlarni ham saqlaydi.',
-    again: 'Yana bir bor',
+  end: {
     buy: 'AndoGram sotib olish',
+    more: 'Boshqa imkoniyatlar',
+    again: 'Yana bir bor',
   },
   restart: 'Qaytadan boshlash',
   screenLabel: 'AndoGram demosi: A-B-C ko‘prigi',
@@ -256,10 +278,10 @@ const UZ: BridgeCopy = {
 const EN: BridgeCopy = {
   me: 'Max',
   friend: 'Alex',
+  ex: 'Molly💔',
   phones: {
     a: { title: 'Phone 1 · AndoGram', sub: 'This is you — Max' },
     b: { title: 'Phone 2 · Telegram', sub: 'Your second account' },
-    c: { title: 'Alex’s phone · Telegram', sub: 'Your contact' },
   },
   ui: {
     message: 'Message',
@@ -280,15 +302,24 @@ const EN: BridgeCopy = {
   },
   msg: {
     old: 'OK, deal 👍',
-    ask19: 'Are we meeting today at 19:00?',
-    ask20: 'Are we meeting today at 20:00?',
-    myReply: 'Yes, I’ll be there 👍',
-    fromPhone2: 'OK, 20:00 then 👌',
-    friendReply: 'Great, see you!',
+    long: {
+      head: 'Hey, thanks so much for lending me your headphones for the vacation! The train ride was amazing with them, and the sound is pure fire. Just one small problem: I ',
+      was: 'drowned',
+      now: 'lost',
+      tail: ' them, sorry',
+    },
+    tease: 'Drowned them, huh?😏',
+    how: 'What?! I fixed it right away 😳 How did you even read it??',
+    secret: 'I use AndoGram 😎',
+    ex: 'I miss you, please read this',
   },
   card: {
     header: (name, time) => `${name}, ${time}`,
-    edit: (name, was, now) => `User ${name} edited a message:\nWas: ${was}\nNow: ${now}`,
+    editTitle: (name) => `User ${name} edited a message:`,
+    was: 'Was:',
+    now: 'Now:',
+    deleteTitle: (name) => `User ${name} deleted a message:`,
+    deleteBody: (text, sent, deleted) => `Message: ${text} • sent at ${sent}\nStatus: deleted, deleted at ${deleted}`,
   },
   chatsA: [
     { id: 'mom', name: 'Mom', preview: 'Don’t forget to call grandma ❤️', time: '17:20', color: '#ee7aae' },
@@ -302,36 +333,30 @@ const EN: BridgeCopy = {
   ],
   hints: {
     aOpenChat: 'Alex is texting you. Open the chat',
-    aReply: 'Reply to Alex — tap “Send message”',
-    aBack: 'Alex edited the message: 19:00 became 20:00. Go back to your chats',
-    aOpenArchive: 'AndoGram created a “Personal archive” by itself. Open it',
-    aOpenTopic: 'Every contact gets their own topic here. Open “Alex”',
-    aTopic: 'Alex edited the message, but the archive remembers the original',
+    aEdited: 'Alex fixed something. Want to know what it said before?',
     bOpenArchive: 'This is a second phone with regular Telegram — no AndoGram needed. Your second account is already in the group. Open “Personal archive”',
     bOpenTopic: 'Open the “Alex” topic',
-    bReply: 'Your whole chat with Alex is here. Reply right from here',
-    bSent: 'Sent! Let’s see what Alex got',
-    cIncoming: 'The message came from Max — that is, from you. Alex has no idea about the second phone',
-    cSent: 'Alex replied',
-    bReceived: 'Alex’s reply is already here, on your second phone',
+    bReply: 'Here’s what he really wrote. Tease him',
+    bSent: 'Sent to Alex from your main account',
+    aSecret: 'Reveal the secret',
+    aSecretSent: 'Leave the chat',
+    aOpenArchive: 'Open “Personal archive”',
+    aOpenTopic: 'Open the “Molly💔” topic',
   },
   buttons: {
-    aTopic: 'Take the second phone',
-    bSent: 'Alex’s phone',
-    cIncoming: 'Next',
-    cSent: 'Back to the second phone',
-    bReceived: 'Next',
+    aEdited: 'Take the second phone',
+    bSent: 'Back to the first phone',
   },
+  tagline: 'AndoGram. They told you it was impossible. We’ll show you otherwise.',
   start: {
     title: 'The A-B-C bridge',
-    sub: 'About a minute. Nothing to install',
+    sub: '1–2 minutes. Nothing to install',
     cta: 'Try it yourself',
   },
-  finale: {
-    title: 'That’s the A-B-C bridge',
-    text: 'Reply from any phone — your contact sees messages from your main account. And the “Personal archive” keeps the whole conversation, even edited messages.',
-    again: 'Try again',
+  end: {
     buy: 'Buy AndoGram',
+    more: 'Other features',
+    again: 'Try again',
   },
   restart: 'Start over',
   screenLabel: 'AndoGram demo: the A-B-C bridge',
@@ -346,7 +371,7 @@ const PAGE: Record<Language, BridgePageCopy> = {
     back: 'AndoGram',
     kicker: 'Как работает',
     title: 'Личный архив и мост A-B-C',
-    lead: 'AndoGram сам копирует личные переписки в закрытую группу «Личный архив» — по отдельной теме на каждого собеседника. Там остаётся даже то, что потом изменили. А из архива можно отвечать со второго телефона от имени основного аккаунта.',
+    lead: 'AndoGram сам копирует личные переписки в закрытую группу «Личный архив» — по отдельной теме на каждого собеседника. Там остаётся даже то, что потом изменили или удалили. А из архива можно отвечать со второго телефона от имени основного аккаунта.',
     rolesTitle: 'Кто есть кто',
     roles: [
       { letter: 'A', who: 'Ты — Максим.', what: 'Телефон с AndoGram' },
@@ -359,7 +384,7 @@ const PAGE: Record<Language, BridgePageCopy> = {
     back: 'AndoGram',
     kicker: 'Qanday ishlaydi',
     title: 'Shaxsiy arxiv va A-B-C ko‘prigi',
-    lead: 'AndoGram shaxsiy yozishmalarni «Shaxsiy arxiv» yopiq guruhiga o‘zi nusxalaydi — har bir suhbatdosh uchun alohida mavzu bilan. Keyin tahrirlangan xabarlar ham saqlanib qoladi. Arxivdan esa ikkinchi telefondan asosiy akkaunt nomidan javob berish mumkin.',
+    lead: 'AndoGram shaxsiy yozishmalarni «Shaxsiy arxiv» yopiq guruhiga o‘zi nusxalaydi — har bir suhbatdosh uchun alohida mavzu bilan. Keyin tahrirlangan yoki o‘chirilgan xabarlar ham saqlanib qoladi. Arxivdan esa ikkinchi telefondan asosiy akkaunt nomidan javob berish mumkin.',
     rolesTitle: 'Kim kim',
     roles: [
       { letter: 'A', who: 'Siz — Aziz.', what: 'AndoGram o‘rnatilgan telefon' },
@@ -372,7 +397,7 @@ const PAGE: Record<Language, BridgePageCopy> = {
     back: 'AndoGram',
     kicker: 'How it works',
     title: 'Personal archive & the A-B-C bridge',
-    lead: 'AndoGram copies your private chats into a closed “Personal archive” group by itself — one topic per contact. Even messages edited later stay there. And from the archive you can reply from a second phone as your main account.',
+    lead: 'AndoGram copies your private chats into a closed “Personal archive” group by itself — one topic per contact. Even messages edited or deleted later stay there. And from the archive you can reply from a second phone as your main account.',
     rolesTitle: 'Who is who',
     roles: [
       { letter: 'A', who: 'You — Max.', what: 'The phone with AndoGram' },

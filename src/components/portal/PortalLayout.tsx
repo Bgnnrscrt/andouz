@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Language, AppId } from '../../types';
 import { PortalSection } from '../../portalTypes';
-import { DEMO_CRUMBS, DemoId, demoFromHash } from '../sandbox/demos';
+import { DEMO_CRUMBS, DemoId, demoFromHash, isFeaturesHash } from '../sandbox/demos';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { HomeView } from './views/HomeView';
@@ -30,13 +30,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   onOpenDownload,
 }) => {
   // Read hash on load
-  const parseHash = (): { section: PortalSection; project?: AppId; demo?: DemoId } => {
+  const parseHash = (): { section: PortalSection; project?: AppId; demo?: DemoId; features?: boolean } => {
     const hash = window.location.hash.replace(/^#\/?/, '');
     if (hash.startsWith('projects/andusta')) {
-      return { section: 'projects', project: 'andusta' };
+      return { section: 'projects', project: 'andusta', features: isFeaturesHash(hash) };
     }
     if (hash.startsWith('projects')) {
-      return { section: 'projects', project: 'andogram', demo: demoFromHash(hash) };
+      return { section: 'projects', project: 'andogram', demo: demoFromHash(hash), features: isFeaturesHash(hash) };
     }
     if (hash.startsWith('docs')) {
       return { section: 'docs' };
@@ -54,6 +54,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const [activeSection, setActiveSection] = useState<PortalSection>(initialRoute.section);
   const [activeProject, setActiveProject] = useState<AppId | undefined>(initialRoute.project || 'andogram');
   const [activeDemo, setActiveDemo] = useState<DemoId | undefined>(initialRoute.demo);
+  /** `#/projects/<app>/features`: ProjectView scrolls to its feature list. */
+  const [focusFeatures, setFocusFeatures] = useState<boolean>(initialRoute.features ?? false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
 
@@ -66,7 +68,10 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
         setActiveProject(route.project);
       }
       setActiveDemo(route.demo);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setFocusFeatures(route.features ?? false);
+      if (!route.features) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -76,6 +81,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const handleNavigate = (section: PortalSection, appId?: AppId) => {
     setActiveSection(section);
     setActiveDemo(undefined);
+    setFocusFeatures(false);
     if (appId) {
       setActiveProject(appId);
     }
@@ -148,6 +154,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
               key={activeProject}
               lang={lang}
               initialAppId={activeProject || 'andogram'}
+              focusFeatures={focusFeatures}
               onOpenDownload={(appId) => onOpenDownload(appId)}
               onSelectApp={(appId) => handleNavigate('projects', appId)}
             />
