@@ -158,7 +158,10 @@ const RU: BridgeCopy = {
   ],
   hints: {
     aOpenChat: 'Тебе пишет Даниль. Открой чат',
-    aEdited: 'Даниль что-то исправил. Хочешь узнать, что было?',
+    aEdited: 'Даниль что-то исправил. Выйди из чата — посмотрим, что было',
+    aArchiveIn: 'Появился «Личный архив». Открой его',
+    aFriendTopic: 'Открой тему «Даниль»',
+    aEditCard: 'AndoGram сохранил и оригинал, и правку. Этот архив видно и со второго телефона',
     bOpenArchive: 'Это второй телефон с обычным Telegram — AndoGram здесь не нужен. Твой второй аккаунт уже в группе. Открой «Личный архив»',
     bOpenTopic: 'Открой тему «Даниль»',
     bReply: 'Вот что он написал на самом деле. Подколи его',
@@ -169,7 +172,7 @@ const RU: BridgeCopy = {
     aOpenTopic: 'Открой тему «Лиза💔»',
   },
   buttons: {
-    aEdited: 'Взять второй телефон',
+    aEditCard: 'Взять второй телефон',
     bSent: 'Вернуться на первый телефон',
   },
   tagline: 'AndoGram. Тебе говорили, что это невозможно. Мы покажем обратное.',
@@ -246,7 +249,10 @@ const UZ: BridgeCopy = {
   ],
   hints: {
     aOpenChat: 'Sizga Sanjar yozyapti. Chatni oching',
-    aEdited: 'Sanjar nimanidir tuzatdi. Avval nima yozganini bilishni xohlaysizmi?',
+    aEdited: 'Sanjar nimanidir tuzatdi. Chatdan chiqing — avval nima yozganini ko‘ramiz',
+    aArchiveIn: '«Shaxsiy arxiv» paydo bo‘ldi. Uni oching',
+    aFriendTopic: '«Sanjar» mavzusini oching',
+    aEditCard: 'AndoGram asl xabarni ham, tuzatishni ham saqladi. Bu arxiv ikkinchi telefonda ham ko‘rinadi',
     bOpenArchive: 'Bu oddiy Telegram o‘rnatilgan ikkinchi telefon — AndoGram shart emas. Ikkinchi akkauntingiz guruhda bor. «Shaxsiy arxiv»ni oching',
     bOpenTopic: '«Sanjar» mavzusini oching',
     bReply: 'Mana u aslida nima yozgan. Unga bir tegishib qo‘ying',
@@ -257,7 +263,7 @@ const UZ: BridgeCopy = {
     aOpenTopic: '«Sabina💔» mavzusini oching',
   },
   buttons: {
-    aEdited: 'Ikkinchi telefonni olish',
+    aEditCard: 'Ikkinchi telefonni olish',
     bSent: 'Birinchi telefonga qaytish',
   },
   tagline: 'AndoGram. Sizga bu imkonsiz deyishgan. Biz esa aksini ko‘rsatamiz.',
@@ -333,7 +339,10 @@ const EN: BridgeCopy = {
   ],
   hints: {
     aOpenChat: 'Alex is texting you. Open the chat',
-    aEdited: 'Alex fixed something. Want to know what it said before?',
+    aEdited: 'Alex fixed something. Leave the chat to see what it said before',
+    aArchiveIn: '“Personal archive” just appeared. Open it',
+    aFriendTopic: 'Open the “Alex” topic',
+    aEditCard: 'AndoGram kept both the original and the edit. Your second phone sees this archive too',
     bOpenArchive: 'This is a second phone with regular Telegram — no AndoGram needed. Your second account is already in the group. Open “Personal archive”',
     bOpenTopic: 'Open the “Alex” topic',
     bReply: 'Here’s what he really wrote. Tease him',
@@ -344,7 +353,7 @@ const EN: BridgeCopy = {
     aOpenTopic: 'Open the “Molly💔” topic',
   },
   buttons: {
-    aEdited: 'Take the second phone',
+    aEditCard: 'Take the second phone',
     bSent: 'Back to the first phone',
   },
   tagline: 'AndoGram. They told you it was impossible. We’ll show you otherwise.',

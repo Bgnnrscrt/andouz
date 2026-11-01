@@ -40,8 +40,9 @@ import './sandbox.css';
 /*
  * «Проверь сам» for the AndoGram A-B-C bridge (Личный архив + мост), v2.
  * Two phones: A = the visitor's AndoGram, B = plain Telegram with the second
- * account. The friend edits a message; on phone 2 the visitor reads the
- * original in the archive and teases him as A. Then the outro: a tagline over
+ * account. The friend edits a message; the visitor leaves the chat and reads the
+ * original in AndoGram's «Личный архив», then on phone 2 (same archive) teases
+ * him as A. Then the outro: a tagline over
  * the dimmed screen while the ex's message arrives and is deleted, and the
  * archive still has it. Everything is local mock data: nothing is sent anywhere.
  * Script and timings: bridgeFlow.ts; texts: bridgeCopy.ts.
@@ -62,7 +63,7 @@ const BRAND = 'AndoGram';
  * Their hint is docked into the chat between the messages and the input, so it
  * pushes the conversation up instead of covering it.
  */
-const DOCKED: ReadonlySet<TargetKey> = new Set<TargetKey>(['send', 'msg-edited', 'msg-sent']);
+const DOCKED: ReadonlySet<TargetKey> = new Set<TargetKey>(['send', 'msg-edited', 'card-edit', 'msg-sent']);
 
 /*
  * Phone size. Narrow screens: the phone fills the width (fluid, CSS only).
@@ -463,9 +464,11 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
     sbx: 'row-friend',
     ...(!at('aOpenChat')
       ? { preview: c.msg.old, previewText: c.msg.old, time: c.ui.yesterdayShort }
-      : !at('aOutro')
+      : !at('aArchiveIn')
         ? { preview: longOriginal, previewText: longOriginal, time: '18:41', unread: 1 }
-        : { preview: c.msg.secret, previewText: c.msg.secret, time: '18:44', read: true }),
+        : !at('aOutro')
+          ? { preview: longEdited, previewText: longEdited, time: '18:41' }
+          : { preview: c.msg.secret, previewText: c.msg.secret, time: '18:44', read: true }),
     typing: step === 'aTyping' ? c.ui.typing : undefined,
   };
 
@@ -502,16 +505,12 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
     phone === 'a'
       ? [
           ...(exArrived && !exGone ? [exRow] : []),
+          // «Личный архив» appears once the visitor leaves the chat after the edit.
           ...(at('aOutro')
-            ? [
-                archiveRow(
-                  c.ui.you,
-                  exGone ? deleteTitle : exArrived ? exCard : secretCard,
-                  exArrived ? '18:45' : '18:44',
-                  step === 'aOutro' && outroT < 600,
-                ),
-              ]
-            : []),
+            ? [archiveRow(c.ui.you, exGone ? deleteTitle : exArrived ? exCard : secretCard, exArrived ? '18:45' : '18:44')]
+            : at('aArchiveIn')
+              ? [archiveRow(c.ui.you, editTitle, '18:41', step === 'aArchiveIn')]
+              : []),
           friendRow,
           ...c.chatsA.map(seedRow),
         ].map((row) => (row.id === 'ex' || !listAnim ? row : { ...row, anim: listAnim }))
@@ -557,7 +556,7 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
     { id: 'general', name: c.ui.general, time: '16:00', preview: c.ui.groupCreated, previewText: c.ui.groupCreated },
   ];
   const topicRows: TopicRowData[] =
-    phone === 'a'
+    phone === 'a' && at('aOutro')
       ? [
           {
             id: 'ex',
@@ -599,6 +598,12 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
   if (at('aSecretSent')) {
     chatA.push({ id: 'secret', out: true, text: c.msg.secret, time: '18:44', read: true, fresh: step === 'aSecretSent' });
   }
+
+  // Phone 1, right after the edit: AndoGram's own cards in the friend's topic.
+  const topicFriendA: ChatItem[] = [
+    { id: 'k1', out: true, text: `${c.card.header(c.friend, '18:41')}\n${longOriginal}`, time: '18:41' },
+    { id: 'k2', out: true, text: editCard, time: '18:41', sbx: 'card-edit' },
+  ];
 
   // Phone 2: the friend's topic. The cards come in from A (Максим).
   const fromMe = { name: c.me, color: ME_COLOR };
@@ -698,16 +703,16 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
       );
       break;
     default: {
-      const onA = phone === 'a';
-      const items = onA ? topicEx : topicB;
-      const title = onA ? c.ex : c.friend;
+      const onEx = phone === 'a' && at('aOutro');
+      const items = onEx ? topicEx : phone === 'a' ? topicFriendA : topicB;
+      const title = onEx ? c.ex : c.friend;
       const count = items.filter((item) => !('date' in item)).length;
       view = (
         <>
           <ChatBar
             title={title}
             subtitle={c.ui.messages(count)}
-            avatar={<TopicIcon name={title} color={onA ? TOPIC_COLOR.ex : TOPIC_COLOR.friend} size={36} />}
+            avatar={<TopicIcon name={title} color={onEx ? TOPIC_COLOR.ex : TOPIC_COLOR.friend} size={36} />}
             backLabel={c.ui.back}
             want={want}
             tap={tap}

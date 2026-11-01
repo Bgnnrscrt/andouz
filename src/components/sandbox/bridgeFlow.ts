@@ -1,5 +1,7 @@
 /*
  * «Проверь сам» — the A-B-C bridge sandbox script, v2 (owner-approved 2026-11-01).
+ * After the edit the visitor leaves the chat on phone 1 and sees the original in
+ * AndoGram's own «Личный архив» first (owner, 2026-11-01), then takes phone 2.
  * The flow is a fixed list of steps. A step is either timed (AUTO_MS), waits
  * for a tap on one element (TAP), or waits for the button in the hint
  * (NEXT_BUTTON). Every transition goes to the next step in STEPS.
@@ -20,6 +22,10 @@ export const STEPS = [
   'aOpenChat',
   'aRead',
   'aEdited',
+  // Still phone 1: back to the list, the new «Личный архив», the friend's topic
+  'aArchiveIn',
+  'aFriendTopic',
+  'aEditCard',
   // Phone 2 — plain Telegram with the second account (B)
   'bSplash',
   'bOpenArchive',
@@ -49,6 +55,7 @@ export type TargetKey =
   | 'send'
   | 'back'
   | 'msg-edited'
+  | 'card-edit'
   | 'msg-sent';
 
 export const nextStep = (s: Step): Step =>
@@ -82,6 +89,9 @@ export const AUTO_MS: Partial<Record<Step, number>> = {
 /** Steps that wait for a tap on one element. */
 export const TAP: Partial<Record<Step, TargetKey>> = {
   aOpenChat: 'row-friend',
+  aEdited: 'back',
+  aArchiveIn: 'row-archive',
+  aFriendTopic: 'topic-friend',
   bOpenArchive: 'row-archive',
   bOpenTopic: 'topic-friend',
   bReply: 'send',
@@ -93,12 +103,12 @@ export const TAP: Partial<Record<Step, TargetKey>> = {
 
 /** Steps that only spotlight an element (their hint has a button). */
 export const LOOK: Partial<Record<Step, TargetKey>> = {
-  aEdited: 'msg-edited',
+  aEditCard: 'card-edit',
   bSent: 'msg-sent',
 };
 
 /** Steps that wait for the button inside the hint. */
-export const NEXT_BUTTON: ReadonlySet<Step> = new Set<Step>(['aEdited', 'bSent']);
+export const NEXT_BUTTON: ReadonlySet<Step> = new Set<Step>(['aEditCard', 'bSent']);
 
 export const phoneOf = (s: Step): PhoneId => (s.startsWith('b') ? 'b' : 'a');
 
@@ -112,6 +122,7 @@ export const screenOf = (s: Step): ScreenId => {
     case 'aList':
     case 'aTyping':
     case 'aOpenChat':
+    case 'aArchiveIn':
     case 'bOpenArchive':
     case 'aOutro':
     case 'aOpenArchive':
@@ -123,6 +134,7 @@ export const screenOf = (s: Step): ScreenId => {
     case 'aSecret':
     case 'aSecretSent':
       return 'chat';
+    case 'aFriendTopic':
     case 'bOpenTopic':
     case 'aOpenTopic':
       return 'topics';
@@ -133,7 +145,7 @@ export const screenOf = (s: Step): ScreenId => {
 
 /** The outro after the visitor leaves the chat, in ms (owner's spec). */
 export const OUTRO = {
-  /** The chat list with the new «Личный архив» row, before the screen dims. */
+  /** The chat list («Личный архив» on top with the latest card), before the screen dims. */
   calm: 1000,
   /** The chat list slowly dims to ~70%. */
   dimIn: 3000,
