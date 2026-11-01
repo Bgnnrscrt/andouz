@@ -61,9 +61,25 @@ export function App() {
   return (
     <MotionConfig reducedMotion="user">
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <a href="#main" className="skip-link">{SKIP_LINK[lang]}</a>
+        <a
+          href="#main"
+          className="skip-link"
+          onClick={(e) => {
+            // The portal routes by hash, so «#main» would open Home: focus the content instead.
+            e.preventDefault();
+            const main = document.getElementById('main');
+            if (!main) return;
+            // Focusable only for this jump: a permanent tabindex would take focus on every click.
+            main.setAttribute('tabindex', '-1');
+            main.addEventListener('blur', () => main.removeAttribute('tabindex'), { once: true });
+            main.focus();
+            main.scrollIntoView();
+          }}
+        >
+          {SKIP_LINK[lang]}
+        </a>
 
-        <div id="main" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <PortalLayout
             lang={lang}
             setLang={setLang}

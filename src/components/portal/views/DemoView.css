@@ -147,7 +147,7 @@
 }
 
 .ptl-demo-loading {
-  min-height: 70vh;
+  min-height: calc(100vh - var(--header-h, 74px));
 }
 
 @media (hover: hover) and (pointer: fine) {

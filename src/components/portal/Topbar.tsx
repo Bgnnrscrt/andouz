@@ -3,6 +3,7 @@ import { Menu } from 'lucide-react';
 import { Language, AppId } from '../../types';
 import { PortalSection } from '../../portalTypes';
 import { portalI18n } from '../../portalTranslations';
+import { splitNoWrap } from '../sandbox/demos';
 import './Topbar.css';
 
 interface TopbarProps {
@@ -61,7 +62,17 @@ export const Topbar: React.FC<TopbarProps> = ({
             <>
               <span className="ptl-breadcrumb-root ptl-breadcrumb-up">{currentTitle}</span>
               <span className="ptl-breadcrumb-sep ptl-breadcrumb-up">/</span>
-              <span className="ptl-breadcrumb-active">{extraCrumb}</span>
+              <span className="ptl-breadcrumb-active">
+                {splitNoWrap(extraCrumb).map((part, i) =>
+                  part.keep ? (
+                    <span key={i} className="ptl-breadcrumb-nowrap">
+                      {part.text}
+                    </span>
+                  ) : (
+                    part.text
+                  ),
+                )}
+              </span>
             </>
           ) : (
             <span className="ptl-breadcrumb-active">{currentTitle}</span>

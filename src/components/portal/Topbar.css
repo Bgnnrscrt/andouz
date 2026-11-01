@@ -4,8 +4,10 @@
   top: 0;
   height: var(--header-h, 74px);
   background: rgba(8, 9, 14, 0.85);
-  backdrop-filter: blur(16px);
+  /* Prefixed line first: in the other order the build's CSS minifier
+     (Lightning CSS) keeps only the -webkit- one, and Chrome/Firefox get no blur. */
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
@@ -63,6 +65,11 @@
 
 .ptl-breadcrumb-active {
   color: #fff;
+}
+
+/* «No-Forwards», «A-B-C»: never split at the hyphen (sandbox/demos.ts splitNoWrap). */
+.ptl-breadcrumb-nowrap {
+  white-space: nowrap;
 }
 
 /* Three crumbs (ANDO / AndoGram / Обход No-Forwards) don't fit on phones: only

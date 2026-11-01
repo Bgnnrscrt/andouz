@@ -164,9 +164,14 @@
 }
 
 /* «Начать заново» / «Qaytadan boshlash» are wider than the rail: one line,
-   growing to the left into the free space (the controls are right-aligned). */
-.sbx--rail .sbx-restart {
-  white-space: nowrap;
+   growing to the left into the free space (the controls are right-aligned),
+   but only where the content area is at least ~660px wide (the sidebar takes
+   280px above 900px). In narrower windows there is no room left of the rail
+   (it would run off the screen or under the sidebar): two lines, as before. */
+@media (min-width: 660px) and (max-width: 900px), (min-width: 940px) {
+  .sbx--rail .sbx-restart {
+    white-space: nowrap;
+  }
 }
 
 .sbx-phone--enter {
@@ -840,6 +845,8 @@
   content: '';
   inset: -2px -3px;
   z-index: -1;
+  /* It grows to the left: the right edge stays in the gap before the time. */
+  transform-origin: right center;
   border-radius: 6px;
   background: rgba(0, 245, 155, 0.5);
   box-shadow: 0 0 14px rgba(0, 245, 155, 0.55);

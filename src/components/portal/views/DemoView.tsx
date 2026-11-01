@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import type { AppId, Language } from '../../../types';
-import type { DemoId } from '../../sandbox/demos';
+import { splitNoWrap, type DemoId } from '../../sandbox/demos';
 import { getCommonCopy } from '../../sandbox/commonCopy';
 import { getDemoPageCopy } from '../../sandbox/demoPages';
 import './DemoView.css';
@@ -23,9 +23,6 @@ const SANDBOXES: Record<DemoId, React.LazyExoticComponent<React.ComponentType<Sa
   archive_bridge: lazy(() => import('../../sandbox/BridgeSandbox')),
 };
 
-/** Words that never break at their hyphens in a title. */
-const NOWRAP = /(A-B-C|No-Forwards)/;
-
 interface DemoViewProps {
   demo: DemoId;
   lang: Language;
@@ -46,13 +43,13 @@ export const DemoView: React.FC<DemoViewProps> = ({ demo, lang, onOpenDownload }
         </a>
         <span className="ptl-demo-kicker">{common.kicker}</span>
         <h1 className="ptl-demo-title">
-          {p.title.split(NOWRAP).map((part, i) =>
-            NOWRAP.test(part) ? (
+          {splitNoWrap(p.title).map((part, i) =>
+            part.keep ? (
               <span key={i} className="ptl-demo-nowrap">
-                {part}
+                {part.text}
               </span>
             ) : (
-              part
+              part.text
             ),
           )}
         </h1>

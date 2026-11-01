@@ -11,10 +11,15 @@ import { SupportView } from './views/SupportView';
 import { CommunityView } from './views/CommunityView';
 import { Footer } from '../Footer';
 import { BackToTop } from '../BackToTop';
+import { ChunkBoundary } from '../ui/ChunkBoundary';
 import './PortalLayout.css';
 
 // «Как работает» pages carry the sandbox code: load them on first visit only.
 const DemoView = lazy(() => import('./views/DemoView').then((m) => ({ default: m.DemoView })));
+
+/** To the top of the page on navigation; no smooth scroll under reduced motion. */
+const scrollToTop = () =>
+  window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 
 interface PortalLayoutProps {
   lang: Language;
@@ -68,7 +73,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
       setActiveDemo(route.demo);
       setFocusFeatures(route.features ?? false);
       if (!route.features) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToTop();
       }
     };
 
@@ -92,7 +97,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
       newHash = `#/${section}`;
     }
     window.location.hash = newHash;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   const toggleSidebarCollapse = () => {
@@ -132,7 +137,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           onToggleSidebar={toggleMobileSidebar}
         />
 
-        <main className="ptl-content-container">
+        {/* The skip link (App.tsx) focuses this. */}
+        <main id="main" className="ptl-content-container">
           {activeSection === 'home' && (
             <HomeView
               lang={lang}
@@ -141,10 +147,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
             />
           )}
 
+          {/* The boundary catches a demo page or sandbox chunk that fails to load (e.g. a tab older than the deploy). */}
           {activeSection === 'projects' && activeDemo && (
-            <Suspense fallback={<div className="ptl-demo-loading" aria-busy="true" />}>
-              <DemoView key={activeDemo} demo={activeDemo} lang={lang} onOpenDownload={(appId) => onOpenDownload(appId)} />
-            </Suspense>
+            <ChunkBoundary key={activeDemo} lang={lang}>
+              <Suspense fallback={<div className="ptl-demo-loading" aria-busy="true" />}>
+                <DemoView demo={activeDemo} lang={lang} onOpenDownload={(appId) => onOpenDownload(appId)} />
+              </Suspense>
+            </ChunkBoundary>
           )}
 
           {activeSection === 'projects' && !activeDemo && (
