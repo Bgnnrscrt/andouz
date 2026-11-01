@@ -246,6 +246,16 @@
   font-weight: 500;
 }
 
+.sbx-status--clear {
+  position: relative;
+  z-index: 3;
+  background: transparent;
+}
+
+.sbx-status--dark {
+  background: #000;
+}
+
 .sbx-status-icons {
   display: inline-flex;
   align-items: center;
@@ -328,6 +338,17 @@
   place-items: center;
   width: 40px;
   height: 40px;
+  border-radius: 50%;
+}
+
+/* ☰ of the chat list when a step waits for it (ListBar `menu`). */
+.sbx-screen .sbx-menu-btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 -10px 0 -10px;
   border-radius: 50%;
 }
 
@@ -528,6 +549,11 @@
   gap: 5px;
   font-size: 15.5px;
   font-weight: 600;
+}
+
+.sbx-kind-icon {
+  flex: none;
+  color: var(--tg-text);
 }
 
 .sbx-row-time {
@@ -767,49 +793,94 @@
   color: inherit;
 }
 
-/* The friend's edit, made visible (owner): the old word is struck out in red,
-   then the new one lights up and fades to plain text. */
+/* The friend's edit (owner, 2026-11-01): the word changes by a plain crossfade,
+   and it is the «изменено» label that lights up, not the text. */
 .sbx-swap-old {
-  border-radius: 4px;
-  color: #ff9d9d;
-  text-decoration: line-through 2px;
-  animation: sbx-swap-old 0.7s var(--ease-in-out) both;
+  animation: sbx-swap-out 0.7s var(--ease-in-out) both;
 }
 
-@keyframes sbx-swap-old {
-  0% {
-    color: inherit;
-    background-color: transparent;
-    text-decoration-color: transparent;
-  }
-  35% {
-    color: #ff9d9d;
-    background-color: rgba(255, 92, 92, 0.26);
-    text-decoration-color: currentColor;
-  }
-  100% {
-    color: #ff9d9d;
-    background-color: rgba(255, 92, 92, 0.26);
-    text-decoration-color: currentColor;
-    opacity: 0.45;
+@keyframes sbx-swap-out {
+  to {
+    opacity: 0.15;
   }
 }
 
 .sbx-swap-new {
-  border-radius: 4px;
-  animation: sbx-swap-new 2.4s var(--ease-out) both;
+  animation: sbx-swap-in 0.35s var(--ease-out) backwards;
 }
 
-@keyframes sbx-swap-new {
-  0% {
-    color: #fff;
-    background-color: rgba(0, 245, 155, 0.55);
+@keyframes sbx-swap-in {
+  from {
+    opacity: 0.15;
   }
-  45% {
-    background-color: rgba(0, 245, 155, 0.32);
+}
+
+/* The label glows twice and fades out (opacity/transform only): a green pill
+   behind it (::before) and a white copy of its text on top (::after). */
+.sbx-edited--flash {
+  position: relative;
+  isolation: isolate;
+}
+
+.sbx-edited--flash::before,
+.sbx-edited--flash::after {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.sbx-edited--flash::before {
+  content: '';
+  inset: -2px -5px;
+  z-index: -1;
+  border-radius: 6px;
+  background: rgba(0, 245, 155, 0.5);
+  box-shadow: 0 0 14px rgba(0, 245, 155, 0.55);
+  animation: sbx-edited-glow 2.8s var(--ease-out) 0.1s both;
+}
+
+.sbx-edited--flash::after {
+  content: attr(data-label);
+  inset: 0;
+  color: #fff;
+  animation: sbx-edited-text 2.8s var(--ease-out) 0.1s both;
+}
+
+@keyframes sbx-edited-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+  24% {
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0.45;
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  68% {
+    transform: scale(1);
   }
   100% {
-    background-color: transparent;
+    opacity: 0;
+  }
+}
+
+@keyframes sbx-edited-text {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  12%,
+  70% {
+    opacity: 1;
   }
 }
 
@@ -825,26 +896,6 @@
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-.sbx-msg--flash::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border: 2px solid var(--tg-accent);
-  border-radius: inherit;
-  opacity: 0;
-  pointer-events: none;
-  animation: sbx-flash 1.3s var(--ease-out);
-}
-
-@keyframes sbx-flash {
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }
 
@@ -1180,12 +1231,12 @@
   z-index: 22;
   background: rgba(2, 4, 8, 0.85);
   opacity: 0;
-  transition: opacity 1s var(--ease-in-out);
+  transition: opacity var(--dim-out, 1s) var(--ease-in-out);
 }
 
 .sbx-dim.is-on {
   opacity: 1;
-  transition-duration: 3s;
+  transition-duration: var(--dim-in, 3s);
 }
 
 .sbx-tagline {
@@ -1198,7 +1249,12 @@
   pointer-events: none;
 }
 
+.sbx-tagline--raised .sbx-tagline-text {
+  transform: translateY(-96px);
+}
+
 .sbx-tagline-text {
+  transition: transform 0.5s var(--ease-out);
   font-family: var(--font-heading);
   font-size: 23px;
   font-weight: 800;
@@ -1251,6 +1307,17 @@
 .sbx-end .sbx-cta {
   width: 100%;
   margin-top: 0;
+}
+
+/* Over the dimmed screen at its bottom (the line stays above it). */
+.sbx-end--over {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 24;
+  border-top: 0;
+  background: transparent;
 }
 
 .sbx-screen .sbx-more,
@@ -1381,5 +1448,12 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* No glow motion: the «изменено» label is simply lit while its step lasts. */
+  .sbx .sbx-edited--flash::before,
+  .sbx .sbx-edited--flash::after {
+    animation: none !important;
+    opacity: 1;
   }
 }

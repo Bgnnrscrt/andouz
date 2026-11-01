@@ -8,8 +8,11 @@
  * A hint shows HINT_DELAY_MS after its step starts, so the visitor can read the
  * screen first (HINT_DELAY_AT: sooner on some steps); the target can be tapped
  * earlier. The outro (dim, tagline, the ex's message that gets deleted) runs on
- * its own timeline (OUTRO).
+ * its own timeline (OUTRO). The engine (steps, hints, spotlight) is shared by all
+ * sandboxes: engine.ts + useSandbox.ts; BRIDGE_FLOW plugs this script into it.
  */
+
+import { isReached, lineAt, outroPhases, progressAt, stepAfter, type Flow, type LineState } from './engine';
 
 export type PhoneId = 'a' | 'b';
 export type ScreenId = 'start' | 'splash' | 'list' | 'chat' | 'topics' | 'topic';
@@ -60,16 +63,13 @@ export type TargetKey =
   | 'card-edit'
   | 'msg-sent';
 
-export const nextStep = (s: Step): Step =>
-  STEPS[Math.min(STEPS.indexOf(s) + 1, STEPS.length - 1)];
+export const nextStep = (s: Step): Step => stepAfter(STEPS, s);
 
 /** True once the flow has reached (or passed) `s`. */
-export const reached = (current: Step, s: Step): boolean =>
-  STEPS.indexOf(current) >= STEPS.indexOf(s);
+export const reached = (current: Step, s: Step): boolean => isReached(STEPS, current, s);
 
 /** 0…1, for the progress bar. `within` (0…1) moves it inside a long step. */
-export const progressOf = (s: Step, within = 0): number =>
-  (STEPS.indexOf(s) + within) / (STEPS.length - 1);
+export const progressOf = (s: Step, within = 0): number => progressAt(STEPS, s, within);
 
 /** A hint appears this long after its step starts (owner's spec: 3 s). */
 export const HINT_DELAY_MS = 3000;
@@ -118,6 +118,26 @@ export const LOOK: Partial<Record<Step, TargetKey>> = {
 
 /** Steps that wait for the button inside the hint. */
 export const NEXT_BUTTON: ReadonlySet<Step> = new Set<Step>(['aEditCard', 'bSent']);
+
+/**
+ * Targets at the bottom of a chat (the send button, the newest message).
+ * Their hint is docked into the chat between the messages and the input, so it
+ * pushes the conversation up instead of covering it.
+ */
+export const DOCKED: ReadonlySet<TargetKey> = new Set<TargetKey>(['send', 'msg-edited', 'card-edit', 'msg-sent']);
+
+/** The bridge script for the shared engine. */
+export const BRIDGE_FLOW: Flow<Step> = {
+  steps: STEPS,
+  auto: AUTO_MS,
+  tap: TAP,
+  look: LOOK,
+  nextButton: NEXT_BUTTON,
+  hintDelay: HINT_DELAY_MS,
+  hintDelayAt: HINT_DELAY_AT,
+  docked: DOCKED,
+  dockAbove: new Set<TargetKey>(['send']),
+};
 
 export const phoneOf = (s: Step): PhoneId => (s.startsWith('b') ? 'b' : 'a');
 
@@ -180,22 +200,11 @@ export const OUTRO = {
 
 /** Phase start times of the outro, in ms from its start. */
 export const OUTRO_AT = (() => {
-  const dim = OUTRO.calm;
-  const type = dim + OUTRO.dimIn;
-  const hold = type + OUTRO.type;
-  const erase = hold + OUTRO.hold;
-  const undim = erase + OUTRO.erase;
-  const end = undim + OUTRO.dimOut;
-  return { dim, type, hold, erase, undim, end, exIn: hold, exOut: hold + OUTRO.exStay };
+  const at = outroPhases(OUTRO);
+  return { ...at, exIn: at.hold, exOut: at.hold + OUTRO.exStay };
 })();
 
-export interface OutroState {
-  /** The dim is on (it fades in and out by CSS transition). */
-  dimmed: boolean;
-  /** Tagline characters shown. */
-  chars: number;
-  /** The caret blinks while the tagline types, holds and erases. */
-  caret: boolean;
+export interface OutroState extends LineState {
   /** The ex's message has arrived. */
   exIn: boolean;
   /** The ex's row is fading out. */
@@ -209,19 +218,10 @@ export interface OutroState {
  * motion) shows the whole tagline at once and removes it at once, on the same timeline.
  */
 export const outroAt = (t: number, len: number, instant: boolean): OutroState => {
-  const at = OUTRO_AT;
-  let chars = 0;
-  if (t >= at.type && t < at.undim) {
-    if (instant || (t >= at.hold && t < at.erase)) chars = len;
-    else if (t < at.hold) chars = Math.min(len, Math.ceil((len * (t - at.type)) / OUTRO.type));
-    else chars = Math.max(1, len - Math.floor((len * (t - at.erase)) / OUTRO.erase));
-  }
-  const { exOut } = at;
+  const { exIn, exOut } = OUTRO_AT;
   return {
-    dimmed: t >= at.dim && t < at.undim,
-    chars,
-    caret: t >= at.type && t < at.undim,
-    exIn: t >= at.exIn,
+    ...lineAt(t, len, instant, OUTRO),
+    exIn: t >= exIn,
     exLeaving: t >= exOut && t < exOut + OUTRO.exLeave,
     exGone: t >= exOut + OUTRO.exLeave,
   };

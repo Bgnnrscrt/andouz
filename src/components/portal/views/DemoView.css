@@ -109,8 +109,10 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 26px;
+  min-width: 26px;
   height: 26px;
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
   border-radius: 8px;
   color: #04130c;
   font-size: 0.8rem;
@@ -127,6 +129,10 @@
 
 .ptl-demo-role-badge.role-c {
   background: #faa774;
+}
+
+.ptl-demo-role-badge.role-d {
+  background: #e56bd6;
 }
 
 .ptl-demo-buy {

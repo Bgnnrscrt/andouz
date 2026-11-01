@@ -1,5 +1,6 @@
 import type { Language } from '../../types';
 import type { PhoneId, Step } from './bridgeFlow';
+import type { DemoPageCopy } from './commonCopy';
 
 /*
  * All text of the A-B-C bridge sandbox and its page, in 3 languages.
@@ -74,20 +75,9 @@ export interface BridgeCopy {
   buttons: Partial<Record<Step, string>>;
   /** Typed over the dimmed screen in the outro; starts with «AndoGram». */
   tagline: string;
-  start: { title: string; sub: string; cta: string };
-  end: { buy: string; more: string; again: string };
-  restart: string;
+  /** The start screen (its button and the end buttons: commonCopy.ts). */
+  start: { title: string; sub: string };
   screenLabel: string;
-}
-
-export interface BridgePageCopy {
-  back: string;
-  kicker: string;
-  title: string;
-  lead: string;
-  rolesTitle: string;
-  roles: { letter: 'A' | 'B' | 'C'; who: string; what: string }[];
-  buy: string;
 }
 
 const ruPlural = (n: number, one: string, few: string, many: string): string => {
@@ -134,7 +124,7 @@ const RU: BridgeCopy = {
     tease: 'Утопил, говоришь?😏',
     how: 'Как?! Я же сразу исправил 😳 Как ты успел прочитать??',
     secret: 'Я пользуюсь AndoGram 😎',
-    ex: 'Я скучаю по тебе, прочти меня',
+    ex: 'Я скучаю по тебе, прости меня',
   },
   card: {
     header: (name, time) => `${name}, ${time}`,
@@ -179,14 +169,7 @@ const RU: BridgeCopy = {
   start: {
     title: 'Мост A-B-C',
     sub: '1–2 минуты. Ничего устанавливать не нужно',
-    cta: 'Проверь сам',
   },
-  end: {
-    buy: 'Купить AndoGram',
-    more: 'Другие функции',
-    again: 'Пройти ещё раз',
-  },
-  restart: 'Начать заново',
   screenLabel: 'Демо AndoGram: мост A-B-C',
 };
 
@@ -226,7 +209,7 @@ const UZ: BridgeCopy = {
     tease: 'Cho‘ktirdim, deysanmi?😏',
     how: 'Qanaqasiga?! Darrov tuzatgandim-ku 😳 Qanday qilib o‘qib ulgurding??',
     secret: 'Men AndoGram ishlataman 😎',
-    ex: 'Seni sog‘indim, iltimos, o‘qib qo‘y',
+    ex: 'Seni sog‘indim, meni kechir',
   },
   card: {
     header: (name, time) => `${name}, ${time}`,
@@ -270,14 +253,7 @@ const UZ: BridgeCopy = {
   start: {
     title: 'A-B-C ko‘prigi',
     sub: '1–2 daqiqa. Hech narsa o‘rnatish shart emas',
-    cta: 'O‘zingiz sinab ko‘ring',
   },
-  end: {
-    buy: 'AndoGram sotib olish',
-    more: 'Boshqa imkoniyatlar',
-    again: 'Yana bir bor',
-  },
-  restart: 'Qaytadan boshlash',
   screenLabel: 'AndoGram demosi: A-B-C ko‘prigi',
 };
 
@@ -317,7 +293,7 @@ const EN: BridgeCopy = {
     tease: 'Drowned them, huh?😏',
     how: 'What?! I fixed it right away 😳 How did you even read it??',
     secret: 'I use AndoGram 😎',
-    ex: 'I miss you, please read this',
+    ex: 'I miss you, please forgive me',
   },
   card: {
     header: (name, time) => `${name}, ${time}`,
@@ -360,14 +336,7 @@ const EN: BridgeCopy = {
   start: {
     title: 'The A-B-C bridge',
     sub: '1–2 minutes. Nothing to install',
-    cta: 'Try it yourself',
   },
-  end: {
-    buy: 'Buy AndoGram',
-    more: 'Other features',
-    again: 'Try again',
-  },
-  restart: 'Start over',
   screenLabel: 'AndoGram demo: the A-B-C bridge',
 };
 
@@ -375,46 +344,37 @@ const COPY: Record<Language, BridgeCopy> = { ru: RU, uz: UZ, en: EN };
 
 export const getBridgeCopy = (lang: Language): BridgeCopy => COPY[lang];
 
-const PAGE: Record<Language, BridgePageCopy> = {
+const PAGE: Record<Language, DemoPageCopy> = {
   ru: {
-    back: 'AndoGram',
-    kicker: 'Как работает',
     title: 'Личный архив и мост A-B-C',
     lead: 'AndoGram сам копирует личные переписки в закрытую группу «Личный архив» — по отдельной теме на каждого собеседника. Там остаётся даже то, что потом изменили или удалили. А из архива можно отвечать со второго телефона от имени основного аккаунта.',
     rolesTitle: 'Кто есть кто',
     roles: [
-      { letter: 'A', who: 'Ты — Максим.', what: 'Телефон с AndoGram' },
-      { letter: 'B', who: 'Твой второй аккаунт.', what: 'Любой Telegram, даже официальный' },
-      { letter: 'C', who: 'Даниль.', what: 'Обычный собеседник' },
+      { badge: 'A', tone: 'a', who: 'Ты — Максим.', what: 'Телефон с AndoGram' },
+      { badge: 'B', tone: 'b', who: 'Твой второй аккаунт.', what: 'Любой Telegram, даже официальный' },
+      { badge: 'C', tone: 'c', who: 'Даниль.', what: 'Обычный собеседник' },
     ],
-    buy: 'Купить AndoGram',
   },
   uz: {
-    back: 'AndoGram',
-    kicker: 'Qanday ishlaydi',
     title: 'Shaxsiy arxiv va A-B-C ko‘prigi',
     lead: 'AndoGram shaxsiy yozishmalarni «Shaxsiy arxiv» yopiq guruhiga o‘zi nusxalaydi — har bir suhbatdosh uchun alohida mavzu bilan. Keyin tahrirlangan yoki o‘chirilgan xabarlar ham saqlanib qoladi. Arxivdan esa ikkinchi telefondan asosiy akkaunt nomidan javob berish mumkin.',
     rolesTitle: 'Kim kim',
     roles: [
-      { letter: 'A', who: 'Siz — Aziz.', what: 'AndoGram o‘rnatilgan telefon' },
-      { letter: 'B', who: 'Ikkinchi akkauntingiz.', what: 'Istalgan Telegram, hatto rasmiysi ham' },
-      { letter: 'C', who: 'Sanjar.', what: 'Oddiy suhbatdosh' },
+      { badge: 'A', tone: 'a', who: 'Siz — Aziz.', what: 'AndoGram o‘rnatilgan telefon' },
+      { badge: 'B', tone: 'b', who: 'Ikkinchi akkauntingiz.', what: 'Istalgan Telegram, hatto rasmiysi ham' },
+      { badge: 'C', tone: 'c', who: 'Sanjar.', what: 'Oddiy suhbatdosh' },
     ],
-    buy: 'AndoGram sotib olish',
   },
   en: {
-    back: 'AndoGram',
-    kicker: 'How it works',
     title: 'Personal archive & the A-B-C bridge',
     lead: 'AndoGram copies your private chats into a closed “Personal archive” group by itself — one topic per contact. Even messages edited or deleted later stay there. And from the archive you can reply from a second phone as your main account.',
     rolesTitle: 'Who is who',
     roles: [
-      { letter: 'A', who: 'You — Max.', what: 'The phone with AndoGram' },
-      { letter: 'B', who: 'Your second account.', what: 'Any Telegram, even the official one' },
-      { letter: 'C', who: 'Alex.', what: 'A regular contact' },
+      { badge: 'A', tone: 'a', who: 'You — Max.', what: 'The phone with AndoGram' },
+      { badge: 'B', tone: 'b', who: 'Your second account.', what: 'Any Telegram, even the official one' },
+      { badge: 'C', tone: 'c', who: 'Alex.', what: 'A regular contact' },
     ],
-    buy: 'Buy AndoGram',
   },
 };
 
-export const getBridgePageCopy = (lang: Language): BridgePageCopy => PAGE[lang];
+export const getBridgePageCopy = (lang: Language): DemoPageCopy => PAGE[lang];

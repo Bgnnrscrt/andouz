@@ -14,9 +14,7 @@ import { BackToTop } from '../BackToTop';
 import './PortalLayout.css';
 
 // «Как работает» pages carry the sandbox code: load them on first visit only.
-const BridgeDemoView = lazy(() =>
-  import('./views/BridgeDemoView').then((m) => ({ default: m.BridgeDemoView }))
-);
+const DemoView = lazy(() => import('./views/DemoView').then((m) => ({ default: m.DemoView })));
 
 interface PortalLayoutProps {
   lang: Language;
@@ -143,9 +141,9 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
             />
           )}
 
-          {activeSection === 'projects' && activeDemo === 'archive_bridge' && (
+          {activeSection === 'projects' && activeDemo && (
             <Suspense fallback={<div className="ptl-demo-loading" aria-busy="true" />}>
-              <BridgeDemoView lang={lang} onOpenDownload={(appId) => onOpenDownload(appId)} />
+              <DemoView key={activeDemo} demo={activeDemo} lang={lang} onOpenDownload={(appId) => onOpenDownload(appId)} />
             </Suspense>
           )}
 

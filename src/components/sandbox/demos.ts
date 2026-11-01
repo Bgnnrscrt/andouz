@@ -2,18 +2,22 @@ import type { AppId, Language } from '../../types';
 
 /*
  * Features that have an interactive «Проверь сам» page.
- * Keys are feature ids from data.ts. To add a demo: add the id here,
- * build its page and render it in PortalLayout.
+ * Keys are feature ids from data.ts. To add a demo: add the id here and
+ * its page copy + sandbox to DEMOS in portal/views/DemoView.tsx.
  */
-export const DEMO_IDS = ['archive_bridge'] as const;
+export const DEMO_IDS = ['honeypot', 'no_forwards_bypass', 'archive_bridge'] as const;
 export type DemoId = (typeof DEMO_IDS)[number];
 
 const DEMO_APP: Record<DemoId, AppId> = {
+  honeypot: 'andogram',
+  no_forwards_bypass: 'andogram',
   archive_bridge: 'andogram',
 };
 
 /** Third breadcrumb in the Topbar while a demo page is open. */
 export const DEMO_CRUMBS: Record<DemoId, Record<Language, string>> = {
+  honeypot: { ru: 'Honeypot-пароли', uz: 'Honeypot parollari', en: 'Duress passcodes' },
+  no_forwards_bypass: { ru: 'Обход No-Forwards', uz: 'No-Forwards’ni chetlab o‘tish', en: 'No-Forwards bypass' },
   archive_bridge: { ru: 'Мост A-B-C', uz: 'A-B-C ko‘prigi', en: 'A-B-C bridge' },
 };
 
@@ -25,7 +29,7 @@ export const demoHref = (id: DemoId): string => `#/projects/${DEMO_APP[id]}/${id
 
 /**
  * Hash route of an app's feature list, e.g. `#/projects/andogram/features`
- * (the sandbox finale's «Другие функции»): the project page, scrolled to its features.
+ * (the sandbox finale's «Другие сценарии»): the project page, scrolled to its features.
  */
 export const featuresHref = (app: AppId): string => `#/projects/${app}/features`;
 

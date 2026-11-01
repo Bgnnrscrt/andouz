@@ -8,6 +8,7 @@ import {
   CheckCheck,
   EllipsisVertical,
   Hash,
+  Megaphone,
   Menu,
   MessageCircle,
   Mic,
@@ -17,9 +18,9 @@ import {
   SendHorizontal,
   Signal,
   Smile,
+  Users,
   Wifi,
 } from 'lucide-react';
-import type { TargetKey } from './bridgeFlow';
 
 /*
  * A small Telegram-like UI kit for the «Проверь сам» sandboxes: the generic
@@ -27,6 +28,9 @@ import type { TargetKey } from './bridgeFlow';
  * Elements a step can point at carry data-sbx={key}; only the element the
  * current step expects is focusable (tabIndex 0) and shows a pointer.
  */
+
+/** data-sbx key of an element a step can wait for or point at. */
+export type TargetKey = string;
 
 export type Tap = (key?: TargetKey) => void;
 
@@ -92,9 +96,12 @@ export function TopicIcon({ name, color, size = 30 }: { name: string; color?: st
   );
 }
 
-export function StatusBar({ time }: { time: string }) {
+/** `bar`: the app's top-bar colour; `clear`: over a wallpaper; `dark`: a black lock screen. */
+export type StatusTone = 'bar' | 'clear' | 'dark';
+
+export function StatusBar({ time, tone = 'bar' }: { time: string; tone?: StatusTone }) {
   return (
-    <div className="sbx-status" aria-hidden="true">
+    <div className={`sbx-status${tone === 'bar' ? '' : ` sbx-status--${tone}`}`} aria-hidden="true">
       <span>{time}</span>
       <span className="sbx-status-icons">
         <Signal size={13} />
@@ -105,11 +112,34 @@ export function StatusBar({ time }: { time: string }) {
   );
 }
 
-/** Top bar of the chat list: ☰, app name, search. */
-export function ListBar({ title }: { title: string }) {
+/**
+ * Top bar of the chat list: ☰, app name, search. With `menu` the ☰ is a
+ * button (data-sbx="menu") that opens the side menu.
+ */
+export function ListBar({
+  title,
+  menu,
+}: {
+  title: string;
+  menu?: { label: string } & TapProps;
+}) {
   return (
     <div className="sbx-bar">
-      <Menu size={21} aria-hidden="true" />
+      {menu ? (
+        <button
+          type="button"
+          className="sbx-menu-btn"
+          data-sbx="menu"
+          data-want={menu.want === 'menu'}
+          tabIndex={tabFor(menu.want, 'menu')}
+          onClick={() => menu.tap('menu')}
+          aria-label={menu.label}
+        >
+          <Menu size={21} aria-hidden="true" />
+        </button>
+      ) : (
+        <Menu size={21} aria-hidden="true" />
+      )}
       <span className="sbx-bar-title">{title}</span>
       <Search size={20} aria-hidden="true" />
     </div>
@@ -200,6 +230,8 @@ export interface RowData {
   anim?: 'push' | 'shift' | 'gone';
   /** Shown above the outro dim (the ex's message must be seen through it). */
   lifted?: boolean;
+  /** A channel or a group: a small icon before the name, as in Telegram. */
+  kind?: 'channel' | 'group';
 }
 
 export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
@@ -217,6 +249,8 @@ export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
       <span className="sbx-row-main">
         <span className="sbx-row-line">
           <span className="sbx-row-name">
+            {row.kind === 'channel' && <Megaphone size={14} className="sbx-kind-icon" aria-hidden="true" />}
+            {row.kind === 'group' && <Users size={14} className="sbx-kind-icon" aria-hidden="true" />}
             <span className="sbx-ellipsis">{row.name}</span>
             {row.muted && <BellOff size={13} className="sbx-dim-icon" aria-hidden="true" />}
           </span>
@@ -295,7 +329,7 @@ export interface MsgData {
   sbx?: TargetKey;
   /** Pops in (the message just arrived). */
   fresh?: boolean;
-  /** Short highlight (the message was just edited). */
+  /** The «изменено» label lights up (the message was just edited; owner, 2026-11-01). */
   flash?: boolean;
   /** Archive card: a wider bubble, so long cards fit the screen. */
   wide?: boolean;
@@ -317,7 +351,11 @@ const sameSender = (m: MsgData, other: ChatItem | undefined): boolean =>
 function Meta({ m, editedLabel }: { m: MsgData; editedLabel: string }) {
   return (
     <>
-      {m.edited && <span>{editedLabel}</span>}
+      {m.edited && (
+        <span className={m.flash ? 'sbx-edited sbx-edited--flash' : 'sbx-edited'} data-label={editedLabel}>
+          {editedLabel}
+        </span>
+      )}
       <span>{m.time}</span>
       {m.out && (m.read ? <CheckCheck size={15} /> : <Check size={15} />)}
     </>
@@ -378,8 +416,8 @@ export function Messages({ items, editedLabel }: { items: ChatItem[]; editedLabe
               ))}
             <div
               className={`sbx-msg ${item.out ? 'sbx-msg--out' : 'sbx-msg--in'}${item.fresh ? ' sbx-msg--fresh' : ''}${
-                item.flash ? ' sbx-msg--flash' : ''
-              }${item.wide ? ' sbx-msg--wide' : ''}`}
+                item.wide ? ' sbx-msg--wide' : ''
+              }`}
               data-sbx={item.sbx}
             >
               {from && firstOfRun && (
