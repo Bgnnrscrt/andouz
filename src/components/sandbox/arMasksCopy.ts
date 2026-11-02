@@ -183,7 +183,7 @@ const UZ: ArMasksCopy = {
     aMask: 'Niqob haqiqiydek turibdi va yuz bilan birga harakatlanadi. Qolganlari — to‘liq versiyada',
   },
   line: 'Endi buni sinab ko‘ring\nAndoGram’da',
-  tagline: 'AndoGram\nOddiy ilova,\ng‘ayrioddiy imkoniyatlar',
+  tagline: 'AndoGram\nOddiy ilova,\nnoodatiy imkoniyatlar',
   decimal: ',',
   start: { title: '3D AR-niqoblar', sub: '1 daqiqa. Hech narsa o‘rnatish shart emas' },
   screenLabel: 'AndoGram demosi: dumaloq videolarda 3D AR-niqoblar',
