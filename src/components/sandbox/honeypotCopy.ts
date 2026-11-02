@@ -317,7 +317,7 @@ const RU: Words = {
   },
   buttons: { drawer1: 'Начать сначала', drawer2: 'Начать сначала', drawer3: 'Начать сначала', drawer4: 'Начать сначала' },
   // «AndoGram» on a line of its own (owner, 2026-11-02); «ты.» must not hang alone.
-  tagline: 'AndoGram.\nКто что увидит,\nрешаешь ты.',
+  tagline: 'AndoGram\nКто что увидит,\nрешаешь ты',
   start: { title: 'Honeypot-пароли', sub: '1 минута. Ничего устанавливать не нужно' },
   screenLabel: 'Демо AndoGram: Honeypot-пароли',
 };
@@ -422,7 +422,7 @@ const UZ: Words = {
     drawer3: 'Boshidan boshlash',
     drawer4: 'Boshidan boshlash',
   },
-  tagline: 'AndoGram.\nKim nimani ko‘rishini\no‘zingiz hal qilasiz.',
+  tagline: 'AndoGram\nKim nimani ko‘rishini\no‘zingiz hal qilasiz',
   start: { title: 'Honeypot parollari', sub: '1 daqiqa. Hech narsa o‘rnatish shart emas' },
   screenLabel: 'AndoGram demosi: Honeypot parollari',
 };
@@ -522,7 +522,7 @@ const EN: Words = {
     drawer5: 'All five accounts are here: the main PIN opens everything',
   },
   buttons: { drawer1: 'Start again', drawer2: 'Start again', drawer3: 'Start again', drawer4: 'Start again' },
-  tagline: 'AndoGram.\nYou decide who sees what.',
+  tagline: 'AndoGram\nYou decide who sees what',
   start: { title: 'Duress passcodes', sub: '1 minute. Nothing to install' },
   screenLabel: 'AndoGram demo: duress passcodes',
 };

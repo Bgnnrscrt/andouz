@@ -174,7 +174,7 @@ const RU: BridgeCopy = {
     bSent: 'Вернуться на первый телефон',
   },
   // «AndoGram» on a line of its own (owner, 2026-11-02); the other breaks keep words from hanging alone.
-  tagline: 'AndoGram.\nТебе говорили,\nчто это невозможно.\nМы покажем обратное.',
+  tagline: 'AndoGram\nТебе говорили,\nчто это невозможно\nМы покажем обратное',
   start: {
     title: 'Мост A-B-C',
     sub: '1–2 минуты. Ничего устанавливать не нужно',
@@ -260,7 +260,7 @@ const UZ: BridgeCopy = {
     aEditCard: 'Ikkinchi telefonni olish',
     bSent: 'Birinchi telefonga qaytish',
   },
-  tagline: 'AndoGram.\nSizga bu imkonsiz deyishgan.\nBiz esa aksini ko‘rsatamiz.',
+  tagline: 'AndoGram\nSizga bu imkonsiz deyishgan\nBiz esa aksini ko‘rsatamiz',
   start: {
     title: 'A-B-C ko‘prigi',
     sub: '1–2 daqiqa. Hech narsa o‘rnatish shart emas',
@@ -345,7 +345,7 @@ const EN: BridgeCopy = {
     aEditCard: 'Take the second phone',
     bSent: 'Back to the first phone',
   },
-  tagline: 'AndoGram.\nThey told you\nit was impossible.\nWe’ll show you otherwise.',
+  tagline: 'AndoGram\nThey told you\nit was impossible\nWe’ll show you otherwise',
   start: {
     title: 'The A-B-C bridge',
     sub: '1–2 minutes. Nothing to install',

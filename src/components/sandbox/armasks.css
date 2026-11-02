@@ -1,117 +1,55 @@
 /*
- * AR masks sandbox («Проверь сам», 3D AR masks in video messages): the drawn
- * face (ArFace.tsx), the video message recorders of Telegram and AndoGram and
- * the masks row (ArMasksUi.tsx). Prefix ar-. It lives inside .sbx: the
+ * AR masks sandbox («Проверь сам», 3D AR masks in video messages): the camera
+ * clip (ArCamera.tsx), the video message recorders of Telegram and AndoGram
+ * and the masks row (ArMasksUi.tsx). Prefix ar-. It lives inside .sbx: the
  * Telegram palette (--tg-*) and the reduced-motion rules of sandbox.css apply
- * here too (the head stops turning, the eyes stop blinking). Only transform
- * and opacity animate. Layers: the recorder (6) is over the chat and under
+ * here too (the clip is a still frame then: ArCamera renders the poster). Only
+ * transform and opacity animate. Layers: the recorder (6) is over the chat and under
  * the spotlight (20), the hint (21) and the outro dim (22).
  */
 
-/* ── The face: a 5 s loop, like a GIF ─────────────────────────────────── */
-.ar-face {
+/* ── The camera: a 5 s clip, two takes side by side (ArCamera.tsx) ──── */
+.ar-cam {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #d9d5cf; /* a light room, until the poster is there */
+}
+
+/* The clip is 2:1 — no mask on the left, the mask on the right — and twice
+   the circle's width: the circle shows one half. */
+.ar-cam-media {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
-  width: 100%;
+  width: 200%;
+  max-width: none;
   height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
 }
 
-/* The head turns a little right, back, a little left, back, from the neck. */
-.ar-head {
-  transform-box: view-box;
-  transform-origin: 150px 238px;
-  animation: ar-turn 5s var(--ease-in-out) infinite;
+/* The mask is on: the other half — the same frame, with the mask. */
+.ar-cam.is-masked .ar-cam-media {
+  transform: translateX(-50%);
 }
 
-@keyframes ar-turn {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-
-  25% {
-    transform: translate(6px, -1px) rotate(3.2deg);
-  }
-
-  50% {
-    transform: translate(0, 0.5px) rotate(0deg);
-  }
-
-  75% {
-    transform: translate(-6px, -1px) rotate(-3.2deg);
-  }
+/* It lands with a short soft flash, as AR effects do (none under reduced motion). */
+.ar-cam.is-masked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 62%);
+  opacity: 0;
+  pointer-events: none;
+  animation: ar-mask-flash 0.45s var(--ease-out);
 }
 
-/* The face moves a bit more than the head's outline: it reads as a turn. */
-.ar-features {
-  animation: ar-yaw 5s var(--ease-in-out) infinite;
-}
-
-@keyframes ar-yaw {
-  0%,
-  50%,
-  100% {
-    transform: translateX(0);
-  }
-
-  25% {
-    transform: translateX(3.5px);
-  }
-
-  75% {
-    transform: translateX(-3.5px);
-  }
-}
-
-.ar-body {
-  animation: ar-sway 5s var(--ease-in-out) infinite;
-}
-
-@keyframes ar-sway {
-  0%,
-  50%,
-  100% {
-    transform: translateX(0);
-  }
-
-  25% {
-    transform: translateX(1.5px);
-  }
-
-  75% {
-    transform: translateX(-1.5px);
-  }
-}
-
-.ar-eye {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: ar-blink 5s linear infinite;
-}
-
-@keyframes ar-blink {
-  0%,
-  37%,
-  41%,
-  100% {
-    transform: scaleY(1);
-  }
-
-  39% {
-    transform: scaleY(0.1);
-  }
-}
-
-/* The mask lands on the face. */
-.ar-face-mask {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: ar-mask-on 0.35s var(--ease-out) backwards;
-}
-
-@keyframes ar-mask-on {
+@keyframes ar-mask-flash {
   from {
-    opacity: 0;
-    transform: scale(1.08);
+    opacity: 1;
   }
 }
 
@@ -360,10 +298,11 @@
   transform: scale(0.94);
 }
 
-.ar-thumb-svg {
+.ar-thumb-img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 /* A locked mask: its icon is barely seen behind a big «?». */

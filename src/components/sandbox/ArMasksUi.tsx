@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pause, SendHorizontal, Square, SwitchCamera, Zap } from 'lucide-react';
 import { emojify } from '../../lib/emoji';
-import { ArFace, GhoulThumb, PlainThumb } from './ArFace';
+import { ArCamera, MaskThumb } from './ArCamera';
 import { MASK_IDS, type MaskId } from './arMasksCopy';
 import type { Tap } from './TgUi';
 import './armasks.css';
@@ -15,7 +15,7 @@ import './armasks.css';
  * Only the masks are buttons; the Ghoul mask is the one the demo can try.
  */
 
-/** Mask icons: the Ghoul mask and «no mask» are drawn; the locked ones show their emoji behind a «?». */
+/** Mask icons: the Ghoul mask and «no mask» are the man himself (with and without it); the locked ones show their emoji behind a «?». */
 const MASK_EMOJI: Partial<Record<MaskId, string>> = {
   forest: '🌿',
   noir: '🖤',
@@ -50,7 +50,7 @@ const RING_MS = 30_000;
 /** Circumference of the ring (r 48.5 in a 100 × 100 box); pathLength is unreliable on <circle> in older Safari. */
 const RING_C = 2 * Math.PI * 48.5;
 
-/** The circle: the camera (ArFace) and the white recording ring around it. */
+/** The circle: the camera (ArCamera) and the white recording ring around it. */
 function RoundVideo({ mask, elapsed }: { mask: boolean; elapsed: number }) {
   const p = Math.min(1, elapsed / RING_MS);
   return (
@@ -59,7 +59,7 @@ function RoundVideo({ mask, elapsed }: { mask: boolean; elapsed: number }) {
         <circle cx="50" cy="50" r="48.5" strokeDasharray={RING_C} strokeDashoffset={RING_C * (1 - p)} />
       </svg>
       <div className="ar-video-clip">
-        <ArFace mask={mask} />
+        <ArCamera mask={mask} />
       </div>
     </div>
   );
@@ -161,10 +161,8 @@ export function AndoGramRecorder({
               }}
             >
               <span className="ar-mask-icon" aria-hidden="true">
-                {id === 'none' ? (
-                  <PlainThumb />
-                ) : id === 'ghoul' ? (
-                  <GhoulThumb />
+                {id === 'none' || id === 'ghoul' ? (
+                  <MaskThumb masked={id === 'ghoul'} />
                 ) : (
                   <span className="ar-mask-emoji">{emojify(MASK_EMOJI[id] ?? '')}</span>
                 )}

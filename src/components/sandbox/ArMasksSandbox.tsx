@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import type { Language } from '../../types';
+import { loadCamera } from './arCameraClip';
 import { AndoGramRecorder, TelegramRecorder } from './ArMasksUi';
 import {
   AR_FLOW,
@@ -30,8 +31,8 @@ import { useSandbox, useTimeline } from './useSandbox';
  * Telegram it is just the camera; the screen dims: «Теперь попробуй в
  * AndoGram». In AndoGram the masks are under the circle: the Ghoul mask sits
  * on the face and follows it, the others are locked («?»). Then the tagline
- * and the end buttons. The face is a drawing (ArFace.tsx); nothing is
- * recorded or sent. Script and timings: arMasksFlow.ts; texts: arMasksCopy.ts;
+ * and the end buttons. The face is a generated photo animated into a 5 s clip
+ * (ArCamera.tsx); nothing is recorded or sent. Script and timings: arMasksFlow.ts; texts: arMasksCopy.ts;
  * the recorders: ArMasksUi.tsx; the home screen: HomeUi.tsx; the shared
  * engine: useSandbox.ts + SandboxFrame.tsx.
  */
@@ -74,6 +75,12 @@ export function ArMasksSandbox({ lang, onBuy }: ArMasksSandboxProps) {
   const { step, want, tap } = sb;
   const app = appOf(step);
   const screen = screenOf(step);
+  const started = step !== 'idle';
+
+  // The camera clip loads as soon as the try starts: it is there by the recording.
+  useEffect(() => {
+    if (started && !prefersReducedMotion()) void loadCamera();
+  }, [started]);
 
   // Two timelines: the line after try 1 (LINE) and the outro after try 2 (AR_OUTRO).
   const lineT = useTimeline(step === 'tLine', LINE_END, sb.next);
