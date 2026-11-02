@@ -1,15 +1,16 @@
-import React, { useMemo } from 'react';
-import { ArrowRight, LayoutGrid, Play, RotateCcw } from 'lucide-react';
+import React, { useId, useMemo } from 'react';
+import { ArrowRight, LayoutGrid, Play, RotateCcw, RotateCw } from 'lucide-react';
 import type { LineState } from './engine';
 import { featuresHref } from './demos';
 import { StatusBar, type StatusTone } from './TgUi';
+import { emojify } from '../../lib/emoji';
 import { PHONE_W, type HintSide, type Sandbox } from './useSandbox';
 import './sandbox.css';
 
 /*
  * The parts every «Проверь сам» sandbox shares: the phone frame (caption, fit,
- * spotlight, floating hint, progress, «Начать заново»), the docked hint, the
- * outro layer (dim + typed line), the start screen and the end buttons.
+ * spotlight, floating hint, the restart ring in the status bar), the docked
+ * hint, the outro layer (dim + typed line), the start screen and the end buttons.
  */
 
 /** Lines are typed with the brand in the ANDO green, wherever it stands. */
@@ -38,7 +39,7 @@ export function HintBox({
       data-side={side}
       style={{ '--arrow-x': arrowX } as React.CSSProperties}
     >
-      <p className="sbx-hint-text">{text}</p>
+      <p className="sbx-hint-text">{emojify(text)}</p>
       {button && (
         <button type="button" className="sbx-hint-btn" onClick={onNext}>
           {button}
@@ -101,11 +102,11 @@ export function Tagline({ text, shown, caret }: { text: string; shown: number; c
             {run.text}
           </span>
         ) : (
-          <React.Fragment key={i}>{run.text}</React.Fragment>
+          <React.Fragment key={i}>{emojify(run.text)}</React.Fragment>
         ),
       )}
       {caret && <span className="sbx-tagline-caret" />}
-      <span className="sbx-tagline-rest">{chars.slice(shown).join('')}</span>
+      <span className="sbx-tagline-rest">{emojify(chars.slice(shown).join(''))}</span>
     </p>
   );
 }
@@ -205,6 +206,55 @@ export function EndPanel({
         {labels.again}
       </button>
     </div>
+  );
+}
+
+/** Radius of the restart ring in its 40 × 40 box (3px stroke). */
+const RING_R = 17;
+const RING_C = 2 * Math.PI * RING_R;
+
+/**
+ * «Начать заново» as a small round button in the right end of the phone's
+ * status bar (owner, 2026-11-02: inside the phone, in place of the signal /
+ * Wi-Fi / battery icons): a reload arrow, as in a browser, inside a ring that
+ * draws itself as the scenario goes on (the progress). Above the outro dim,
+ * so it works during the outro too; not on the start screen.
+ */
+function RestartRing({
+  progress,
+  label,
+  onRestart,
+}: {
+  progress: number;
+  label: string;
+  onRestart: () => void;
+}) {
+  // useId() ids contain colons or guillemets: keep plain characters for url(#…).
+  const gradientId = `sbx-ring-${useId().replace(/[^\w-]/g, '')}`;
+  const p = Math.max(0, Math.min(1, progress));
+  return (
+    <button type="button" className="sbx-restart" onClick={onRestart} aria-label={label} title={label}>
+      <svg className="sbx-ring" viewBox="0 0 40 40" aria-hidden="true">
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+            {/* var() works in style, not in SVG presentation attributes. */}
+            <stop offset="0" style={{ stopColor: 'var(--accent-ando)' }} />
+            <stop offset="1" style={{ stopColor: '#00b4d8' }} />
+          </linearGradient>
+        </defs>
+        <circle className="sbx-ring-track" cx="20" cy="20" r={RING_R} />
+        <circle
+          className={`sbx-ring-bar${p > 0 ? '' : ' is-empty'}`}
+          cx="20"
+          cy="20"
+          r={RING_R}
+          stroke={`url(#${gradientId})`}
+          strokeDasharray={RING_C}
+          strokeDashoffset={RING_C * (1 - p)}
+        />
+      </svg>
+      <RotateCw size={11} strokeWidth={2.6} className="sbx-ring-icon" aria-hidden="true" />
+    </button>
   );
 }
 
@@ -308,6 +358,9 @@ export function SandboxFrame<S extends string>({
           >
             <span className="sbx-camera" aria-hidden="true" />
             {status && <StatusBar time={status.time} tone={status.tone} />}
+            {status && step !== initial && (
+              <RestartRing progress={progress} label={restartLabel} onRestart={onRestart} />
+            )}
             {/* Keys are prefixed: they share one sibling list with the hint. */}
             <div key={`view-${viewKey}-${run}`} className="sbx-view sbx-view--enter">
               {children}
@@ -317,7 +370,7 @@ export function SandboxFrame<S extends string>({
 
             {spot && (
               <div
-                className={`sbx-spot${spotReady ? ' is-ready' : ''}`}
+                className={`sbx-spot${spotReady ? ' is-ready' : ''}${spot.round ? ' sbx-spot--round' : ''}`}
                 style={{
                   width: spot.w + 8,
                   height: spot.h + 8,
@@ -351,17 +404,6 @@ export function SandboxFrame<S extends string>({
         {spotReady && hint ? hint : live}
       </p>
 
-      <div className="sbx-controls">
-        <span className="sbx-progress" aria-hidden="true">
-          <span style={{ '--p': progress } as React.CSSProperties} />
-        </span>
-        {step !== initial && (
-          <button type="button" className="sbx-restart" onClick={onRestart}>
-            <RotateCcw size={14} aria-hidden="true" />
-            {restartLabel}
-          </button>
-        )}
-      </div>
     </div>
   );
 }

@@ -265,6 +265,12 @@
   line-height: 1;
 }
 
+.nf-reaction img.emoji {
+  width: 27px;
+  height: 27px;
+  margin: 0;
+}
+
 .nf-reactions-more {
   display: grid;
   place-items: center;
@@ -386,6 +392,11 @@
 /* A styling hook around OutroLayer; no box of its own. */
 .nf-outro {
   display: contents;
+}
+
+.nf-outro--final .sbx-tagline-text {
+  /* «Другие решили за тебя, / что можно, а что нельзя.» — exactly two lines. */
+  font-size: 21px;
 }
 
 .nf-outro--shrug .sbx-tagline-text {

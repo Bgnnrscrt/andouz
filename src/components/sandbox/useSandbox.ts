@@ -10,45 +10,57 @@ import { isReached, prefersReducedMotion, stepAfter, type Flow } from './engine'
  */
 
 /*
- * Phone size. Narrow screens: the phone fills the width (fluid, CSS only).
- * Wider screens: it keeps a phone shape, 360 × 648…740 logical px, and the
- * whole phone is scaled to the window height instead of getting squat. When
- * there is room, the caption and the controls go to a rail on the phone's
- * left, so the phone takes almost the whole window height (owner, 2026-11-01).
+ * Phone size. The phone always has a phone's shape: 360 × 760 logical px
+ * (≈ 9 : 19, a modern Android), scaled as a whole to fit the window, on
+ * every screen. It never turns squat on low windows (owner, 2026-11-02, the
+ * third time: «выглядит нелепо»): it gets smaller instead. Where there is
+ * room, the caption goes to a rail on the phone's left («rail»); otherwise it
+ * is a row above the phone. The restart ring is inside the phone (status bar).
  */
 export const PHONE_W = 360;
-const PHONE_H = 740;
-/** Shortest logical height (ratio 1.8); on lower windows the phone is scaled. */
-const PHONE_H_MIN = 648;
-/** Smallest scale; on even lower windows the page scrolls instead. */
-const FIT_MIN = 0.62;
+const PHONE_H = 760;
+/**
+ * Smallest scale for the window height; on even lower windows the page
+ * scrolls instead. 0.64: a window from ~600px tall (a 1366 × 768 laptop with
+ * the browser's bars: ~625px) still shows the whole phone.
+ */
+const FIT_MIN = 0.64;
 /** Largest scale, on tall windows. */
 const FIT_MAX = 1.1;
-const FLUID_MAX_W = 560;
 /** Room above (the page padding) and below the phone. */
 const FIT_AIR = 40;
-/** The rail (caption + controls) and its gap; must match sandbox.css. */
+/** The rail (caption) and its gap; must match sandbox.css. */
 const RAIL_W = 132;
-const RAIL_GAP = 20;
-/** Without the rail: caption + controls + gaps above and below the phone. */
-const STACK_CHROME = 46 + 36 + 2 * 14;
+const GAP = 20;
+/** Without the rail: the caption above the phone and its gap. */
+const STACK_CHROME = 46 + 14;
 /** The spotlight is shown after the longest enter animation (phone 0.32 s, new message 0.36 s). */
 const SETTLE_MS = 400;
 
 export interface Fit {
   /** Scale of the whole phone. */
   k: number;
-  /** Logical phone height before scaling, px. */
+  /** Logical phone height before scaling, px (always PHONE_H). */
   h: number;
-  /** Caption and controls in a rail beside the phone. */
+  /** The caption in a rail beside the phone. */
   rail: boolean;
 }
 
-/** The largest phone for a given height: logical height first, then scale. */
-const sizeFor = (availH: number): { h: number; k: number } => {
-  if (availH >= PHONE_H) return { h: PHONE_H, k: Math.min(FIT_MAX, availH / PHONE_H) };
-  if (availH >= PHONE_H_MIN) return { h: Math.round(availH), k: 1 };
-  return { h: PHONE_H_MIN, k: Math.max(FIT_MIN, availH / PHONE_H_MIN) };
+/** Scale for a height: the phone's shape stays, only its size changes. */
+const scaleFor = (availH: number): number => Math.min(FIT_MAX, Math.max(FIT_MIN, availH / PHONE_H));
+
+/**
+ * The window height without the browser's bars (100svh), else innerHeight.
+ * On phones innerHeight changes while the address bar slides away; this one
+ * doesn't, so the phone doesn't jump while the visitor scrolls.
+ */
+const viewportHeight = (): number => {
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+  document.body.appendChild(probe);
+  const svh = probe.offsetHeight;
+  probe.remove();
+  return svh > 0 ? Math.min(svh, window.innerHeight) : window.innerHeight;
 };
 
 /** Spotlighted element, in the phone screen's own (unscaled) px. */
@@ -57,6 +69,8 @@ export interface Spot {
   y: number;
   w: number;
   h: number;
+  /** The target is round (data-sbx-round): a round spotlight. */
+  round?: boolean;
   sw: number;
   sh: number;
   /** Which target/screen this measurement belongs to. */
@@ -232,28 +246,21 @@ export function useSandbox<S extends string>({
     return () => window.clearTimeout(id);
   }, [shaking]);
 
-  // Wider screens: keep the phone's shape and scale it to the window height.
+  // Keep the phone's shape and scale it to the window: height first, width a hard limit.
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return undefined;
     const update = () => {
-      if (window.innerWidth <= FLUID_MAX_W) {
-        setFit(null);
-        return;
-      }
       const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 74;
-      const availH = window.innerHeight - header - FIT_AIR;
+      const availH = viewportHeight() - header - FIT_AIR;
       const width = root.clientWidth;
-      // Rail beside the phone vs caption/controls above and below it: take
-      // whichever gives the taller phone.
-      const tall = sizeFor(availH);
-      const railK = Math.min(tall.k, (width - RAIL_W - RAIL_GAP) / PHONE_W);
-      const stack = sizeFor(availH - STACK_CHROME);
-      const stackK = Math.min(stack.k, width / PHONE_W);
-      const rail = railK * tall.h >= stackK * stack.h;
-      const h = rail ? tall.h : stack.h;
+      // Rail beside the phone vs caption above it: take whichever gives the
+      // bigger phone.
+      const railK = Math.min(scaleFor(availH), (width - RAIL_W - GAP) / PHONE_W);
+      const stackK = Math.min(scaleFor(availH - STACK_CHROME), width / PHONE_W);
+      const rail = railK >= stackK;
       const k = Math.round((rail ? railK : stackK) * 1000) / 1000;
-      setFit((prev) => (prev && prev.k === k && prev.h === h && prev.rail === rail ? prev : { k, h, rail }));
+      setFit((prev) => (prev && prev.k === k && prev.rail === rail ? prev : { k, h: PHONE_H, rail }));
     };
     update();
     const observer = new ResizeObserver(update);
@@ -287,6 +294,7 @@ export function useSandbox<S extends string>({
         y: (r.top - s.top) / k,
         w: r.width / k,
         h: r.height / k,
+        round: el.dataset.sbxRound !== undefined,
         sw: scr.offsetWidth,
         sh: scr.offsetHeight,
         key: spotKey,

@@ -18,6 +18,7 @@ const HONEYPOT: Record<Language, DemoPageCopy> = {
       { badge: '2222', tone: 'c', who: 'Личный.', what: 'Жена, семья, близкие' },
       { badge: '3333', tone: 'b', who: 'Рабочий.', what: 'Два аккаунта: коллеги и клиенты' },
       { badge: '4444', tone: 'd', who: 'Секретный.', what: 'То, о чём знаешь только ты' },
+      { badge: '7777', tone: 'e', who: 'Главный.', what: 'Все аккаунты сразу' },
     ],
   },
   uz: {
@@ -29,6 +30,7 @@ const HONEYPOT: Record<Language, DemoPageCopy> = {
       { badge: '2222', tone: 'c', who: 'Shaxsiy.', what: 'Xotin, oila, yaqinlar' },
       { badge: '3333', tone: 'b', who: 'Ish.', what: 'Ikki akkaunt: hamkasblar va mijozlar' },
       { badge: '4444', tone: 'd', who: 'Maxfiy.', what: 'Faqat o‘zingiz biladigan narsalar' },
+      { badge: '7777', tone: 'e', who: 'Asosiy.', what: 'Barcha akkauntlar birdaniga' },
     ],
   },
   en: {
@@ -40,6 +42,7 @@ const HONEYPOT: Record<Language, DemoPageCopy> = {
       { badge: '2222', tone: 'c', who: 'Personal.', what: 'Wife, family, loved ones' },
       { badge: '3333', tone: 'b', who: 'Work.', what: 'Two accounts: colleagues and clients' },
       { badge: '4444', tone: 'd', who: 'Secret.', what: 'Things only you know about' },
+      { badge: '7777', tone: 'e', who: 'Main.', what: 'All accounts at once' },
     ],
   },
 };
@@ -107,10 +110,41 @@ const BRIDGE: Record<Language, DemoPageCopy> = {
   },
 };
 
+const AR_MASKS: Record<Language, DemoPageCopy> = {
+  ru: {
+    title: '3D AR-маски в кружках',
+    lead: 'В обычном Telegram кружок — просто видео с камеры. В AndoGram при записи кружка под ним есть маски: AR-движок MediaPipe следит за 468 точками лица, и маска сидит на нём как настоящая, даже когда ты двигаешься.',
+    rolesTitle: 'Что сравниваем',
+    roles: [
+      { badge: 'T', tone: 'b', who: 'Telegram.', what: 'Кружок без масок и эффектов' },
+      { badge: 'A', tone: 'a', who: 'AndoGram.', what: '3D-маски прямо при записи кружка' },
+    ],
+  },
+  uz: {
+    title: 'Dumaloq videolarda 3D AR-niqoblar',
+    lead: 'Oddiy Telegram’da dumaloq video — shunchaki kamera videosi. AndoGram’da dumaloq video yozayotganda uning ostida niqoblar bor: MediaPipe AR-dvijogi yuzning 468 nuqtasini kuzatadi va niqob harakatlansangiz ham haqiqiydek turadi.',
+    rolesTitle: 'Nimani solishtiramiz',
+    roles: [
+      { badge: 'T', tone: 'b', who: 'Telegram.', what: 'Niqob va effektlarsiz dumaloq video' },
+      { badge: 'A', tone: 'a', who: 'AndoGram.', what: 'Dumaloq video yozishda 3D-niqoblar' },
+    ],
+  },
+  en: {
+    title: '3D AR masks in video messages',
+    lead: 'In regular Telegram a video message is just your camera. In AndoGram the masks are right under the circle while you record: the MediaPipe AR engine tracks 468 points of your face, so the mask sits like a real one even as you move.',
+    rolesTitle: 'What we compare',
+    roles: [
+      { badge: 'T', tone: 'b', who: 'Telegram.', what: 'Video messages without masks or effects' },
+      { badge: 'A', tone: 'a', who: 'AndoGram.', what: '3D masks right while you record' },
+    ],
+  },
+};
+
 const PAGES: Record<DemoId, Record<Language, DemoPageCopy>> = {
   honeypot: HONEYPOT,
   no_forwards_bypass: NO_FORWARDS,
   archive_bridge: BRIDGE,
+  ar_masks: AR_MASKS,
 };
 
 export const getDemoPageCopy = (id: DemoId, lang: Language): DemoPageCopy => PAGES[id][lang];

@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { MotionConfig } from 'motion/react';
 import { Language, AppId, AppInfo } from './types';
 import { PortalLayout } from './components/portal/PortalLayout';
+import { ChunkBoundary } from './components/ui/ChunkBoundary';
 
 // Modals (and the QR generator) load on first open, keeping them out of the initial bundle.
 const DownloadModal = lazy(() => import('./components/DownloadModal').then((m) => ({ default: m.DownloadModal })));
@@ -87,29 +88,40 @@ export function App() {
           />
         </div>
 
-        {/* Lazy-loaded Modals */}
+        {/* Lazy-loaded Modals. The boundary catches a modal chunk that fails to
+            load (e.g. a tab older than the deploy): no blank page. */}
         {modalsRequested && (
-          <Suspense fallback={null}>
-            <DownloadModal
-              isOpen={downloadModalOpen}
-              onClose={() => setDownloadModalOpen(false)}
-              lang={lang}
-              initialAppId={downloadAppId}
-            />
+          <ChunkBoundary
+            lang={lang}
+            modal
+            onClose={() => {
+              setDownloadModalOpen(false);
+              setSelectedAppDetails(null);
+              setModalsRequested(false);
+            }}
+          >
+            <Suspense fallback={null}>
+              <DownloadModal
+                isOpen={downloadModalOpen}
+                onClose={() => setDownloadModalOpen(false)}
+                lang={lang}
+                initialAppId={downloadAppId}
+              />
 
-            <AppDetailsModal
-              app={selectedAppDetails}
-              onClose={() => setSelectedAppDetails(null)}
-              lang={lang}
-              onOpenDownload={() => {
-                if (selectedAppDetails) {
-                  handleOpenDownload(selectedAppDetails.id);
-                } else {
-                  handleOpenDownload('andogram');
-                }
-              }}
-            />
-          </Suspense>
+              <AppDetailsModal
+                app={selectedAppDetails}
+                onClose={() => setSelectedAppDetails(null)}
+                lang={lang}
+                onOpenDownload={() => {
+                  if (selectedAppDetails) {
+                    handleOpenDownload(selectedAppDetails.id);
+                  } else {
+                    handleOpenDownload('andogram');
+                  }
+                }}
+              />
+            </Suspense>
+          </ChunkBoundary>
         )}
       </div>
     </MotionConfig>

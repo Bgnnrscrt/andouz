@@ -105,7 +105,7 @@ export function NoForwardsSandbox({ lang, onBuy }: NoForwardsSandboxProps) {
         ? { dimmed: true, chars: tagLen, caret: false }
         : lineAt(outroT, tagLen, prefersReducedMotion(), T_OUTRO);
     overlay = (
-      <div className="nf-outro">
+      <div className="nf-outro nf-outro--final">
         <OutroLayer line={line} text={c.tagline} dimIn={T_OUTRO.dimIn} dimOut={T_OUTRO.dimOut} raised={step === 'finale'} />
         {step === 'finale' && <EndPanel labels={common.end} onBuy={onBuy} onAgain={() => sb.go('aList')} over />}
       </div>

@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../../../types';
 import { portalI18n } from '../../../portalTranslations';
+import { emojify } from '../../../lib/emoji';
 import './SupportView.css';
 
 interface SupportViewProps {
@@ -89,7 +90,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ lang }) => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-ando)', fontWeight: 600 }}>
           <Clock size={16} />
-          <span>{t.support.responseTime}</span>
+          <span>{emojify(t.support.responseTime)}</span>
         </div>
       </div>
     </div>

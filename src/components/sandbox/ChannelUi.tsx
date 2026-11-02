@@ -13,6 +13,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
+import { emojify } from '../../lib/emoji';
 import { ChatBar, type Tap } from './TgUi';
 
 /*
@@ -100,7 +101,7 @@ function PostRow({
       <div className={`sbx-msg sbx-msg--in nf-post nf-post--${post.kind}`}>
         {post.kind !== 'text' && <Media kind={post.kind} duration={post.duration} />}
         <span className="nf-caption">
-          <span className="sbx-msg-text">{post.text}</span>
+          <span className="sbx-msg-text">{emojify(post.text)}</span>
           <span className="sbx-msg-ghost" aria-hidden="true">
             {meta}
           </span>
@@ -245,7 +246,7 @@ function PostMenu({
       <div className="nf-reactions" aria-hidden="true">
         {REACTIONS.map((r) => (
           <span key={r} className="nf-reaction">
-            {r}
+            {emojify(r)}
           </span>
         ))}
         <span className="nf-reactions-more">
@@ -297,7 +298,7 @@ function Toast({ toast }: { toast: ToastData }) {
       ) : (
         <Ban size={20} aria-hidden="true" />
       )}
-      <span>{toast.text}</span>
+      <span>{emojify(toast.text)}</span>
     </div>
   );
 }

@@ -96,6 +96,16 @@ canvas {
 }
 
 /* Accessibility helpers */
+/* An emoji picture (src/lib/emoji.tsx) in running text: the size and seat of
+   the glyph it replaces. */
+img.emoji {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  margin: 0 0.05em;
+  vertical-align: -0.22em;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

@@ -14,17 +14,19 @@ import {
   viewOf,
   type Step,
 } from './honeypotFlow';
-import { AccountDrawer, HomeScreen, LockScreen } from './HoneypotUi';
+import { HomeScreen } from './HomeUi';
+import { AccountDrawer, LockScreen } from './HoneypotUi';
 import { DockedHint, EndPanel, OutroLayer, SandboxFrame, StartScreen } from './SandboxFrame';
 import { ChatRow, Fab, ListBar, type RowData, type StatusTone } from './TgUi';
 import { useSandbox, useTimeline } from './useSandbox';
 
 /*
  * «Проверь сам» for AndoGram's Honeypot (duress PIN codes). One phone: its
- * home screen, then AndoGram's lock screen four times — 1111, 2222, 3333,
- * 4444. Each PIN opens its own account(s) and chats, and the side menu lists
- * only those. Then the outro: the screen dims, the tagline types out and
- * stays, and the end buttons come up over the dim.
+ * home screen, then AndoGram's lock screen five times — 1111, 2222, 3333,
+ * 4444 and the main 7777. Each of the first four opens its own account(s)
+ * and chats, and the side menu lists only those; 7777 lists them all. Then
+ * the outro: the screen dims, the tagline types out and stays, and the end
+ * buttons come up over the dim.
  * Everything is local mock data: nothing is sent anywhere.
  * Script and timings: honeypotFlow.ts; texts and chats: honeypotCopy.ts;
  * screens: HoneypotUi.tsx; the shared engine: useSandbox.ts + SandboxFrame.tsx.
@@ -107,7 +109,7 @@ export function HoneypotSandbox({ lang, onBuy }: HoneypotSandboxProps) {
     // The chat list of this round's account; the side menu over it. In the
     // outro the menu slides away first. The ☰ hint is docked on top of the
     // list (honeypotFlow DOCKED): it pushes the chats down, never covers them.
-    const r = round ?? 4;
+    const r = round ?? 5;
     const drawer = place?.stage === 'drawer' || (step === 'outro' && outroT < DRAWER_CLOSE_MS);
     view = (
       <>
@@ -125,6 +127,7 @@ export function HoneypotSandbox({ lang, onBuy }: HoneypotSandboxProps) {
         {drawer && (
           <AccountDrawer
             accounts={c.rounds[r].accounts}
+            active={c.rounds[r].active}
             addLabel={c.ui.addAccount}
             items={c.ui.drawer}
             closing={step === 'outro'}

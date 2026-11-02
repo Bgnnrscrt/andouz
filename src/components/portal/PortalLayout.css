@@ -55,6 +55,33 @@
   text-align: center;
 }
 
+/* The same for a modal (App.tsx): over the page, with «Закрыть». */
+.ptl-load-error-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(3, 6, 12, 0.72);
+}
+
+.ptl-load-error--modal {
+  min-height: 0;
+  max-width: 420px;
+  padding: 28px 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  background: #10141f;
+}
+
+.ptl-load-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 /* Mobile Layout */
 @media (max-width: 900px) {
   .ptl-main-wrapper,

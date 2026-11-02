@@ -25,15 +25,24 @@
   --sbx-hint-bg: var(--accent-ando);
   --sbx-hint-text: #03130c;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  /* Narrow (useSandbox «fit» without the rail): one column as wide as the
+     phone, the caption above it. */
+  display: grid;
+  grid-template-columns: var(--fit-w, min(360px, 100%));
+  grid-template-areas:
+    'caption'
+    'phone';
+  row-gap: 14px;
+  justify-content: center;
   width: 100%;
+  /* «Проверь сам» scrolls the sandbox into view: keep a little air under the phone. */
+  scroll-margin-bottom: 12px;
 }
 
-/* ── Caption above the phone ───────────────────────────────────────────── */
+/* ── Caption (the step) ────────────────────────────────────────────────── */
 .sbx-caption {
+  grid-area: caption;
+  align-self: center;
   min-height: 46px;
   text-align: center;
 }
@@ -65,19 +74,20 @@
 }
 
 /* ── Phone frame ───────────────────────────────────────────────────────── */
-/* Narrow screens (fluid): the phone fills the width and fits the height. */
+/* useSandbox «fit»: a 360 × 760 logical phone (always a phone's shape),
+   scaled as a whole to the window. .sbx-fit has the scaled size; JS sets
+   --fit-k (scale), the logical height and --fit-w (scaled width). Before the
+   first measurement (one layout pass) the phone is fluid, same shape. */
 .sbx-fit {
+  grid-area: phone;
   position: relative;
-  flex: none;
-  width: min(360px, 100%);
+  width: 100%;
 }
 
 .sbx-phone {
   position: relative;
   width: 100%;
-  /* Fits the caption + phone into the screen (topbar, paddings ≈ 200px). */
-  height: min(740px, calc(100vh - 200px));
-  min-height: 560px;
+  aspect-ratio: 360 / 760;
   padding: 10px;
   border-radius: 46px;
   background: #0a0c11;
@@ -86,53 +96,29 @@
     0 30px 80px rgba(0, 0, 0, 0.55);
 }
 
-@supports (height: 1svh) {
-  .sbx-phone {
-    height: min(740px, calc(100svh - 200px));
-  }
-}
-
-/* Wider screens (useSandbox «fit»): a phone-shaped 360 × 648…740 px phone,
-   scaled as a whole to the window height. .sbx-fit has the scaled size;
-   JS sets --fit-k (scale), the logical height and --fit-w (scaled width). */
 .sbx--fit .sbx-phone {
   position: absolute;
   top: 0;
   left: 0;
   width: 360px;
-  min-height: 0;
+  aspect-ratio: auto;
   transform-origin: 0 0;
   scale: var(--fit-k, 1);
 }
 
-.sbx--fit .sbx-controls {
-  width: var(--fit-w, 360px);
-}
-
-/* Room beside the phone (useSandbox «rail»): the caption and the controls
-   sit in a 132px rail on the left, the phone takes the window height.
-   RAIL_W / RAIL_GAP in useSandbox.ts match these. */
+/* Room beside the phone (useSandbox «rail»): the caption in a 132px rail on
+   its left, the phone takes the window height. RAIL_W / GAP in useSandbox.ts
+   match these. */
 .sbx--rail {
-  display: grid;
-  /* One row as tall as the phone: the caption sits at its top, the controls
-     at its bottom (same cell). */
   grid-template-columns: 132px auto;
-  grid-template-rows: auto;
+  grid-template-areas: 'caption phone';
   column-gap: 20px;
   row-gap: 0;
-  justify-content: center;
-}
-
-.sbx--rail .sbx-fit {
-  grid-column: 2;
-  grid-row: 1;
 }
 
 .sbx--rail .sbx-caption {
-  grid-column: 1;
-  grid-row: 1;
   align-self: start;
-  padding-top: 22px;
+  padding: 22px 0 0;
   text-align: right;
 }
 
@@ -146,32 +132,6 @@
 
 .sbx--rail .sbx-caption-sub {
   margin-top: 6px;
-}
-
-.sbx--rail .sbx-controls {
-  grid-column: 1;
-  grid-row: 1;
-  align-self: end;
-  flex-direction: column;
-  align-items: flex-end;
-  width: auto;
-  padding-bottom: 18px;
-}
-
-.sbx--rail .sbx-progress {
-  flex: none;
-  width: 100%;
-}
-
-/* «Начать заново» / «Qaytadan boshlash» are wider than the rail: one line,
-   growing to the left into the free space (the controls are right-aligned),
-   but only where the content area is at least ~660px wide (the sidebar takes
-   280px above 900px). In narrower windows there is no room left of the rail
-   (it would run off the screen or under the sidebar): two lines, as before. */
-@media (min-width: 660px) and (max-width: 900px), (min-width: 940px) {
-  .sbx--rail .sbx-restart {
-    white-space: nowrap;
-  }
 }
 
 .sbx-phone--enter {
@@ -265,12 +225,6 @@
 
 .sbx-status--dark {
   background: #000;
-}
-
-.sbx-status-icons {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .sbx-view {
@@ -804,28 +758,6 @@
   color: inherit;
 }
 
-/* The friend's edit (owner, 2026-11-01): the word changes by a plain crossfade,
-   and it is the «изменено» label that lights up, not the text. */
-.sbx-swap-old {
-  animation: sbx-swap-out 0.7s var(--ease-in-out) both;
-}
-
-@keyframes sbx-swap-out {
-  to {
-    opacity: 0.15;
-  }
-}
-
-.sbx-swap-new {
-  animation: sbx-swap-in 0.3s var(--ease-out) backwards;
-}
-
-@keyframes sbx-swap-in {
-  from {
-    opacity: 0.15;
-  }
-}
-
 /* The label glows twice and fades out (opacity/transform only): a green pill
    behind it (::before) and a white copy of its text on top (.sbx-edited-copy,
    aria-hidden). The pill stays inside the 3px gap before the time. */
@@ -923,6 +855,18 @@
   min-height: 54px;
   padding: 7px 12px;
   background: var(--tg-input);
+  color: var(--tg-sub);
+}
+
+/* The video message button (InputBar `camera`), in place of the mic. */
+.sbx-record-btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin: -6px -7px -6px -6px;
+  border-radius: 50%;
   color: var(--tg-sub);
 }
 
@@ -1096,6 +1040,11 @@
   transition: opacity 0.25s var(--ease-out);
 }
 
+/* A round target (data-sbx-round: the video message circle). */
+.sbx-spot--round {
+  border-radius: 50%;
+}
+
 .sbx-spot.is-ready {
   opacity: 1;
 }
@@ -1258,7 +1207,7 @@
   z-index: 23;
   display: grid;
   place-items: center;
-  padding: 0 30px;
+  padding: 0 20px;
   pointer-events: none;
 }
 
@@ -1269,12 +1218,16 @@
 .sbx-tagline-text {
   transition: transform 0.3s var(--ease-out);
   font-family: var(--font-heading);
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 800;
   line-height: 1.32;
   color: #fff;
   text-align: center;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  /* The lines break where the copy says («\n»): «AndoGram» always stands on a
+     line of its own (owner, 2026-11-02). Each line fits 300px even in the
+     widest fallback font for Cyrillic (Outfit has none: DejaVu on Linux). */
+  white-space: pre-line;
 }
 
 .sbx-tagline-brand {
@@ -1377,52 +1330,41 @@
   }
 }
 
-/* ── Under the phone ───────────────────────────────────────────────────── */
-.sbx-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: min(360px, 100%);
-  min-height: 36px;
-}
-
-.sbx-progress {
-  flex: 1;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.sbx-progress > span {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-ando), #00b4d8);
-  transform: scaleX(var(--p, 0));
-  transform-origin: left;
-  transition: transform 0.4s var(--ease-out);
-}
-
+/* ── Restart ring (SandboxFrame RestartRing) ───────────────────────────── */
+/* «Начать заново» in the right end of the status bar (owner, 2026-11-02): a
+   reload arrow in a ring that draws the progress. Above the outro dim (22),
+   the line (23) and the end buttons (24), so it works during the outro too.
+   It sits clear of the screen's rounded corner; a wider invisible area
+   (::before) makes the small ring easy to hit. */
 .sbx-restart {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: 0.84rem;
+  position: absolute;
+  top: 3px;
+  right: 20px;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
   cursor: pointer;
   transition:
-    color 0.2s var(--ease-out),
-    border-color 0.2s var(--ease-out);
+    background-color 0.2s var(--ease-out),
+    transform 0.12s var(--ease-out);
 }
 
-.sbx-restart svg {
-  flex: none;
+.sbx-restart::before {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+}
+
+.sbx-restart:active {
+  transform: scale(0.92);
 }
 
 .sbx-restart:focus-visible {
@@ -1430,10 +1372,38 @@
   outline-offset: 2px;
 }
 
+/* Starts at 12 o'clock and goes clockwise. */
+.sbx-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  rotate: -90deg;
+  fill: none;
+  stroke-width: 3.6;
+}
+
+.sbx-ring-track {
+  stroke: rgba(255, 255, 255, 0.22);
+}
+
+.sbx-ring-bar {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s var(--ease-out);
+}
+
+/* A round cap would still draw a dot at 0. */
+.sbx-ring-bar.is-empty {
+  opacity: 0;
+}
+
+.sbx-ring-icon {
+  position: relative;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .sbx-restart:hover {
-    color: #fff;
-    border-color: var(--border-hover);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .sbx-screen .sbx-cta:hover {
@@ -1446,17 +1416,6 @@
 
   .sbx-screen .sbx-again:hover {
     border-color: rgba(255, 255, 255, 0.32);
-  }
-}
-
-@media (max-width: 420px) {
-  .sbx-phone {
-    padding: 7px;
-    border-radius: 38px;
-  }
-
-  .sbx-screen {
-    border-radius: 31px;
   }
 }
 

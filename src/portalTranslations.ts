@@ -300,7 +300,7 @@ export const portalI18n: Record<Language, PortalTranslations> = {
       updated: 'Yangilangan sana',
       downloadApk: 'Ushbu APKni yuklash',
       allFeatures: 'Ilovaning barcha imkoniyatlari',
-      howItWorks: 'Qanday ishlaydi',
+      howItWorks: 'Ishlatib ko‘rish',
       compareWithOriginal: 'Rasmiy versiya bilan taqqoslash',
       changelogHeading: 'O‘zgarishlar va yangiliklar tarixi'
     },

@@ -90,9 +90,9 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
         : at('bSplash')
           ? '18:42'
           : '18:41';
-  const { head, was, now, tail } = c.msg.long;
+  const { head, was, now, tail, more } = c.msg.long;
   const longOriginal = head + was + tail;
-  const longEdited = head + now + tail;
+  const longEdited = head + now + tail + more.sep + more.word;
   const editTitle = c.card.editTitle(c.friend);
   // The changed word is marked (our demo highlight; the app's card is plain text).
   const editCard = (
@@ -106,6 +106,8 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
       {c.card.now} {head}
       <mark className="sbx-mark">{now}</mark>
       {tail}
+      {more.sep}
+      <mark className="sbx-mark">{more.word}</mark>
     </>
   );
   const deleteTitle = c.card.deleteTitle(c.ex);
@@ -123,9 +125,12 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
       ? { preview: c.msg.old, previewText: c.msg.old, time: c.ui.yesterdayShort }
       : !at('aArchiveIn')
         ? { preview: longOriginal, previewText: longOriginal, time: '18:41', unread: 1 }
-        : !at('aOutro')
+        : !at('aBack')
           ? { preview: longEdited, previewText: longEdited, time: '18:41' }
-          : { preview: c.msg.secret, previewText: c.msg.secret, time: '18:44', read: true }),
+          : // Back from phone 2: the reply sent through the bridge is simply yours.
+            !at('aOutro')
+            ? { preview: c.msg.tease, previewText: c.msg.tease, time: '18:43', read: true }
+            : { preview: c.msg.secret, previewText: c.msg.secret, time: '18:44', read: true }),
     typing: step === 'aTyping' ? c.ui.typing : undefined,
   };
 
@@ -243,24 +248,9 @@ export function BridgeSandbox({ lang, onBuy }: BridgeSandboxProps) {
     {
       id: 'long',
       out: false,
-      text:
-        step === 'aEditing' ? (
-          <>
-            {head}
-            <span className="sbx-swap-old">{was}</span>
-            {tail}
-          </>
-        ) : step === 'aEdited' ? (
-          <>
-            {head}
-            <span className="sbx-swap-new">{now}</span>
-            {tail}
-          </>
-        ) : at('aEdited') ? (
-          longEdited
-        ) : (
-          longOriginal
-        ),
+      // The edit shows only as a new last line and the glowing «изменено»;
+      // the changed word itself is not marked (the archive card reveals it).
+      text: at('aEdited') ? longEdited : longOriginal,
       time: '18:41',
       edited: at('aEdited'),
       flash: step === 'aEdited',

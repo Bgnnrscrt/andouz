@@ -2,6 +2,8 @@
  * «Проверь сам» — the A-B-C bridge sandbox script, v2 (owner-approved 2026-11-01).
  * After the edit the visitor leaves the chat on phone 1 and sees the original in
  * AndoGram's own «Личный архив» first (owner, 2026-11-01), then takes phone 2.
+ * Back on phone 1 the chat list comes first (owner, 2026-11-02): the reply sent
+ * from phone 2 is the friend's last message there; the visitor opens the chat.
  * The flow is a fixed list of steps. A step is either timed (AUTO_MS), waits
  * for a tap on one element (TAP), or waits for the button in the hint
  * (NEXT_BUTTON). Every transition goes to the next step in STEPS.
@@ -25,7 +27,6 @@ export const STEPS = [
   'aTyping',
   'aOpenChat',
   'aRead',
-  'aEditing',
   'aEdited',
   // Still phone 1: back to the list, the new «Личный архив», the friend's topic
   'aArchiveIn',
@@ -37,7 +38,7 @@ export const STEPS = [
   'bOpenTopic',
   'bReply',
   'bSent',
-  // Back on phone 1
+  // Back on phone 1: the chat list, then the chat with the friend
   'aBack',
   'aFriendTyping',
   'aSecret',
@@ -76,6 +77,8 @@ export const HINT_DELAY_MS = 3000;
 
 /** Steps whose hint comes sooner. After the outro: at once (owner, 2026-11-01). */
 export const HINT_DELAY_AT: Partial<Record<Step, number>> = {
+  /** Back from phone 2: the visitor knows the list by now. */
+  aBack: 1500,
   aOpenArchive: 0,
 };
 
@@ -84,12 +87,14 @@ export const AUTO_MS: Partial<Record<Step, number>> = {
   aSplash: 1300,
   aList: 2000,
   aTyping: 2000,
-  /** «утопил» becomes «потерял» 1 s after the chat opens: first it is struck out… */
+  /**
+   * The friend edits his message 1 s after the chat opens: «утопил» silently
+   * becomes «потерял» and «пожалуйста» is added at its end, so the bubble grows
+   * by a line and «изменено» lights up. Which word changed is not shown (owner,
+   * 2026-11-02: the visitor should wonder «а что изменилось?»).
+   */
   aRead: 1000,
-  /** …then the new word replaces it (owner: the change must be seen). */
-  aEditing: 700,
   bSplash: 1300,
-  aBack: 1200,
   aFriendTyping: 2000,
   /** The final buttons come 4 s after the deleted message is on screen. */
   aDeleted: 4000,
@@ -104,6 +109,7 @@ export const TAP: Partial<Record<Step, TargetKey>> = {
   bOpenArchive: 'row-archive',
   bOpenTopic: 'topic-friend',
   bReply: 'send',
+  aBack: 'row-friend',
   aSecret: 'send',
   aSecretSent: 'back',
   aOpenArchive: 'row-archive',
@@ -153,13 +159,12 @@ export const screenOf = (s: Step): ScreenId => {
     case 'aOpenChat':
     case 'aArchiveIn':
     case 'bOpenArchive':
+    case 'aBack':
     case 'aOutro':
     case 'aOpenArchive':
       return 'list';
     case 'aRead':
-    case 'aEditing':
     case 'aEdited':
-    case 'aBack':
     case 'aFriendTyping':
     case 'aSecret':
     case 'aSecretSent':

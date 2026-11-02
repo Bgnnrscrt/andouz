@@ -1,103 +1,127 @@
-import React from 'react';
-import { Menu } from 'lucide-react';
-import { Language, AppId } from '../../types';
-import { PortalSection } from '../../portalTypes';
-import { portalI18n } from '../../portalTranslations';
-import { splitNoWrap } from '../sandbox/demos';
+import React, { useEffect, useId, useRef, useState } from 'react';
+import { Check, ChevronDown, Languages, Menu } from 'lucide-react';
+import { Language } from '../../types';
 import './Topbar.css';
+
+/*
+ * The bar over every portal page: only the language button in the right
+ * corner (owner, 2026-11-02: no breadcrumb, no ☰ on wide screens; the
+ * sidebar has its own collapse button). Below 900px the sidebar is a drawer,
+ * so ☰ stays there: it is the only way to open it.
+ */
 
 interface TopbarProps {
   lang: Language;
   setLang: (l: Language) => void;
-  activeSection: PortalSection;
-  activeProject?: AppId;
-  /** Third breadcrumb, e.g. a feature's «Как работает» page. */
-  extraCrumb?: string;
+  /** The mobile sidebar drawer is open (☰'s aria-expanded). */
+  menuOpen: boolean;
   onToggleSidebar: () => void;
 }
 
-const LANGUAGES: Language[] = ['uz', 'ru', 'en'];
+const LANGUAGES: { code: Language; name: string }[] = [
+  { code: 'uz', name: 'O‘zbekcha' },
+  { code: 'ru', name: 'Русский' },
+  { code: 'en', name: 'English' },
+];
 
-export const Topbar: React.FC<TopbarProps> = ({
-  lang,
-  setLang,
-  activeSection,
-  activeProject,
-  extraCrumb,
-  onToggleSidebar,
-}) => {
-  const t = portalI18n[lang];
-
-  // Breadcrumbs title determination
-  let currentTitle = t.sidebar.home;
-  if (activeSection === 'projects') {
-    currentTitle = activeProject === 'andusta' ? t.sidebar.andusta : t.sidebar.andogram;
-  } else if (activeSection === 'stats') {
-    currentTitle = t.sidebar.stats;
-  } else if (activeSection === 'docs') {
-    currentTitle = t.sidebar.docs;
-  } else if (activeSection === 'support') {
-    currentTitle = t.sidebar.support;
-  } else if (activeSection === 'community') {
-    currentTitle = t.sidebar.community;
-  }
-
-  return (
-    <header className="ptl-topbar">
-      {/* Left: Hamburger & breadcrumb */}
-      <div className="ptl-topbar-left">
-        <button
-          type="button"
-          className="ptl-menu-trigger"
-          onClick={onToggleSidebar}
-          aria-label="Toggle navigation"
-        >
-          <Menu size={20} />
-        </button>
-
-        <div className="ptl-breadcrumb">
-          <span className={extraCrumb ? 'ptl-breadcrumb-root ptl-breadcrumb-up' : 'ptl-breadcrumb-root'}>{t.sidebar.brand}</span>
-          <span className={extraCrumb ? 'ptl-breadcrumb-sep ptl-breadcrumb-up' : 'ptl-breadcrumb-sep'}>/</span>
-          {extraCrumb ? (
-            <>
-              <span className="ptl-breadcrumb-root ptl-breadcrumb-up">{currentTitle}</span>
-              <span className="ptl-breadcrumb-sep ptl-breadcrumb-up">/</span>
-              <span className="ptl-breadcrumb-active">
-                {splitNoWrap(extraCrumb).map((part, i) =>
-                  part.keep ? (
-                    <span key={i} className="ptl-breadcrumb-nowrap">
-                      {part.text}
-                    </span>
-                  ) : (
-                    part.text
-                  ),
-                )}
-              </span>
-            </>
-          ) : (
-            <span className="ptl-breadcrumb-active">{currentTitle}</span>
-          )}
-        </div>
-      </div>
-
-      {/* Right: Status, Languages, Quick CTA */}
-      <div className="ptl-topbar-right">
-        {/* Language switch */}
-        <div className="ptl-lang-switcher" role="group" aria-label="Choose language">
-          {LANGUAGES.map((l) => (
-            <button
-              key={l}
-              type="button"
-              className={`ptl-lang-btn ${lang === l ? 'active' : ''}`}
-              onClick={() => setLang(l)}
-            >
-              {l.toUpperCase()}
-            </button>
-          ))}
-        </div>
-
-      </div>
-    </header>
-  );
+const LABELS: Record<Language, { language: string; menu: string }> = {
+  ru: { language: 'Язык', menu: 'Меню' },
+  uz: { language: 'Til', menu: 'Menyu' },
+  en: { language: 'Language', menu: 'Menu' },
 };
 
+/** The current language with an icon; a click opens the list of all three. */
+function LanguageMenu({ lang, setLang }: { lang: Language; setLang: (l: Language) => void }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+  const current = LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[1];
+
+  // Close on a press outside or on Escape (focus goes back to the button).
+  useEffect(() => {
+    if (!open) return undefined;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setOpen(false);
+      triggerRef.current?.focus();
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
+
+  const choose = (code: Language) => {
+    setLang(code);
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  return (
+    <div
+      className="ptl-lang"
+      ref={rootRef}
+      // Tabbing out of the list closes it.
+      onBlur={(e) => {
+        if (!rootRef.current?.contains(e.relatedTarget as Node | null)) setOpen(false);
+      }}
+    >
+      <button
+        ref={triggerRef}
+        type="button"
+        className={`ptl-lang-trigger${open ? ' is-open' : ''}`}
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        aria-label={`${LABELS[lang].language}: ${current.name}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <Languages size={16} aria-hidden="true" />
+        <span className="ptl-lang-current">{lang.toUpperCase()}</span>
+        <ChevronDown size={14} className="ptl-lang-chevron" aria-hidden="true" />
+      </button>
+      {open && (
+        <ul id={listId} className="ptl-lang-menu">
+          {LANGUAGES.map((l) => (
+            <li key={l.code}>
+              <button
+                type="button"
+                lang={l.code}
+                className={`ptl-lang-option${l.code === lang ? ' is-current' : ''}`}
+                aria-current={l.code === lang ? 'true' : undefined}
+                onClick={() => choose(l.code)}
+              >
+                <span className="ptl-lang-code" aria-hidden="true">
+                  {l.code.toUpperCase()}
+                </span>
+                <span className="ptl-lang-name">{l.name}</span>
+                {l.code === lang && <Check size={15} className="ptl-lang-check" aria-hidden="true" />}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export const Topbar: React.FC<TopbarProps> = ({ lang, setLang, menuOpen, onToggleSidebar }) => (
+  <header className="ptl-topbar">
+    <button
+      type="button"
+      className="ptl-menu-trigger"
+      onClick={onToggleSidebar}
+      aria-label={LABELS[lang].menu}
+      aria-expanded={menuOpen}
+    >
+      <Menu size={20} aria-hidden="true" />
+    </button>
+
+    <LanguageMenu lang={lang} setLang={setLang} />
+  </header>
+);

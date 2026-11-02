@@ -215,7 +215,8 @@ export const HoneypotScene: React.FC<SceneProps> = ({ lang }) => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-muted)', marginBottom: 3 }}>
             <span>{tx('line1')}</span>
-            <b style={{ color: green }}><CountUp to={14} active={step >= 6} duration={0.8} /></b>
+            {/* The other four accounts of the «Проверь сам» demo (2222, 3333 × 2, 4444). */}
+            <b style={{ color: green }}><CountUp to={4} active={step >= 6} duration={0.8} /></b>
           </div>
           <div style={{ color: 'var(--text-muted)', marginBottom: 3 }}>{tx('line2')}</div>
           <div style={{ color: 'var(--text-muted)' }}>{tx('line3')}</div>

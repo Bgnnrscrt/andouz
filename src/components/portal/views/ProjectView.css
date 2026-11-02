@@ -201,14 +201,16 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
+/* The icon and the feature's name side by side. */
 .ptl-feature-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
+  gap: 14px;
+  margin-bottom: 12px;
 }
 
 .ptl-feature-icon {
+  flex: none;
   width: 42px;
   height: 42px;
   border-radius: 10px;
@@ -234,16 +236,24 @@
   color: var(--accent-ando);
 }
 
+/* The card's bottom row, centred; the cards of a grid row line it up. */
+.ptl-feature-foot {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 18px;
+}
+
 /* «Как работает» — replaces the tag on features that have a «Проверь сам» page */
 .ptl-feature-demo-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 7px;
+  padding: 8px 16px;
   border-radius: 9999px;
   background: var(--accent-ando);
   color: #04130c;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 700;
   white-space: nowrap;
   text-decoration: none;
@@ -272,11 +282,12 @@
 }
 
 .ptl-feature-title {
+  min-width: 0;
   font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 700;
+  line-height: 1.25;
   color: #fff;
-  margin-bottom: 8px;
 }
 
 .ptl-feature-desc {

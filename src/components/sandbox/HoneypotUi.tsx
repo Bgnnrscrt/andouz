@@ -1,150 +1,38 @@
 import React from 'react';
 import {
-  Aperture,
   Bookmark,
-  Camera,
+  BriefcaseBusiness,
   Check,
   ChevronUp,
-  CirclePlay,
   CircleUserRound,
-  Clock,
-  CloudSun,
   Delete,
-  Globe,
-  Images,
+  House,
   Lock,
   LockOpen,
-  MessageSquareText,
   Moon,
-  Music2,
   Phone,
   Plus,
   Settings,
+  ShieldCheck,
   UserRound,
   Users,
+  VenetianMask,
   type LucideIcon,
 } from 'lucide-react';
 import { ROUNDS, pinOf, type Round } from './honeypotFlow';
-import type { DrawerItem, HoneypotAccount, HomeAppId, LockCopy } from './honeypotCopy';
+import type { AccountId, DrawerItem, HoneypotAccount, LockCopy } from './honeypotCopy';
 import { Avatar, type Tap } from './TgUi';
 import './honeypot.css';
 
 /*
  * Screens of the Honeypot sandbox that the Telegram kit (TgUi) has no parts
- * for: the phone's home screen, AndoGram's PIN lock screen with its digits
- * keypad and the PIN legend (our layer), and the side menu with the accounts.
+ * for: AndoGram's PIN lock screen with its digits keypad and the PIN legend
+ * (our layer), and the side menu with the accounts (the home screen: HomeUi.tsx).
  * As in TgUi, elements a step can point at carry data-sbx={key}; only the one
  * the step expects is focusable. Every button reports its tap to the engine.
  */
 
 const tabFor = (want: string | undefined, key: string): number => (want === key ? 0 : -1);
-
-/* ── Home screen ─────────────────────────────────────────────────────────── */
-
-/** Apps whose name is a brand: the label stays the same in every language. */
-type BrandId = 'andogram' | 'instagram' | 'tiktok' | 'youtube';
-type AppId = BrandId | HomeAppId;
-
-const BRAND: Record<BrandId, string> = {
-  andogram: 'AndoGram',
-  instagram: 'Instagram',
-  tiktok: 'TikTok',
-  youtube: 'YouTube',
-};
-
-const isBrand = (id: AppId): id is BrandId => id in BRAND;
-
-/** The launcher grid (with labels) and the dock (without, as on Android). */
-const GRID: readonly AppId[] = ['andogram', 'instagram', 'tiktok', 'youtube', 'gallery', 'clock', 'weather', 'settings'];
-const DOCK: readonly AppId[] = ['phone', 'messages', 'browser', 'camera'];
-
-/** Generic glyphs, no brand logos; brand-named apps only keep their names. */
-const GLYPH: Record<Exclude<AppId, 'andogram'>, LucideIcon> = {
-  instagram: Aperture,
-  tiktok: Music2,
-  youtube: CirclePlay,
-  gallery: Images,
-  clock: Clock,
-  weather: CloudSun,
-  settings: Settings,
-  phone: Phone,
-  messages: MessageSquareText,
-  browser: Globe,
-  camera: Camera,
-};
-
-function AppIcon({
-  id,
-  label,
-  dock,
-  want,
-  tap,
-}: {
-  id: AppId;
-  label: string;
-  dock: boolean;
-  want?: string;
-  tap: Tap;
-}) {
-  const key = `app-${id}`;
-  const Glyph = id === 'andogram' ? null : GLYPH[id];
-  return (
-    <button
-      type="button"
-      className="hp-app"
-      data-sbx={key}
-      data-want={want === key}
-      tabIndex={tabFor(want, key)}
-      onClick={() => tap(key)}
-      aria-label={label}
-    >
-      <span className={`hp-tile hp-tile--${id}`} aria-hidden="true">
-        {Glyph ? <Glyph size={27} strokeWidth={1.9} /> : <img src="/logo-96.webp" alt="" width={54} height={54} />}
-      </span>
-      {!dock && (
-        <span className="hp-app-label" aria-hidden="true">
-          {label}
-        </span>
-      )}
-    </button>
-  );
-}
-
-/** Android home screen: clock widget, app grid, dock. AndoGram is the first app. */
-export function HomeScreen({
-  time,
-  date,
-  labels,
-  want,
-  tap,
-}: {
-  time: string;
-  date: string;
-  labels: Record<HomeAppId, string>;
-  want?: string;
-  tap: Tap;
-}) {
-  const labelOf = (id: AppId): string => (isBrand(id) ? BRAND[id] : labels[id]);
-  return (
-    <div className="hp-home">
-      <div className="hp-clock" aria-hidden="true">
-        <span className="hp-clock-time">{time}</span>
-        <span className="hp-clock-date">{date}</span>
-      </div>
-      <div className="hp-apps">
-        {GRID.map((id) => (
-          <AppIcon key={id} id={id} label={labelOf(id)} dock={false} want={want} tap={tap} />
-        ))}
-      </div>
-      <div className="hp-dock">
-        {DOCK.map((id) => (
-          <AppIcon key={id} id={id} label={labelOf(id)} dock want={want} tap={tap} />
-        ))}
-      </div>
-      <span className="hp-handle" aria-hidden="true" />
-    </div>
-  );
-}
 
 /* ── Lock screen ─────────────────────────────────────────────────────────── */
 
@@ -254,6 +142,15 @@ export function LockScreen({
 
 /* ── Side menu ───────────────────────────────────────────────────────────── */
 
+/** The accounts' pictures: what each one is for, the same in every language. */
+const ACCOUNT_ICON: Record<AccountId, LucideIcon> = {
+  safe: ShieldCheck,
+  personal: House,
+  work1: BriefcaseBusiness,
+  work2: BriefcaseBusiness,
+  secret: VenetianMask,
+};
+
 const ITEMS: readonly { id: DrawerItem; Icon: LucideIcon }[] = [
   { id: 'profile', Icon: CircleUserRound },
   { id: 'group', Icon: Users },
@@ -271,24 +168,27 @@ const ITEMS: readonly { id: DrawerItem; Icon: LucideIcon }[] = [
  */
 export function AccountDrawer({
   accounts,
+  active: activeIndex,
   addLabel,
   items,
   closing,
   tap,
 }: {
   accounts: HoneypotAccount[];
+  /** Index of the active account in `accounts`. */
+  active: number;
   addLabel: string;
   items: Record<DrawerItem, string>;
   closing: boolean;
   tap: Tap;
 }) {
-  const [active] = accounts;
+  const active = accounts[activeIndex] ?? accounts[0];
   return (
     <div className={`hp-drawer-layer${closing ? ' is-closing' : ''}`}>
       <div className="hp-scrim" aria-hidden="true" />
       <div className="hp-drawer">
         <div className="hp-drawer-head">
-          <Avatar name={active.name} color={active.color} size={62} />
+          <Avatar name={active.name} color={active.color} icon={ACCOUNT_ICON[active.id]} size={62} />
           <Moon size={22} className="hp-drawer-theme" aria-hidden="true" />
           <span className="hp-drawer-who">
             <span className="hp-drawer-id">
@@ -299,11 +199,11 @@ export function AccountDrawer({
           </span>
         </div>
         <div className="hp-accs" data-sbx="drawer-accounts">
-          {accounts.map((a, i) => (
-            <button key={a.phone} type="button" className="hp-acc" tabIndex={-1} onClick={() => tap()}>
+          {accounts.map((a) => (
+            <button key={a.id} type="button" className="hp-acc" tabIndex={-1} onClick={() => tap()}>
               <span className="hp-acc-avatar">
-                <Avatar name={a.name} color={a.color} size={34} />
-                {i === 0 && (
+                <Avatar name={a.name} color={a.color} icon={ACCOUNT_ICON[a.id]} size={34} />
+                {a === active && (
                   <span className="hp-acc-check" aria-hidden="true">
                     <Check size={10} strokeWidth={4} />
                   </span>

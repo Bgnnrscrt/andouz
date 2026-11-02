@@ -1,13 +1,15 @@
 import type { Language } from '../../types';
+import type { HomeAppId } from './HomeUi';
 import type { Round, Step } from './honeypotFlow';
 
 /*
  * Texts of the Honeypot (duress PIN) sandbox, in 3 languages (its page: demoPages.ts).
- * You = Максим / Aziz / Max, as in the bridge. Each PIN opens its own
- * account(s) and chats: the words are per language (RU / UZ / EN below), the
+ * Each PIN opens its own account(s) and chats; the main PIN 7777 opens all
+ * five accounts. The accounts are named by their role («Безопасный аккаунт»…,
+ * owner 2026-11-02). The words are per language (RU / UZ / EN below), the
  * rest of each chat row and account (colour, time, badges, phone number) is
- * defined once in LOOK. The secret account's chats are the owner's choice
- * (2026-11-01); the swearing is censored with asterisks.
+ * defined once in ACCOUNT and LOOK. The secret account's chats are the
+ * owner's choice (2026-11-01); the swearing is censored with asterisks.
  */
 
 export interface Caption {
@@ -15,13 +17,14 @@ export interface Caption {
   sub: string;
 }
 
-/** Generic apps on the home screen (brand-named apps keep their names). */
-export type HomeAppId = 'gallery' | 'clock' | 'weather' | 'settings' | 'phone' | 'messages' | 'browser' | 'camera';
 
 /** Side menu items under the accounts. */
 export type DrawerItem = 'profile' | 'group' | 'contacts' | 'calls' | 'saved' | 'settings';
 
-/** Chats of the four accounts: 1111 safe, 2222 personal, 3333 work, 4444 secret. */
+/** The demo's five accounts: one per PIN, two for work (3333). */
+export type AccountId = 'safe' | 'personal' | 'work1' | 'work2' | 'secret';
+
+/** Chats of the accounts: 1111 safe, 2222 personal, 3333 work, 4444 secret. */
 export type ChatId =
   | 'saved1'
   | 'water'
@@ -58,6 +61,7 @@ export interface HoneypotChat {
 }
 
 export interface HoneypotAccount {
+  id: AccountId;
   name: string;
   phone: string;
   color: string;
@@ -67,8 +71,10 @@ export interface HoneypotAccount {
 
 export interface HoneypotRound {
   caption: Caption;
-  /** The accounts this PIN opens; the first one is active. */
+  /** The accounts this PIN opens, in the menu's order. */
   accounts: HoneypotAccount[];
+  /** Index of the active account: the chat list is its, the menu checks it. */
+  active: number;
   chats: HoneypotChat[];
 }
 
@@ -122,19 +128,40 @@ interface ChatLook {
   kind?: 'channel' | 'group';
 }
 
-interface AccountLook {
-  phone: string;
-  color: string;
-  unread?: number;
+/**
+ * The accounts. Their numbers repeat the PIN's digit (owner, 2026-11-02:
+ * numbers like these are kept by the operators for testing and never sold);
+ * the second work account differs in the operator code.
+ */
+const ACCOUNT: Record<AccountId, { phone: string; color: string }> = {
+  safe: { phone: '+998 90 111 11 11', color: '#7bc862' },
+  personal: { phone: '+998 90 222 22 22', color: '#faa774' },
+  work1: { phone: '+998 90 333 33 33', color: '#65aadd' },
+  work2: { phone: '+998 91 333 33 33', color: '#6ec9cb' },
+  secret: { phone: '+998 90 444 44 44', color: '#e56bd6' },
+};
+
+interface RoundLook {
+  /** In the menu's order; `unread`: messages waiting in an inactive account. */
+  accounts: { id: AccountId; unread?: number }[];
+  /** The active account (default: the first). */
+  active?: AccountId;
+  chats: ChatLook[];
 }
 
-/**
- * Phone numbers are masked: a full number in a real format could belong to a
- * real subscriber (the page is public). Chats are in list order (newest first).
- */
-const LOOK: Record<Round, { accounts: AccountLook[]; chats: ChatLook[] }> = {
+/** The personal account's chats (PIN 2222, and the main PIN 7777 opens it too). */
+const PERSONAL_CHATS: ChatLook[] = [
+  { id: 'wife', when: '18:32', color: '#ee7aae', unread: 2 },
+  { id: 'mom', when: '17:15', color: '#e17076', unread: 1 },
+  { id: 'family', when: '16:40', color: '#7bc862', unread: 4, kind: 'group' },
+  { id: 'brother', when: '14:05', color: '#65aadd' },
+  { id: 'saved2', when: 'sat', color: '#65aadd', saved: true },
+];
+
+/** Chats are in list order (newest first). */
+const LOOK: Record<Round, RoundLook> = {
   1: {
-    accounts: [{ phone: '+998 90 ••• •• 67', color: '#7bc862' }],
+    accounts: [{ id: 'safe' }],
     chats: [
       { id: 'saved1', when: '17:02', color: '#65aadd', saved: true },
       { id: 'water', when: '13:47', color: '#6ec9cb', unread: 1 },
@@ -142,20 +169,11 @@ const LOOK: Record<Round, { accounts: AccountLook[]; chats: ChatLook[] }> = {
     ],
   },
   2: {
-    accounts: [{ phone: '+998 93 ••• •• 76', color: '#faa774' }],
-    chats: [
-      { id: 'wife', when: '18:32', color: '#ee7aae', unread: 2 },
-      { id: 'mom', when: '17:15', color: '#e17076', unread: 1 },
-      { id: 'family', when: '16:40', color: '#7bc862', unread: 4, kind: 'group' },
-      { id: 'brother', when: '14:05', color: '#65aadd' },
-      { id: 'saved2', when: 'sat', color: '#65aadd', saved: true },
-    ],
+    accounts: [{ id: 'personal' }],
+    chats: PERSONAL_CHATS,
   },
   3: {
-    accounts: [
-      { phone: '+998 71 ••• •• 40', color: '#65aadd' },
-      { phone: '+998 97 ••• •• 02', color: '#6ec9cb', unread: 3 },
-    ],
+    accounts: [{ id: 'work1' }, { id: 'work2', unread: 3 }],
     chats: [
       { id: 'sales', when: '14:52', color: '#faa774', unread: 3, kind: 'group' },
       { id: 'boss', when: '13:05', color: '#e17076', unread: 1 },
@@ -165,7 +183,7 @@ const LOOK: Record<Round, { accounts: AccountLook[]; chats: ChatLook[] }> = {
     ],
   },
   4: {
-    accounts: [{ phone: '+998 99 ••• •• 44', color: '#e56bd6' }],
+    accounts: [{ id: 'secret' }],
     chats: [
       { id: 'boys', when: '18:39', color: '#faa774', unread: 7, kind: 'group' },
       { id: 'lola', when: '18:12', color: '#ee7aae', unread: 2 },
@@ -174,12 +192,25 @@ const LOOK: Record<Round, { accounts: AccountLook[]; chats: ChatLook[] }> = {
       { id: 'hookah', when: '12:20', color: '#a695e7', unread: 1, muted: true, kind: 'channel' },
     ],
   },
+  // The main PIN: every account in the menu; the personal one is open.
+  5: {
+    accounts: [
+      { id: 'safe', unread: 1 },
+      { id: 'personal' },
+      { id: 'work1', unread: 4 },
+      { id: 'work2', unread: 3 },
+      { id: 'secret', unread: 9 },
+    ],
+    active: 'personal',
+    chats: PERSONAL_CHATS,
+  },
 };
 
 /* ── Words, per language ─────────────────────────────────────────────────── */
 
 interface Words extends Omit<HoneypotCopy, 'rounds'> {
-  rounds: Record<Round, { caption: Caption; accounts: string[] }>;
+  rounds: Record<Round, { caption: Caption }>;
+  accounts: Record<AccountId, string>;
   chats: Record<ChatId, { name: string; preview: string; from?: string }>;
   /** Short weekdays of older chats. */
   days: Record<Day, string>;
@@ -203,18 +234,30 @@ const RU: Words = {
   },
   lock: {
     legendTitle: 'Введи PIN-код:',
-    legend: { 1: 'безопасный аккаунт', 2: 'личный аккаунт', 3: 'рабочие аккаунты', 4: 'секретный аккаунт' },
+    legend: {
+      1: 'безопасный аккаунт',
+      2: 'личный аккаунт',
+      3: 'рабочие аккаунты',
+      4: 'секретный аккаунт',
+      5: 'главный: все аккаунты',
+    },
     enter: 'Введите PIN',
     forgot: 'Забыли PIN?',
     del: 'Стереть',
   },
   rounds: {
-    1: { caption: { title: 'PIN 1111 · Безопасный', sub: 'Для чужих глаз' }, accounts: ['Максим'] },
-    2: { caption: { title: 'PIN 2222 · Личный', sub: 'Жена и семья' }, accounts: ['Максим'] },
-    3: { caption: { title: 'PIN 3333 · Рабочий', sub: 'Коллеги и клиенты' }, accounts: ['Максим | Офис', 'Максим | Продажи'] },
-    // \uFE0F (VS16) after 🕶 and 🃏: both default to a monochrome text glyph
-    // (Windows, Linux); VS16 asks for the colour emoji, like the others.
-    4: { caption: { title: 'PIN 4444 · Секретный', sub: 'Только для тебя' }, accounts: ['Тень 🕶\uFE0F'] },
+    1: { caption: { title: 'PIN 1111 · Безопасный', sub: 'Для чужих глаз' } },
+    2: { caption: { title: 'PIN 2222 · Личный', sub: 'Жена и семья' } },
+    3: { caption: { title: 'PIN 3333 · Рабочий', sub: 'Коллеги и клиенты' } },
+    4: { caption: { title: 'PIN 4444 · Секретный', sub: 'Только для тебя' } },
+    5: { caption: { title: 'PIN 7777 · Главный', sub: 'Все аккаунты' } },
+  },
+  accounts: {
+    safe: 'Безопасный аккаунт',
+    personal: 'Личный аккаунт',
+    work1: 'Рабочий аккаунт 1',
+    work2: 'Рабочий аккаунт 2',
+    secret: 'Секретный аккаунт',
   },
   chats: {
     saved1: { name: 'Избранное', preview: 'Список покупок 🛒' },
@@ -232,6 +275,8 @@ const RU: Words = {
     accounting: { name: 'Бухгалтерия', preview: 'Нужен акт сверки за октябрь' },
     boys: { name: 'Кенты 🍻', from: 'Серёга', preview: 'Бл*ть, ты где? Мы уже на месте 😂' },
     lola: { name: 'Лола 💋', preview: 'Скучаю… Сегодня увидимся? 😘' },
+    // \uFE0F (VS16) after 🃏: it defaults to a monochrome text glyph
+    // (Windows, Linux); VS16 asks for the colour emoji, like the others.
     poker: { name: 'Покер по пятницам 🃏\uFE0F', from: 'Рустам', preview: 'Ставки удваиваем, с*ки 😂' },
     shop: { name: 'Секс-шоп «Пульс» 18+', preview: '🔥 −30% на всё до воскресенья' },
     hookah: { name: 'Кальяны «Облако»', preview: 'Новые вкусы табака уже в наличии 💨' },
@@ -265,12 +310,14 @@ const RU: Words = {
     drawer3: 'Два рабочих аккаунта — и больше ничего. Дальше\u00a0— PIN\u00a04444',
     pin4: 'А теперь 4444 — секретный PIN',
     list4: 'Кенты, Лола 💋 и каналы, о которых никому знать не нужно. Открой меню',
-    // Only what the visitor saw: in the app the main passcode opens every account too.
-    drawer4: 'Под 1111, 2222 и 3333 этого аккаунта в меню не было',
+    drawer4: 'Под 1111, 2222 и 3333 этого аккаунта в меню не было. Дальше\u00a0— главный PIN\u00a07777',
+    pin5: 'И наконец 7777 — главный PIN',
+    list5: 'Главный PIN открывает всё. Открой меню',
+    drawer5: 'Все пять аккаунтов на месте: главный PIN открывает всё',
   },
-  buttons: { drawer1: 'Начать сначала', drawer2: 'Начать сначала', drawer3: 'Начать сначала' },
-  // A no-break space keeps the dash on the line of the word before it.
-  tagline: 'AndoGram. Один телефон\u00a0— четыре жизни. Кто что увидит, решаешь ты.',
+  buttons: { drawer1: 'Начать сначала', drawer2: 'Начать сначала', drawer3: 'Начать сначала', drawer4: 'Начать сначала' },
+  // «AndoGram» on a line of its own (owner, 2026-11-02); «ты.» must not hang alone.
+  tagline: 'AndoGram.\nКто что увидит,\nрешаешь ты.',
   start: { title: 'Honeypot-пароли', sub: '1 минута. Ничего устанавливать не нужно' },
   screenLabel: 'Демо AndoGram: Honeypot-пароли',
 };
@@ -293,16 +340,30 @@ const UZ: Words = {
   lock: {
     // Not «PIN-kodni kiriting:» — the app's own title right below says exactly that.
     legendTitle: 'Qaysi PIN nimani ochadi:',
-    legend: { 1: 'xavfsiz akkaunt', 2: 'shaxsiy akkaunt', 3: 'ish akkauntlari', 4: 'maxfiy akkaunt' },
+    legend: {
+      1: 'xavfsiz akkaunt',
+      2: 'shaxsiy akkaunt',
+      3: 'ish akkauntlari',
+      4: 'maxfiy akkaunt',
+      5: 'asosiy: barcha akkauntlar',
+    },
     enter: 'PIN-kodni kiriting',
     forgot: 'PIN-kodni unutdingizmi?',
     del: 'O‘chirish',
   },
   rounds: {
-    1: { caption: { title: 'PIN 1111 · Xavfsiz', sub: 'Begona ko‘zlar uchun' }, accounts: ['Aziz'] },
-    2: { caption: { title: 'PIN 2222 · Shaxsiy', sub: 'Xotin va oila' }, accounts: ['Aziz'] },
-    3: { caption: { title: 'PIN 3333 · Ish', sub: 'Hamkasblar va mijozlar' }, accounts: ['Aziz | Ofis', 'Aziz | Savdo'] },
-    4: { caption: { title: 'PIN 4444 · Maxfiy', sub: 'Faqat siz uchun' }, accounts: ['Soya 🕶\uFE0F'] },
+    1: { caption: { title: 'PIN 1111 · Xavfsiz', sub: 'Begona ko‘zlar uchun' } },
+    2: { caption: { title: 'PIN 2222 · Shaxsiy', sub: 'Xotin va oila' } },
+    3: { caption: { title: 'PIN 3333 · Ish', sub: 'Hamkasblar va mijozlar' } },
+    4: { caption: { title: 'PIN 4444 · Maxfiy', sub: 'Faqat siz uchun' } },
+    5: { caption: { title: 'PIN 7777 · Asosiy', sub: 'Barcha akkauntlar' } },
+  },
+  accounts: {
+    safe: 'Xavfsiz akkaunt',
+    personal: 'Shaxsiy akkaunt',
+    work1: 'Ish akkaunti 1',
+    work2: 'Ish akkaunti 2',
+    secret: 'Maxfiy akkaunt',
   },
   chats: {
     saved1: { name: 'Saqlangan xabarlar', preview: 'Xaridlar ro‘yxati 🛒' },
@@ -350,10 +411,18 @@ const UZ: Words = {
     drawer3: 'Ikkita ish akkaunti — boshqa hech narsa yo‘q. Keyingisi\u00a0— PIN\u00a04444',
     pin4: 'Endi esa 4444 — maxfiy PIN',
     list4: 'Oshnalar, Lola 💋 va hech kim bilmasligi kerak bo‘lgan kanallar. Menyuni oching',
-    drawer4: '1111, 2222 va 3333 bilan ochganda bu akkaunt menyuda ko‘rinmadi',
+    drawer4: '1111, 2222 va 3333 bilan ochganda bu akkaunt menyuda ko‘rinmadi. Keyingisi\u00a0— asosiy PIN\u00a07777',
+    pin5: 'Va nihoyat 7777 — asosiy PIN',
+    list5: 'Asosiy PIN hammasini ochadi. Menyuni oching',
+    drawer5: 'Beshala akkaunt ham joyida: asosiy PIN hammasini ochadi',
   },
-  buttons: { drawer1: 'Boshidan boshlash', drawer2: 'Boshidan boshlash', drawer3: 'Boshidan boshlash' },
-  tagline: 'AndoGram. Bitta telefon\u00a0— to‘rtta hayot. Kim nimani ko‘rishini o‘zingiz hal qilasiz.',
+  buttons: {
+    drawer1: 'Boshidan boshlash',
+    drawer2: 'Boshidan boshlash',
+    drawer3: 'Boshidan boshlash',
+    drawer4: 'Boshidan boshlash',
+  },
+  tagline: 'AndoGram.\nKim nimani ko‘rishini\no‘zingiz hal qilasiz.',
   start: { title: 'Honeypot parollari', sub: '1 daqiqa. Hech narsa o‘rnatish shart emas' },
   screenLabel: 'AndoGram demosi: Honeypot parollari',
 };
@@ -376,16 +445,30 @@ const EN: Words = {
   lock: {
     // Not «Enter a PIN:» — the app's own «Enter PIN» is right below.
     legendTitle: 'Which PIN opens what:',
-    legend: { 1: 'safe account', 2: 'personal account', 3: 'work accounts', 4: 'secret account' },
+    legend: {
+      1: 'safe account',
+      2: 'personal account',
+      3: 'work accounts',
+      4: 'secret account',
+      5: 'main: all accounts',
+    },
     enter: 'Enter PIN',
     forgot: 'Forgot PIN?',
     del: 'Delete',
   },
   rounds: {
-    1: { caption: { title: 'PIN 1111 · Safe', sub: 'For prying eyes' }, accounts: ['Max'] },
-    2: { caption: { title: 'PIN 2222 · Personal', sub: 'Wife and family' }, accounts: ['Max'] },
-    3: { caption: { title: 'PIN 3333 · Work', sub: 'Colleagues and clients' }, accounts: ['Max | Office', 'Max | Sales'] },
-    4: { caption: { title: 'PIN 4444 · Secret', sub: 'Just for you' }, accounts: ['Shadow 🕶\uFE0F'] },
+    1: { caption: { title: 'PIN 1111 · Safe', sub: 'For prying eyes' } },
+    2: { caption: { title: 'PIN 2222 · Personal', sub: 'Wife and family' } },
+    3: { caption: { title: 'PIN 3333 · Work', sub: 'Colleagues and clients' } },
+    4: { caption: { title: 'PIN 4444 · Secret', sub: 'Just for you' } },
+    5: { caption: { title: 'PIN 7777 · Main', sub: 'All accounts' } },
+  },
+  accounts: {
+    safe: 'Safe account',
+    personal: 'Personal account',
+    work1: 'Work account 1',
+    work2: 'Work account 2',
+    secret: 'Secret account',
   },
   chats: {
     saved1: { name: 'Saved Messages', preview: 'Shopping list 🛒' },
@@ -433,29 +516,37 @@ const EN: Words = {
     drawer3: 'Two work accounts and nothing else. Next: PIN\u00a04444',
     pin4: 'And now 4444, the secret PIN',
     list4: 'The boys, Lola 💋 and channels nobody needs to know about. Open the menu',
-    drawer4: 'With PIN 1111, 2222 or 3333, this account wasn’t in the menu',
+    drawer4: 'With PIN 1111, 2222 or 3333, this account wasn’t in the menu. Next: the main PIN\u00a07777',
+    pin5: 'And finally 7777, the main PIN',
+    list5: 'The main PIN opens everything. Open the menu',
+    drawer5: 'All five accounts are here: the main PIN opens everything',
   },
-  buttons: { drawer1: 'Start again', drawer2: 'Start again', drawer3: 'Start again' },
-  tagline: 'AndoGram. One phone, four lives. You decide who sees what.',
+  buttons: { drawer1: 'Start again', drawer2: 'Start again', drawer3: 'Start again', drawer4: 'Start again' },
+  tagline: 'AndoGram.\nYou decide who sees what.',
   start: { title: 'Duress passcodes', sub: '1 minute. Nothing to install' },
   screenLabel: 'AndoGram demo: duress passcodes',
 };
 
-/** Words + LOOK → the rows of one round. */
-const roundFrom = (w: Words, r: Round): HoneypotRound => ({
-  caption: w.rounds[r].caption,
-  accounts: LOOK[r].accounts.map((a, i) => ({ ...a, name: w.rounds[r].accounts[i] ?? '' })),
-  chats: LOOK[r].chats.map(({ when, ...look }) => ({
-    ...look,
-    ...w.chats[look.id],
-    time: when === 'fri' || when === 'sat' ? w.days[when] : when,
-  })),
-});
+/** Words + ACCOUNT + LOOK → the rows of one round. */
+const roundFrom = (w: Words, r: Round): HoneypotRound => {
+  const look = LOOK[r];
+  const active = look.accounts.findIndex((a) => a.id === look.active);
+  return {
+    caption: w.rounds[r].caption,
+    accounts: look.accounts.map(({ id, unread }) => ({ id, name: w.accounts[id], ...ACCOUNT[id], unread })),
+    active: Math.max(0, active),
+    chats: look.chats.map(({ when, ...chat }) => ({
+      ...chat,
+      ...w.chats[chat.id],
+      time: when === 'fri' || when === 'sat' ? w.days[when] : when,
+    })),
+  };
+};
 
 const build = (w: Words): HoneypotCopy => ({
   home: w.home,
   lock: w.lock,
-  rounds: { 1: roundFrom(w, 1), 2: roundFrom(w, 2), 3: roundFrom(w, 3), 4: roundFrom(w, 4) },
+  rounds: { 1: roundFrom(w, 1), 2: roundFrom(w, 2), 3: roundFrom(w, 3), 4: roundFrom(w, 4), 5: roundFrom(w, 5) },
   ui: w.ui,
   hints: w.hints,
   buttons: w.buttons,

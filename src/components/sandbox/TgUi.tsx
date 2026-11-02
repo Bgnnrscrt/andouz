@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import {
   ArrowLeft,
-  BatteryMedium,
   BellOff,
   Bookmark,
   Check,
@@ -16,11 +15,12 @@ import {
   Pencil,
   Search,
   SendHorizontal,
-  Signal,
   Smile,
   Users,
-  Wifi,
+  Video,
+  type LucideIcon,
 } from 'lucide-react';
+import { emojify, emojifyNode } from '../../lib/emoji';
 
 /*
  * A small Telegram-like UI kit for the «Проверь сам» sandboxes: the generic
@@ -57,11 +57,14 @@ export function Avatar({
   color,
   size = 50,
   saved = false,
+  icon: Icon,
 }: {
   name: string;
   color: string;
   size?: number;
   saved?: boolean;
+  /** A glyph instead of the initials (a profile picture of sorts). */
+  icon?: LucideIcon;
 }) {
   return (
     <span
@@ -69,7 +72,13 @@ export function Avatar({
       style={{ width: size, height: size, backgroundColor: color, fontSize: Math.round(size * 0.36) }}
       aria-hidden="true"
     >
-      {saved ? <Bookmark size={Math.round(size * 0.42)} fill="currentColor" /> : initials(name)}
+      {saved ? (
+        <Bookmark size={Math.round(size * 0.42)} fill="currentColor" />
+      ) : Icon ? (
+        <Icon size={Math.round(size * 0.48)} strokeWidth={2.1} />
+      ) : (
+        initials(name)
+      )}
     </span>
   );
 }
@@ -99,15 +108,14 @@ export function TopicIcon({ name, color, size = 30 }: { name: string; color?: st
 /** `bar`: the app's top-bar colour; `clear`: over a wallpaper; `dark`: a black lock screen. */
 export type StatusTone = 'bar' | 'clear' | 'dark';
 
+/**
+ * The phone's status bar: the clock only. Its right end holds the sandbox's
+ * restart ring (SandboxFrame), so no signal / Wi-Fi / battery (owner, 2026-11-02).
+ */
 export function StatusBar({ time, tone = 'bar' }: { time: string; tone?: StatusTone }) {
   return (
     <div className={`sbx-status${tone === 'bar' ? '' : ` sbx-status--${tone}`}`} aria-hidden="true">
       <span>{time}</span>
-      <span className="sbx-status-icons">
-        <Signal size={13} />
-        <Wifi size={13} />
-        <BatteryMedium size={16} />
-      </span>
     </div>
   );
 }
@@ -140,7 +148,7 @@ export function ListBar({
       ) : (
         <Menu size={21} aria-hidden="true" />
       )}
-      <span className="sbx-bar-title">{title}</span>
+      <span className="sbx-bar-title">{emojifyNode(title)}</span>
       <Search size={20} aria-hidden="true" />
     </div>
   );
@@ -191,12 +199,12 @@ export function ChatBar({
       {avatar}
       <span className="sbx-bar-head">
         <span className="sbx-bar-name">
-          <span className="sbx-ellipsis">{title}</span>
+          <span className="sbx-ellipsis">{emojifyNode(title)}</span>
           {muted && <BellOff size={14} className="sbx-dim-icon" aria-hidden="true" />}
         </span>
         <span className={`sbx-bar-sub${accent ? ' sbx-accent' : ''}`}>
           {typing && <Dots />}
-          {subtitle}
+          {emojifyNode(subtitle)}
         </span>
       </span>
       <EllipsisVertical size={20} aria-hidden="true" />
@@ -253,7 +261,7 @@ export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
           <span className="sbx-row-name">
             {row.kind === 'channel' && <Megaphone size={14} className="sbx-kind-icon" aria-hidden="true" />}
             {row.kind === 'group' && <Users size={14} className="sbx-kind-icon" aria-hidden="true" />}
-            <span className="sbx-ellipsis">{row.name}</span>
+            <span className="sbx-ellipsis">{emojify(row.name)}</span>
             {row.muted && <BellOff size={13} className="sbx-dim-icon" aria-hidden="true" />}
           </span>
           <span className="sbx-row-time">
@@ -265,10 +273,10 @@ export function ChatRow({ row, want, tap }: { row: RowData } & TapProps) {
           {row.typing ? (
             <span className="sbx-typing">
               <Dots />
-              {row.typing}
+              {emojify(row.typing)}
             </span>
           ) : (
-            <span className="sbx-row-preview">{row.preview}</span>
+            <span className="sbx-row-preview">{emojifyNode(row.preview)}</span>
           )}
           {row.unread ? (
             <span className={`sbx-badge${row.muted ? ' sbx-badge--muted' : ''}`}>{row.unread}</span>
@@ -305,12 +313,12 @@ export function TopicRow({ row, want, tap }: { row: TopicRowData } & TapProps) {
       <span className="sbx-row-main">
         <span className="sbx-row-line">
           <span className="sbx-row-name">
-            <span className="sbx-ellipsis">{row.name}</span>
+            <span className="sbx-ellipsis">{emojify(row.name)}</span>
           </span>
           <span className="sbx-row-time">{row.time}</span>
         </span>
         <span className="sbx-row-line">
-          <span className="sbx-row-preview">{row.preview}</span>
+          <span className="sbx-row-preview">{emojifyNode(row.preview)}</span>
         </span>
       </span>
     </button>
@@ -430,10 +438,10 @@ export function Messages({ items, editedLabel }: { items: ChatItem[]; editedLabe
             >
               {from && firstOfRun && (
                 <span className="sbx-msg-name" style={{ color: from.color }}>
-                  {from.name}
+                  {emojify(from.name)}
                 </span>
               )}
-              <span className="sbx-msg-text">{item.text}</span>
+              <span className="sbx-msg-text">{emojifyNode(item.text)}</span>
               <span className="sbx-msg-ghost" aria-hidden="true">
                 <Meta m={item} editedLabel={editedLabel} />
               </span>
@@ -451,12 +459,15 @@ export function Messages({ items, editedLabel }: { items: ChatItem[]; editedLabe
 /**
  * The message input. `button` mode replaces the field with the blue
  * «Отправить сообщение» button (owner's spec); emoji, clip and mic stay.
+ * `camera`: the mic is the video message button instead (data-sbx="record";
+ * the value is its aria-label), as after a tap on the mic in Telegram.
  */
 export function InputBar({
   mode,
   text = '',
   placeholder,
   sendLabel,
+  camera,
   want,
   tap,
 }: {
@@ -464,6 +475,7 @@ export function InputBar({
   text?: string;
   placeholder: string;
   sendLabel: string;
+  camera?: string;
 } & TapProps) {
   const hasText = mode === 'typing' && text.length > 0;
   return (
@@ -489,6 +501,18 @@ export function InputBar({
       <Paperclip size={22} aria-hidden="true" />
       {hasText ? (
         <SendHorizontal size={22} className="sbx-accent" aria-hidden="true" />
+      ) : camera ? (
+        <button
+          type="button"
+          className="sbx-record-btn"
+          data-sbx="record"
+          data-want={want === 'record'}
+          tabIndex={tabFor(want, 'record')}
+          onClick={() => tap('record')}
+          aria-label={camera}
+        >
+          <Video size={23} aria-hidden="true" />
+        </button>
       ) : (
         <Mic size={22} aria-hidden="true" />
       )}

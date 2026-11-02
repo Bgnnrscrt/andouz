@@ -13,6 +13,7 @@ import {
 import { Language, AppId } from '../../../types';
 import { PortalSection } from '../../../portalTypes';
 import { portalI18n } from '../../../portalTranslations';
+import { emojify } from '../../../lib/emoji';
 import { PhoneMockup } from '../../PhoneMockup';
 import { FeatureMarquee } from '../../FeatureMarquee';
 import './HomeView.css';
@@ -36,7 +37,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <section className="ptl-hero-banner">
         <div className="ptl-hero-badge">
           <Sparkles size={14} />
-          <span>{t.home.heroBadge}</span>
+          <span>{emojify(t.home.heroBadge)}</span>
         </div>
 
         <h1 className="ptl-hero-title">

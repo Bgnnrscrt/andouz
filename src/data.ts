@@ -35,9 +35,9 @@ export const APPS_DATA: AppInfo[] = [
           en: "Duress Passcodes (Honeypot)"
         },
         description: {
-          ru: "Специальные аварийные пароли разблокировки. При вводе ложного пароля открывается пустой или фейковый профиль, а реальные секретные чаты и мосты бесследно скрываются.",
-          uz: "Maxsus xavfsizlik parollari. Soxta parol kiritilganda begona shaxsga faqat bo'sh profil ko'rsatiladi, haqiqiy yozishmalar esa butunlay yashiriladi.",
-          en: "Emergency duress passcodes. Unlocking with a fake pin displays safe dummy profile data while sensitive private chats and bridge topics remain completely hidden."
+          ru: "Отдельные PIN-коды для разных аккаунтов. Под «безопасным» PIN остальные аккаунты исчезают из меню и уведомлений — будто их нет. Главный PIN по-прежнему открывает всё.",
+          uz: "Turli akkauntlar uchun alohida PIN-kodlar. «Xavfsiz» PIN bilan qolgan akkauntlar menyu va bildirishnomalardan yo'qoladi — go'yo ular yo'qdek. Asosiy PIN esa avvalgidek hammasini ochadi.",
+          en: "Separate PIN codes for different accounts. Under the “safe” PIN the other accounts disappear from the menu and notifications as if they weren’t there. Your main PIN still opens everything."
         },
         tag: { ru: "Безопасность", uz: "Xavfsizlik", en: "Security" }
       },

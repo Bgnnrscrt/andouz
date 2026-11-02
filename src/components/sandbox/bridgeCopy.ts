@@ -49,7 +49,14 @@ export interface BridgeCopy {
   msg: {
     old: string;
     /** The friend's long message: he edits only `was` → `now`, in its last line. */
-    long: { head: string; was: string; now: string; tail: string };
+    /**
+     * The friend's long message: his edit silently changes `was` → `now` and
+     * adds `more.word` on a new line at the end, so the bubble grows by a line
+     * (owner, 2026-11-02). The «\n» after the colon in `head` keeps the last
+     * line short and alone: the time fits beside it before the edit (so the new
+     * line really adds one), and the changed word reflows nothing above it.
+     */
+    long: { head: string; was: string; now: string; tail: string; more: { sep: string; word: string } };
     /** Sent from phone 2: proves you saw the original. */
     tease: string;
     how: string;
@@ -115,10 +122,11 @@ const RU: BridgeCopy = {
   msg: {
     old: 'Окей, договорились 👍',
     long: {
-      head: 'Слушай, спасибо тебе большое, что дал свои наушники в поездку на отпуск! С ними поездка на поезде была шикарной, и звук у твоих наушников просто огонь. Только есть небольшая проблемка: я их ',
+      head: 'Слушай, спасибо тебе большое, что дал свои наушники в поездку на отпуск! С ними поездка на поезде была шикарной, и звук у твоих наушников просто огонь.\nТолько есть небольшая проблемка:\nя их ',
       was: 'утопил',
       now: 'потерял',
       tail: ', прости',
+      more: { sep: '\n', word: 'пожалуйста' },
     },
     tease: 'Утопил, говоришь?😏',
     how: 'Как?! Я же сразу исправил 😳 Как ты успел прочитать??',
@@ -155,6 +163,7 @@ const RU: BridgeCopy = {
     bOpenTopic: 'Открой тему «Даниль»',
     bReply: 'Вот что он написал на самом деле. Подколи его',
     bSent: 'Ушло Данилю от твоего основного аккаунта',
+    aBack: 'Твой ответ уже в чате с Данилем. Открой его',
     aSecret: 'Раскрой секрет',
     aSecretSent: 'Выйди из чата',
     aOpenArchive: 'Лиза💔 удалила сообщение. Хочешь прочитать, что там было? Открой «Личный архив»',
@@ -164,7 +173,8 @@ const RU: BridgeCopy = {
     aEditCard: 'Взять второй телефон',
     bSent: 'Вернуться на первый телефон',
   },
-  tagline: 'AndoGram. Тебе говорили, что это невозможно. Мы покажем обратное.',
+  // «AndoGram» on a line of its own (owner, 2026-11-02); the other breaks keep words from hanging alone.
+  tagline: 'AndoGram.\nТебе говорили,\nчто это невозможно.\nМы покажем обратное.',
   start: {
     title: 'Мост A-B-C',
     sub: '1–2 минуты. Ничего устанавливать не нужно',
@@ -200,10 +210,11 @@ const UZ: BridgeCopy = {
   msg: {
     old: 'Bo‘pti, kelishdik 👍',
     long: {
-      head: 'Qara, ta’tilga quloqchinlaringni berib turganing uchun katta rahmat! Ular bilan poyezdda yo‘l zo‘r o‘tdi, ovozi esa bomba. Faqat bitta kichkina muammo bor: ularni ',
+      head: 'Qara, ta’tilga quloqchinlaringni berib turganing uchun katta rahmat! Ular bilan poyezdda yo‘l zo‘r o‘tdi, ovozi esa bomba.\nFaqat bitta kichkina muammo bor:\nularni ',
       was: 'cho‘ktirdim',
       now: 'yo‘qotdim',
       tail: ', kechir',
+      more: { sep: '\n', word: 'iltimos' },
     },
     tease: 'Cho‘ktirdim, deysanmi?😏',
     how: 'Qanaqasiga?! Darrov tuzatgandim-ku 😳 Qanday qilib o‘qib ulgurding??',
@@ -239,6 +250,7 @@ const UZ: BridgeCopy = {
     bOpenTopic: '«Sanjar» mavzusini oching',
     bReply: 'Mana u aslida nima yozgan. Unga bir tegishib qo‘ying',
     bSent: 'Sanjarga asosiy akkauntingizdan ketdi',
+    aBack: 'Javobingiz Sanjar bilan chatda turibdi. Chatni oching',
     aSecret: 'Sirni oshkor qiling',
     aSecretSent: 'Chatdan chiqing',
     aOpenArchive: 'Sabina💔 xabarini o‘chirib yubordi. Nima yozganini o‘qishni xohlaysizmi? «Shaxsiy arxiv»ni oching',
@@ -248,7 +260,7 @@ const UZ: BridgeCopy = {
     aEditCard: 'Ikkinchi telefonni olish',
     bSent: 'Birinchi telefonga qaytish',
   },
-  tagline: 'AndoGram. Sizga bu imkonsiz deyishgan. Biz esa aksini ko‘rsatamiz.',
+  tagline: 'AndoGram.\nSizga bu imkonsiz deyishgan.\nBiz esa aksini ko‘rsatamiz.',
   start: {
     title: 'A-B-C ko‘prigi',
     sub: '1–2 daqiqa. Hech narsa o‘rnatish shart emas',
@@ -284,10 +296,11 @@ const EN: BridgeCopy = {
   msg: {
     old: 'OK, deal 👍',
     long: {
-      head: 'Hey, thanks so much for lending me your headphones for the vacation! The train ride was amazing with them, and the sound is pure fire. Just one small problem: I ',
+      head: 'Hey, thanks so much for lending me your headphones for the vacation! The train ride was amazing with them, and the sound is pure fire.\nJust one small problem:\nI ',
       was: 'drowned',
       now: 'lost',
       tail: ' them, sorry',
+      more: { sep: '\n', word: 'my bad' },
     },
     tease: 'Drowned them, huh?😏',
     how: 'What?! I fixed it right away 😳 How did you even read it??',
@@ -322,6 +335,7 @@ const EN: BridgeCopy = {
     bOpenTopic: 'Open the “Alex” topic',
     bReply: 'Here’s what he really wrote. Tease him',
     bSent: 'Sent to Alex from your main account',
+    aBack: 'Your reply is already in the chat with Alex. Open it',
     aSecret: 'Reveal the secret',
     aSecretSent: 'Leave the chat',
     aOpenArchive: 'Molly💔 deleted her message. Want to read what it said? Open “Personal archive”',
@@ -331,7 +345,7 @@ const EN: BridgeCopy = {
     aEditCard: 'Take the second phone',
     bSent: 'Back to the first phone',
   },
-  tagline: 'AndoGram. They told you it was impossible. We’ll show you otherwise.',
+  tagline: 'AndoGram.\nThey told you\nit was impossible.\nWe’ll show you otherwise.',
   start: {
     title: 'The A-B-C bridge',
     sub: '1–2 minutes. Nothing to install',

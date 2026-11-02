@@ -8,8 +8,10 @@ import './DemoView.css';
 
 /*
  * «Как работает» page of one AndoGram feature (#/projects/andogram/<feature id>):
- * a plain-words explanation plus its «Проверь сам» sandbox. Loaded lazily; each
- * sandbox is a chunk of its own, so a demo page loads only its own sandbox.
+ * a plain-words explanation plus its «Проверь сам» sandbox. No buy button on
+ * the page (owner, 2026-11-02: it only shows how the feature works); the
+ * sandbox's finale has one. Loaded lazily; each sandbox is a chunk of its
+ * own, so a demo page loads only its own sandbox.
  */
 
 interface SandboxProps {
@@ -21,6 +23,7 @@ const SANDBOXES: Record<DemoId, React.LazyExoticComponent<React.ComponentType<Sa
   honeypot: lazy(() => import('../../sandbox/HoneypotSandbox')),
   no_forwards_bypass: lazy(() => import('../../sandbox/NoForwardsSandbox')),
   archive_bridge: lazy(() => import('../../sandbox/BridgeSandbox')),
+  ar_masks: lazy(() => import('../../sandbox/ArMasksSandbox')),
 };
 
 interface DemoViewProps {
@@ -72,10 +75,6 @@ export const DemoView: React.FC<DemoViewProps> = ({ demo, lang, onOpenDownload }
             ))}
           </ul>
         </section>
-
-        <button type="button" className="ptl-btn-secondary ptl-demo-buy" onClick={() => onOpenDownload('andogram')}>
-          {common.buy}
-        </button>
       </div>
 
       <div className="ptl-demo-stage">

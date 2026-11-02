@@ -5,6 +5,7 @@ import { Language } from '../types';
 import { TELEGRAM_COMPARISON, INSTAGRAM_COMPARISON } from '../data';
 import { Check, X, Sparkles } from 'lucide-react';
 import { DURATION, EASE_OUT, VIEWPORT, fade, fadeUp, staggerContainer } from '../lib/motion';
+import { emojify } from '../lib/emoji';
 import { SectionHeader } from './ui/SectionHeader';
 import { SegmentedControl } from './ui/SegmentedControl';
 import './ComparisonTable.css';
@@ -128,7 +129,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
                         <motion.span className="cmp-icon cmp-icon--yes" variants={reduce ? fade : checkPop} aria-hidden="true">
                           <Check size={14} />
                         </motion.span>
-                        <span>{row.ando[lang]}</span>
+                        <span>{emojify(row.ando[lang])}</span>
                       </span>
                     </td>
                   </motion.tr>
@@ -151,7 +152,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
                     <motion.span className="cmp-icon cmp-icon--yes" variants={reduce ? fade : checkPop} aria-hidden="true">
                       <Check size={14} />
                     </motion.span>
-                    <span><span className="cmp-card-label">{l.thAndo}:</span> {row.ando[lang]}</span>
+                    <span><span className="cmp-card-label">{l.thAndo}:</span> {emojify(row.ando[lang])}</span>
                   </div>
                 </motion.li>
               ))}

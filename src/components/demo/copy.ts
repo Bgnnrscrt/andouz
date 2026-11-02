@@ -89,19 +89,21 @@ export const scenes: Record<DemoTab, SceneCopy> = {
       uz: 'Majburlashdan himoya — interfeysning oʻzida',
       en: 'Duress protection built into the interface',
     },
+    // What the feature really does (owner, 2026-11-02): each PIN opens its own
+    // accounts; the others leave the menu and the notifications; the main PIN opens all.
     desc: {
-      ru: 'Аварийный пароль переключает приложение на чистый decoy-профиль. Секретные чаты, мост и темы бесследно скрываются — остаются только публичные каналы.',
-      uz: 'Favqulodda parol ilovani toza decoy-profilga oʻtkazadi. Maxfiy chatlar, koʻprik va mavzular izsiz yashiriladi — faqat ochiq kanallar qoladi.',
-      en: 'A duress passcode switches the app to a clean decoy profile. Secret chats, the bridge and topics vanish without a trace — only public channels remain.',
+      ru: 'У каждого PIN-кода свои аккаунты. Введёшь «безопасный» PIN — остальные аккаунты исчезнут из меню и уведомлений, будто их нет. Главный PIN по-прежнему открывает всё.',
+      uz: 'Har bir PIN-kodning oʻz akkauntlari bor. «Xavfsiz» PIN kiritilsa, qolgan akkauntlar menyu va bildirishnomalardan yoʻqoladi — goʻyo ular yoʻqdek. Asosiy PIN esa avvalgidek hammasini ochadi.',
+      en: 'Each PIN code opens its own accounts. Enter the “safe” PIN and the other accounts disappear from the menu and notifications as if they weren’t there. Your main PIN still opens everything.',
     },
     phone: {
       title: { ru: 'Режим Honeypot', uz: 'Honeypot rejimi', en: 'Honeypot mode' },
-      sub: { ru: 'Введён аварийный пароль', uz: 'Favqulodda parol kiritildi', en: 'Duress passcode entered' },
+      sub: { ru: 'Введён безопасный PIN', uz: 'Xavfsiz PIN kiritildi', en: 'Safe PIN entered' },
       locked: { ru: 'Заблокировано', uz: 'Qulflangan', en: 'Locked' },
-      unlocked: { ru: 'Безопасный профиль активен', uz: 'Xavfsiz profil faol', en: 'Safe profile active' },
-      line1: { ru: 'Скрыто секретных чатов', uz: 'Yashirilgan maxfiy chatlar', en: 'Secret chats hidden' },
-      line2: { ru: 'Мост и темы отключены', uz: 'Koʻprik va mavzular oʻchirildi', en: 'Bridge and topics disabled' },
-      line3: { ru: 'Остались только публичные каналы', uz: 'Faqat ochiq kanallar qoldi', en: 'Only public channels remain' },
+      unlocked: { ru: 'Открыт безопасный аккаунт', uz: 'Xavfsiz akkaunt ochildi', en: 'Safe account open' },
+      line1: { ru: 'Скрыто аккаунтов', uz: 'Yashirilgan akkauntlar', en: 'Accounts hidden' },
+      line2: { ru: 'Их нет ни в меню, ни в уведомлениях', uz: 'Ular menyuda ham, bildirishnomalarda ham yoʻq', en: 'Not in the menu, not in notifications' },
+      line3: { ru: 'Главный PIN откроет всё', uz: 'Asosiy PIN hammasini ochadi', en: 'The main PIN opens everything' },
     },
   },
   mediasort: {

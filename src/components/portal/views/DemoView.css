@@ -1,12 +1,13 @@
 /* «Как работает» page of a feature (prefix ptl-demo-). */
 .ptl-demo-view {
   display: grid;
-  /* The sandbox column holds the rail (132 + 20) and a phone up to ~396px wide. */
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 540px);
+  /* The sandbox column holds the rail (132 + 20) and a phone up to ~396px
+     wide; the text keeps at least 360px. */
+  grid-template-columns: minmax(360px, 1fr) minmax(320px, 560px);
   align-items: start;
   gap: 48px;
   width: 100%;
-  max-width: 1180px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 32px 32px 80px;
 }
@@ -135,10 +136,8 @@
   background: #e56bd6;
 }
 
-.ptl-demo-buy {
-  align-self: flex-start;
-  margin-top: 4px;
-  cursor: pointer;
+.ptl-demo-role-badge.role-e {
+  background: #f2c94c;
 }
 
 .ptl-demo-stage {
@@ -167,11 +166,6 @@
   .ptl-demo-intro {
     position: static;
     padding-top: 0;
-  }
-
-  /* On narrow screens the buy button lives in the sandbox finale. */
-  .ptl-demo-buy {
-    display: none;
   }
 }
 

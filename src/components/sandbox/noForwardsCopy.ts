@@ -122,7 +122,9 @@ const RU: NoForwardsCopy = {
   // No-break spaces keep the emoji with its words.
   shrug: 'И что такого?\u00a0😅\nПопробуй заново, смелее',
   // A no-break space keeps the dash off the start of a line.
-  tagline: 'Другие решили за тебя, что можно, а что нельзя. AndoGram: твой Android\u00a0— твои правила.',
+  // Owner, 2026-11-02: «Другие решили…» in exactly two lines, then «AndoGram» alone, then the
+  // rules. «Телефон», not «смартфон»: as people say it («мой дом — мои правила»), and shorter.
+  tagline: 'Другие решили за тебя,\nчто можно, а что нельзя.\nAndoGram.\nТвой телефон\u00a0—\nтвои правила.',
   start: {
     title: 'Обход No-Forwards',
     sub: '1 минута. Ничего устанавливать не нужно',
@@ -183,7 +185,7 @@ const UZ: NoForwardsCopy = {
     tChannel: 'Video yonidagi bo‘sh joyga bosing',
   },
   shrug: 'Xo‘sh, nima bo‘pti?\u00a0😅\nQaytadan urinib ko‘ring, dadilroq',
-  tagline: 'Nima mumkin-u nima mumkin emasligini siz uchun boshqalar hal qilgan. AndoGram: Android sizniki\u00a0— qoidalar ham sizniki.',
+  tagline: 'Nima mumkinligini\nboshqalar hal qilgan.\nAndoGram.\nTelefon sizniki\u00a0—\nqoidalar ham sizniki.',
   start: {
     title: 'No-Forwards’ni chetlab o‘tish',
     sub: '1 daqiqa. Hech narsa o‘rnatish shart emas',
@@ -243,7 +245,7 @@ const EN: NoForwardsCopy = {
     tChannel: 'Tap next to the video',
   },
   shrug: 'So what’s the big deal?\u00a0😅\nTry it again, go on',
-  tagline: 'Others decided for you what’s allowed and what’s not. AndoGram: your Android, your rules.',
+  tagline: 'Others decided for you\nwhat you can and can’t do.\nAndoGram.\nYour phone, your rules.',
   start: {
     title: 'No-Forwards bypass',
     sub: '1 minute. Nothing to install',

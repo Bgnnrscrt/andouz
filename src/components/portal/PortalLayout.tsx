@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Language, AppId } from '../../types';
 import { PortalSection } from '../../portalTypes';
-import { DEMO_CRUMBS, DemoId, demoFromHash, isFeaturesHash } from '../sandbox/demos';
+import { DemoId, demoFromHash, isFeaturesHash } from '../sandbox/demos';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { HomeView } from './views/HomeView';
@@ -128,14 +128,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
 
       {/* 2. Main Area */}
       <div className="ptl-main-wrapper">
-        <Topbar
-          lang={lang}
-          setLang={setLang}
-          activeSection={activeSection}
-          activeProject={activeProject}
-          extraCrumb={activeSection === 'projects' && activeDemo ? DEMO_CRUMBS[activeDemo][lang] : undefined}
-          onToggleSidebar={toggleMobileSidebar}
-        />
+        <Topbar lang={lang} setLang={setLang} menuOpen={mobileSidebarOpen} onToggleSidebar={toggleMobileSidebar} />
 
         {/* The skip link (App.tsx) focuses this. */}
         <main id="main" className="ptl-content-container">

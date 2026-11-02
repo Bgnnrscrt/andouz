@@ -1,4 +1,4 @@
-import type { AppId, Language } from '../../types';
+import type { AppId } from '../../types';
 
 /*
  * Features that have an interactive «Проверь сам» page.
@@ -6,23 +6,17 @@ import type { AppId, Language } from '../../types';
  * page to PAGES in sandbox/demoPages.ts and its sandbox to SANDBOXES in
  * portal/views/DemoView.tsx.
  */
-export const DEMO_IDS = ['honeypot', 'no_forwards_bypass', 'archive_bridge'] as const;
+export const DEMO_IDS = ['honeypot', 'no_forwards_bypass', 'archive_bridge', 'ar_masks'] as const;
 export type DemoId = (typeof DEMO_IDS)[number];
 
 const DEMO_APP: Record<DemoId, AppId> = {
   honeypot: 'andogram',
   no_forwards_bypass: 'andogram',
   archive_bridge: 'andogram',
+  ar_masks: 'andogram',
 };
 
-/** Third breadcrumb in the Topbar while a demo page is open. */
-export const DEMO_CRUMBS: Record<DemoId, Record<Language, string>> = {
-  honeypot: { ru: 'Honeypot-пароли', uz: 'Honeypot parollari', en: 'Duress passcodes' },
-  no_forwards_bypass: { ru: 'Обход No-Forwards', uz: 'No-Forwards’ni chetlab o‘tish', en: 'No-Forwards bypass' },
-  archive_bridge: { ru: 'Мост A-B-C', uz: 'A-B-C ko‘prigi', en: 'A-B-C bridge' },
-};
-
-/** Words a line must not break inside, at their hyphens (page titles, the crumb). */
+/** Words a line must not break inside, at their hyphens (page titles). */
 const NOWRAP = /(A-B-C|No-Forwards)/;
 
 /**

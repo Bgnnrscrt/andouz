@@ -17,6 +17,7 @@ import {
 import { Language, AppId } from '../../../types';
 import { APPS_DATA } from '../../../data';
 import { portalI18n } from '../../../portalTranslations';
+import { emojify } from '../../../lib/emoji';
 import { demoHref, isDemoId } from '../../sandbox/demos';
 import { ComparisonTable } from '../../ComparisonTable';
 import './ProjectView.css';
@@ -171,18 +172,26 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
                 <div className="ptl-feature-icon">
                   {renderIcon(feat.iconName)}
                 </div>
-                {isDemoId(feat.id) ? (
+                <h3 className="ptl-feature-title">{feat.title[lang]}</h3>
+              </div>
+
+              <p className="ptl-feature-desc">{emojify(feat.description[lang])}</p>
+
+              {/* At the bottom, centred: «Как работает» for features with a «Проверь сам» page, else the tag. */}
+              {isDemoId(feat.id) ? (
+                <div className="ptl-feature-foot">
                   <a className="ptl-feature-demo-btn" href={demoHref(feat.id)}>
                     <PlayCircle size={15} aria-hidden="true" />
                     <span>{t.projects.howItWorks}</span>
                   </a>
-                ) : (
-                  feat.tag && <span className="ptl-feature-tag">{feat.tag[lang]}</span>
-                )}
-              </div>
-
-              <h3 className="ptl-feature-title">{feat.title[lang]}</h3>
-              <p className="ptl-feature-desc">{feat.description[lang]}</p>
+                </div>
+              ) : (
+                feat.tag && (
+                  <div className="ptl-feature-foot">
+                    <span className="ptl-feature-tag">{feat.tag[lang]}</span>
+                  </div>
+                )
+              )}
             </div>
           ))}
         </div>
@@ -206,7 +215,7 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
               {app.changelog[0].items[lang].map((item, idx) => (
                 <li key={idx} className="ptl-changelog-item">
                   <CheckCircle2 size={16} color={selectedAppId === 'andusta' ? '#ff007f' : '#00f59b'} style={{ marginTop: '2px', flexShrink: 0 }} />
-                  <span>{item}</span>
+                  <span>{emojify(item)}</span>
                 </li>
               ))}
             </ul>
