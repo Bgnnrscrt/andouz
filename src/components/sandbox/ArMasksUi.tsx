@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Pause, SendHorizontal, Square, SwitchCamera, Zap } from 'lucide-react';
-import { emojify } from '../../lib/emoji';
 import { ArCamera, MaskThumb } from './ArCamera';
 import { MASK_IDS, type MaskId } from './arMasksCopy';
 import type { Tap } from './TgUi';
@@ -15,16 +14,11 @@ import './armasks.css';
  * Only the masks are buttons; the Ghoul mask is the one the demo can try.
  */
 
-/** Mask icons: the Ghoul mask and «no mask» are the man himself (with and without it); the locked ones show their emoji behind a «?». */
-const MASK_EMOJI: Partial<Record<MaskId, string>> = {
-  forest: '🌿',
-  noir: '🖤',
-  beard: '🧔',
-  fawkes: '🎭',
-  glitter: '✨',
-};
-
-/** A mask the demo cannot try: everything but «no mask» and the Ghoul mask. */
+/**
+ * A mask the demo cannot try: everything but «no mask» and the Ghoul mask. Its
+ * icon is only a «?» (owner, 2026-11-02: nothing behind it). The Ghoul mask's
+ * icon is the mask itself, drawn without a face; «no mask» is the man.
+ */
 const isLocked = (id: MaskId): boolean => id !== 'none' && id !== 'ghoul';
 
 /** Time since the recorder appeared, ms, ticking every 100 ms (the timer and the ring). */
@@ -161,12 +155,7 @@ export function AndoGramRecorder({
               }}
             >
               <span className="ar-mask-icon" aria-hidden="true">
-                {id === 'none' || id === 'ghoul' ? (
-                  <MaskThumb masked={id === 'ghoul'} />
-                ) : (
-                  <span className="ar-mask-emoji">{emojify(MASK_EMOJI[id] ?? '')}</span>
-                )}
-                {lock && <span className="ar-mask-q">?</span>}
+                {lock ? <span className="ar-mask-q">?</span> : <MaskThumb masked={id === 'ghoul'} />}
               </span>
               <span className="ar-mask-name" aria-hidden="true">
                 {labels[id]}

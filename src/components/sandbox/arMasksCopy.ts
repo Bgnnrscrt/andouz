@@ -14,8 +14,8 @@ export interface Caption {
   sub: string;
 }
 
-/** The masks under the circle, in the row's order. */
-export const MASK_IDS = ['none', 'forest', 'noir', 'ghoul', 'beard', 'fawkes', 'glitter'] as const;
+/** The masks under the circle, in the row's order: the Ghoul mask first (owner, 2026-11-02), then «no mask», then the locked ones. */
+export const MASK_IDS = ['ghoul', 'none', 'forest', 'noir', 'beard', 'fawkes', 'glitter'] as const;
 export type MaskId = (typeof MASK_IDS)[number];
 
 /** A chat of the list besides the friend. */

@@ -67,7 +67,7 @@ export function ArCamera({ mask }: { mask: boolean }) {
   );
 }
 
-/** The icon of «Маска Гуля» (the same man in the mask) and of «Без маски» in the masks row. */
+/** Icons in the masks row: «Маска Гуля» — the mask itself, drawn without a face (mask_icon.py); «Без маски» — the man. */
 export function MaskThumb({ masked }: { masked: boolean }) {
   return <img className="ar-thumb-img" src={masked ? thumbGhoul : thumbPlain} alt="" draggable={false} />;
 }
