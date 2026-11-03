@@ -19,19 +19,22 @@ import './home.css';
 /*
  * The phone's home screen of the «Проверь сам» sandboxes (Android launcher):
  * clock widget, app grid, dock. The grid is the scenario's: Honeypot starts
- * with AndoGram, the AR masks with Telegram and then AndoGram. Apps a step
- * waits for carry data-sbx="app-<id>"; only the expected one is focusable.
+ * with AndoGram, the AR masks with Telegram and then AndoGram, Andusta's with
+ * Instagram and then Andusta. Apps a step waits for carry data-sbx="app-<id>";
+ * only the expected one is focusable. Andusta's tile is Instagram's (the clone
+ * keeps its icon; only the label differs — owner, 2026-11-03).
  */
 
 /** Generic apps (their labels are translated); brand-named apps keep their names. */
 export type HomeAppId = 'gallery' | 'clock' | 'weather' | 'settings' | 'phone' | 'messages' | 'browser' | 'camera';
 
-type BrandId = 'andogram' | 'telegram' | 'instagram' | 'tiktok' | 'youtube';
+type BrandId = 'andogram' | 'andusta' | 'telegram' | 'instagram' | 'tiktok' | 'youtube';
 
 export type LauncherApp = BrandId | HomeAppId;
 
 const BRAND: Record<BrandId, string> = {
   andogram: 'AndoGram',
+  andusta: 'Andusta',
   telegram: 'Telegram',
   instagram: 'Instagram',
   tiktok: 'TikTok',
@@ -57,6 +60,7 @@ const DOCK: readonly LauncherApp[] = ['phone', 'messages', 'browser', 'camera'];
 const GLYPH: Record<Exclude<LauncherApp, 'andogram'>, LucideIcon> = {
   telegram: Send,
   instagram: Aperture,
+  andusta: Aperture,
   tiktok: Music2,
   youtube: CirclePlay,
   gallery: Images,

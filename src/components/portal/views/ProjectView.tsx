@@ -24,7 +24,7 @@ import { Language, AppId } from '../../../types';
 import { APPS_DATA } from '../../../data';
 import { portalI18n } from '../../../portalTranslations';
 import { emojify } from '../../../lib/emoji';
-import { demoHref, isDemoId } from '../../sandbox/demos';
+import { demoHref, isListedDemo } from '../../sandbox/demos';
 import { ComparisonTable } from '../../ComparisonTable';
 import './ProjectView.css';
 
@@ -190,7 +190,7 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
               <p className="ptl-feature-desc">{emojify(feat.description[lang])}</p>
 
               {/* At the bottom, centred: «Как работает» for features with a «Проверь сам» page, else the tag. */}
-              {isDemoId(feat.id) ? (
+              {isListedDemo(feat.id) ? (
                 <div className="ptl-feature-foot">
                   <a className="ptl-feature-demo-btn" href={demoHref(feat.id)}>
                     <PlayCircle size={15} aria-hidden="true" />

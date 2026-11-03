@@ -1234,6 +1234,10 @@
   color: var(--accent-ando);
 }
 
+.sbx-tagline-brand--andusta {
+  color: var(--accent-usta);
+}
+
 /* Not typed yet: keeps its place so the lines don't jump. */
 .sbx-tagline-rest {
   visibility: hidden;

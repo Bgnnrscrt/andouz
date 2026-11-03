@@ -115,7 +115,8 @@
   background: linear-gradient(150deg, #39b3f0, #1f86d6);
 }
 
-.hp-tile--instagram {
+.hp-tile--instagram,
+.hp-tile--andusta {
   background: linear-gradient(45deg, #f8a13b, #e3306c 50%, #8a3ab9);
 }
 

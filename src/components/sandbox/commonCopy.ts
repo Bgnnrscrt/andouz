@@ -1,4 +1,4 @@
-import type { Language } from '../../types';
+import type { AppId, Language } from '../../types';
 import type { EndLabels } from './SandboxFrame';
 
 /*
@@ -53,4 +53,16 @@ const COMMON: Record<Language, CommonCopy> = {
   },
 };
 
-export const getCommonCopy = (lang: Language): CommonCopy => COMMON[lang];
+const APP_NAME: Record<AppId, string> = { andogram: 'AndoGram', andusta: 'Andusta' };
+
+/** The shared texts; for Andusta's sandboxes «Купить Andusta» and the back link to Andusta. */
+export const getCommonCopy = (lang: Language, app: AppId = 'andogram'): CommonCopy => {
+  const c = COMMON[lang];
+  if (app === 'andogram') return c;
+  const name = APP_NAME[app];
+  return {
+    ...c,
+    end: { ...c.end, buy: c.end.buy.replace('AndoGram', name) },
+    page: { ...c.page, back: name },
+  };
+};

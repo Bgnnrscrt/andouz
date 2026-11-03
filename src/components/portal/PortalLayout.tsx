@@ -36,7 +36,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const parseHash = (): { section: PortalSection; project?: AppId; demo?: DemoId; features?: boolean } => {
     const hash = window.location.hash.replace(/^#\/?/, '');
     if (hash.startsWith('projects/andusta')) {
-      return { section: 'projects', project: 'andusta', features: isFeaturesHash(hash) };
+      return { section: 'projects', project: 'andusta', demo: demoFromHash(hash), features: isFeaturesHash(hash) };
     }
     if (hash.startsWith('projects')) {
       return { section: 'projects', project: 'andogram', demo: demoFromHash(hash), features: isFeaturesHash(hash) };

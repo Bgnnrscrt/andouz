@@ -1,0 +1,833 @@
+/*
+ * «Like Instagram» screens of Andusta's sandboxes (IgUi.tsx), dark theme.
+ * Prefix ig-. The phone is 360 × 760 logical px (useSandbox.ts).
+ */
+
+.sbx .ig-screen,
+.ig-screen {
+  background: #000;
+  color: #f5f5f5;
+}
+
+.ig-app {
+  --ig-text: #f5f5f5;
+  --ig-sub: #a8a8a8;
+  --ig-line: #262626;
+  --ig-blue: #0095f6;
+  --ig-red: #ff3040;
+  --ig-lime: #00ff66;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  color: var(--ig-text);
+  font-family: Roboto, var(--font-body), system-ui, sans-serif;
+}
+
+/* Andusta's fonts window changes the app font: the feed shows it. */
+.ig-app.ig-font--serif {
+  font-family: 'Merriweather', Georgia, serif;
+}
+
+.ig-app.ig-font--custom {
+  font-family: 'Caveat', 'Segoe Print', cursive;
+}
+
+.ig-app.ig-font--custom .ig-post-caption,
+.ig-app.ig-font--custom .ig-post-likes,
+.ig-app.ig-font--custom .ig-post-nick,
+.ig-app.ig-font--custom .ig-story-name {
+  font-size: 1.18em;
+}
+
+.ig-app.ig-font--custom .ig-top-name {
+  font-family: 'Caveat', 'Segoe Print', cursive;
+}
+
+.ig-avatar {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ── Splash ─────────────────────────────────────────────────────────── */
+
+.ig-splash {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+.ig-splash-logo {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 24px;
+  color: #fff;
+  background: linear-gradient(45deg, #f8a13b, #e3306c 50%, #8a3ab9);
+}
+
+/* ── Top bar, stories ───────────────────────────────────────────────── */
+
+.ig-top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 16px;
+}
+
+.ig-top-name {
+  font-family: 'Segoe Script', 'Brush Script MT', cursive;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.ig-top-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ig-top-dm {
+  position: relative;
+  display: inline-flex;
+}
+
+.ig-badge {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  border: 2px solid #000;
+  background: var(--ig-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+
+.ig-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden auto;
+  scrollbar-width: none;
+}
+
+.ig-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ig-stories {
+  display: flex;
+  gap: 12px;
+  padding: 4px 12px 12px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ig-line);
+}
+
+.ig-story {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 70px;
+}
+
+.ig-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+}
+
+.ig-ring > .ig-avatar {
+  box-shadow: 0 0 0 3px #000;
+}
+
+.ig-ring--new {
+  background: conic-gradient(from 200deg, #f9ce34, #ee2a7b, #6228d7, #f9ce34);
+}
+
+.ig-ring--seen {
+  background: #3a3a3a;
+}
+
+.ig-ring--none {
+  background: transparent;
+}
+
+.ig-ring--small {
+  width: 36px;
+  height: 36px;
+}
+
+.ig-ring--small > .ig-avatar {
+  box-shadow: 0 0 0 2px #000;
+}
+
+.ig-story-plus {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  background: var(--ig-blue);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ig-story-name {
+  max-width: 70px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11.5px;
+  color: var(--ig-text);
+}
+
+/* ── Post ───────────────────────────────────────────────────────────── */
+
+.ig-post {
+  padding-bottom: 10px;
+}
+
+.ig-post-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+}
+
+.ig-post-nick {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.ig-post-more {
+  color: var(--ig-text);
+}
+
+.sbx-screen .ig-post-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #111;
+}
+
+.ig-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ig-big-heart {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.35));
+  animation: ig-heart-pop 1s var(--ease-out) forwards;
+  pointer-events: none;
+}
+
+.ig-big-heart--lime {
+  color: var(--ig-lime);
+}
+
+@keyframes ig-heart-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  32% {
+    transform: scale(0.96);
+  }
+  44% {
+    transform: scale(1);
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.ig-post-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px 4px;
+}
+
+.ig-act {
+  display: inline-flex;
+  color: var(--ig-text);
+}
+
+.ig-act--save {
+  margin-left: auto;
+}
+
+.ig-liked {
+  color: var(--ig-red);
+  animation: ig-like-bump 0.36s var(--ease-out);
+}
+
+.ig-liked--lime {
+  color: var(--ig-lime);
+}
+
+@keyframes ig-like-bump {
+  50% {
+    transform: scale(1.22);
+  }
+}
+
+.ig-post-likes {
+  margin: 4px 14px 2px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.ig-post-caption {
+  margin: 0 14px;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.ig-post-caption b {
+  margin-right: 2px;
+}
+
+/* ── Bottom bar ─────────────────────────────────────────────────────── */
+
+.ig-nav {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 52px;
+  padding-bottom: 6px;
+  border-top: 1px solid var(--ig-line);
+  background: #000;
+  color: var(--ig-text);
+}
+
+/* ── Story full screen and its viewers ──────────────────────────────── */
+
+.ig-storyview,
+.ig-photo {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+  background: #000;
+}
+
+.ig-storyview-art,
+.ig-photo-art {
+  position: absolute;
+  inset: 0 0 64px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.ig-storyview-bar {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  right: 10px;
+  z-index: 2;
+  height: 2.5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+
+.ig-storyview-fill {
+  display: block;
+  height: 100%;
+  transform-origin: left center;
+  background: #fff;
+  transform: scaleX(0);
+}
+
+.ig-storyview-fill.is-playing {
+  animation: ig-story-run var(--story-ms, 3000ms) linear forwards;
+}
+
+.ig-storyview-fill.is-full {
+  transform: scaleX(1);
+}
+
+@keyframes ig-story-run {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.ig-storyview-head {
+  position: absolute;
+  top: 20px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.ig-storyview-nick {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ig-storyview-ago {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.ig-storyview-x {
+  margin-left: auto;
+}
+
+.ig-storyview-text {
+  position: absolute;
+  top: 34%;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-heading), Roboto, sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.ig-storyview-foot {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 44px;
+  color: #fff;
+}
+
+.ig-storyview-reply {
+  flex: 1;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 22px;
+  font-size: 14px;
+  line-height: 42px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sbx-screen .ig-viewers-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ig-sheet-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.45);
+  animation: ig-fade-in 0.22s var(--ease-out) backwards;
+}
+
+.ig-sheet {
+  min-height: 52%;
+  padding: 8px 0 18px;
+  border-radius: 16px 16px 0 0;
+  background: #1c1c1e;
+  animation: ig-sheet-up 0.3s var(--ease-out) backwards;
+}
+
+@keyframes ig-sheet-up {
+  from {
+    transform: translateY(40%);
+  }
+}
+
+@keyframes ig-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.ig-sheet-grip {
+  display: block;
+  width: 38px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: 2px;
+  background: #555;
+}
+
+.ig-sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px 12px;
+  border-bottom: 1px solid #2c2c2e;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.ig-sheet-list {
+  margin: 0;
+  padding: 6px 0 0;
+  list-style: none;
+}
+
+.ig-viewer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+}
+
+.ig-viewer-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.ig-viewer-text span {
+  color: var(--ig-sub);
+}
+
+/* ── Notification, Direct, view-once photo ──────────────────────────── */
+
+.sbx-screen .ig-notif {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  right: 10px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 18px;
+  background: rgba(44, 44, 46, 0.97);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  animation: ig-notif-in 0.42s var(--ease-out) backwards;
+}
+
+@keyframes ig-notif-in {
+  from {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+}
+
+.ig-notif-app {
+  display: grid;
+  place-items: center;
+  flex: none;
+  align-self: flex-start;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  color: #fff;
+  background: linear-gradient(45deg, #f8a13b, #e3306c 50%, #8a3ab9);
+}
+
+.ig-notif-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ig-notif-top {
+  font-size: 11.5px;
+  color: var(--ig-sub);
+}
+
+.ig-notif-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ig-direct {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+.ig-direct-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--ig-line);
+}
+
+.ig-direct-who {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.ig-direct-who span {
+  font-size: 12px;
+  color: var(--ig-sub);
+}
+
+.ig-direct-msgs {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 12px 14px;
+}
+
+.ig-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  animation: ig-fade-in 0.3s var(--ease-out) backwards;
+}
+
+.ig-bubble {
+  max-width: 76%;
+  padding: 9px 13px;
+  border-radius: 20px;
+  background: #262626;
+  font-size: 14.5px;
+  line-height: 1.35;
+}
+
+/* Narrow enough to stay clear of Andusta's ⚡ (16 px from the right edge). */
+.sbx-screen .ig-vo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 228px;
+  padding: 10px 14px 10px 10px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #7c3aed, #db2777);
+  color: #fff;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.sbx-screen .ig-vo--opened {
+  background: #262626;
+  color: var(--ig-sub);
+}
+
+.ig-vo--shake {
+  animation: ig-wiggle 0.42s var(--ease-out);
+}
+
+@keyframes ig-wiggle {
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.ig-vo-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.ig-vo-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.ig-vo-text span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.ig-vo-once {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px dashed currentColor;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ig-vo-once--light {
+  color: #fff;
+}
+
+.ig-direct-input {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 10px 12px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 24px;
+  background: #262626;
+  color: var(--ig-text);
+}
+
+.ig-direct-cam {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ig-blue);
+  color: #fff;
+}
+
+.ig-direct-field {
+  flex: 1;
+  font-size: 14.5px;
+  color: var(--ig-sub);
+}
+
+.ig-photo {
+  border-radius: 0;
+}
+
+.ig-photo-art {
+  inset: 0 0 64px;
+}
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+
+/* At the very bottom, under the windows' buttons; taps go through it (as an Android toast). */
+.ig-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 9;
+  pointer-events: none;
+  max-width: 290px;
+  padding: 10px 16px;
+  border-radius: 22px;
+  background: rgba(50, 50, 52, 0.96);
+  color: #fff;
+  font-size: 13.5px;
+  line-height: 1.3;
+  text-align: center;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  animation: ig-toast-in 0.26s var(--ease-out) backwards;
+}
+
+@keyframes ig-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-big-heart {
+    animation: ig-fade-out 1s step-end forwards;
+  }
+
+  @keyframes ig-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  .ig-liked,
+  .ig-vo--shake,
+  .ig-notif,
+  .ig-sheet,
+  .ig-sheet-wrap,
+  .ig-toast,
+  .ig-msg {
+    animation: none;
+  }
+
+  .ig-storyview-fill.is-playing {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* The Direct notification arrives a moment after the feed opens. */
+.ig-notif-delay .ig-notif {
+  animation-delay: 0.6s;
+}

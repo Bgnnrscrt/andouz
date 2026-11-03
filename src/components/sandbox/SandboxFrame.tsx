@@ -1,5 +1,6 @@
 import React, { useId, useMemo } from 'react';
 import { ArrowRight, LayoutGrid, Play, RotateCcw, RotateCw } from 'lucide-react';
+import type { AppId } from '../../types';
 import type { LineState } from './engine';
 import { featuresHref } from './demos';
 import { StatusBar, type StatusTone } from './TgUi';
@@ -13,8 +14,11 @@ import './sandbox.css';
  * hint, the outro layer (dim + typed line), the start screen and the end buttons.
  */
 
-/** Lines are typed with the brand in the ANDO green, wherever it stands. */
-const BRAND = 'AndoGram';
+/**
+ * Lines are typed with the brand in its colour, wherever it stands: AndoGram in
+ * the ANDO green, Andusta in its pink (owner, 2026-11-03).
+ */
+const BRAND: Record<AppId, string> = { andogram: 'AndoGram', andusta: 'Andusta' };
 
 /** The green hint: text, optional «next» button, an arrow towards the target. */
 export function HintBox({
@@ -85,9 +89,19 @@ const brandMask = (chars: string[], brand: string[]): boolean[] => {
  * A line typed `shown` characters far. The untyped rest keeps its place
  * (invisible), so the centred lines don't jump while typing.
  */
-export function Tagline({ text, shown, caret }: { text: string; shown: number; caret: boolean }) {
+export function Tagline({
+  text,
+  shown,
+  caret,
+  app = 'andogram',
+}: {
+  text: string;
+  shown: number;
+  caret: boolean;
+  app?: AppId;
+}) {
   const chars = useMemo(() => Array.from(text), [text]);
-  const mask = useMemo(() => brandMask(chars, Array.from(BRAND)), [chars]);
+  const mask = useMemo(() => brandMask(chars, Array.from(BRAND[app])), [chars, app]);
   const runs: { brand: boolean; text: string }[] = [];
   for (let i = 0; i < Math.min(shown, chars.length); i++) {
     const last = runs[runs.length - 1];
@@ -98,7 +112,7 @@ export function Tagline({ text, shown, caret }: { text: string; shown: number; c
     <p className="sbx-tagline-text">
       {runs.map((run, i) =>
         run.brand ? (
-          <span key={i} className="sbx-tagline-brand">
+          <span key={i} className={`sbx-tagline-brand sbx-tagline-brand--${app}`}>
             {run.text}
           </span>
         ) : (
@@ -122,12 +136,15 @@ export function OutroLayer({
   dimIn,
   dimOut,
   raised = false,
+  app = 'andogram',
 }: {
   line: LineState;
   text: string;
   dimIn: number;
   dimOut: number;
   raised?: boolean;
+  /** Whose brand is coloured in the line. */
+  app?: AppId;
 }) {
   return (
     <>
@@ -137,7 +154,7 @@ export function OutroLayer({
         aria-hidden="true"
       />
       <div className={`sbx-tagline${raised ? ' sbx-tagline--raised' : ''}`} aria-hidden="true">
-        <Tagline text={text} shown={line.chars} caret={line.caret} />
+        <Tagline text={text} shown={line.chars} caret={line.caret} app={app} />
       </div>
     </>
   );
@@ -177,27 +194,29 @@ export interface EndLabels {
 }
 
 /**
- * The end buttons: «Купить AndoGram» (DownloadModal), «Другие сценарии» (the
- * app's feature list), «Пройти ещё раз». In the chat column in place of the
- * input, or `over` the dimmed screen at its bottom.
+ * The end buttons: «Купить AndoGram» / «Купить Andusta» (DownloadModal), «Другие
+ * сценарии» (the app's feature list), «Пройти ещё раз». In the chat column in
+ * place of the input, or `over` the dimmed screen at its bottom.
  */
 export function EndPanel({
   labels,
   onBuy,
   onAgain,
   over = false,
+  app = 'andogram',
 }: {
   labels: EndLabels;
   onBuy: () => void;
   onAgain: () => void;
   over?: boolean;
+  app?: AppId;
 }) {
   return (
     <div className={`sbx-end${over ? ' sbx-end--over' : ''}`}>
       <button type="button" className="sbx-cta" onClick={onBuy}>
         {labels.buy}
       </button>
-      <a className="sbx-more" href={featuresHref('andogram')}>
+      <a className="sbx-more" href={featuresHref(app)}>
         <LayoutGrid size={16} aria-hidden="true" />
         {labels.more}
       </a>
