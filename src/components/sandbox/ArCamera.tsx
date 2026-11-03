@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import poster from '../../assets/ar/poster.jpg';
 import thumbGhoul from '../../assets/ar/thumb-ghoul.jpg';
-import thumbPlain from '../../assets/ar/thumb-plain.jpg';
 import { loadCamera } from './arCameraClip';
 import { prefersReducedMotion } from './engine';
 
@@ -67,7 +66,7 @@ export function ArCamera({ mask }: { mask: boolean }) {
   );
 }
 
-/** Icons in the masks row: «Маска Гуля» — the mask itself, drawn without a face (mask_icon.py); «Без маски» — the man. */
-export function MaskThumb({ masked }: { masked: boolean }) {
-  return <img className="ar-thumb-img" src={masked ? thumbGhoul : thumbPlain} alt="" draggable={false} />;
+/** The Ghoul mask's icon in the masks row: the mask itself, drawn without a face (mask_icon.py). */
+export function MaskThumb() {
+  return <img className="ar-thumb-img" src={thumbGhoul} alt="" draggable={false} />;
 }

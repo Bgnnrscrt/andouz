@@ -305,6 +305,32 @@
   object-fit: cover;
 }
 
+/* «Оригинал» (no mask): a 🚫 as in the app's row (owner, 2026-11-03). The Apple
+   picture is see-through inside its ring; a light disc behind it, inside the
+   ring (the ring spans 62–92% of the radius), makes it read as in the app. */
+.ar-mask-none {
+  position: relative;
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.ar-mask-none::before {
+  content: '';
+  position: absolute;
+  inset: 11%;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.ar-mask-none img.emoji {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
 /* A locked mask: only a big «?» (owner, 2026-11-02: no icon behind it). */
 .ar-mask-q {
   position: absolute;

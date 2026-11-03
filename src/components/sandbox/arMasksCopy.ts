@@ -14,8 +14,12 @@ export interface Caption {
   sub: string;
 }
 
-/** The masks under the circle, in the row's order: the Ghoul mask first (owner, 2026-11-02), then «no mask», then the locked ones. */
-export const MASK_IDS = ['ghoul', 'none', 'forest', 'noir', 'beard', 'fawkes', 'glitter'] as const;
+/**
+ * The masks under the circle, in the row's order (owner, 2026-11-03, as in the
+ * app): «Оригинал» (no mask, a 🚫 icon) first, then the Ghoul mask, then the
+ * locked ones.
+ */
+export const MASK_IDS = ['none', 'ghoul', 'forest', 'noir', 'beard', 'fawkes', 'glitter'] as const;
 export type MaskId = (typeof MASK_IDS)[number];
 
 /** A chat of the list besides the friend. */
@@ -101,7 +105,7 @@ const RU: ArMasksCopy = {
     masks: 'Маски',
   },
   masks: {
-    none: 'Без маски',
+    none: 'Оригинал',
     forest: 'Forest',
     noir: 'Нуар',
     ghoul: 'Маска Гуля',
@@ -163,7 +167,7 @@ const UZ: ArMasksCopy = {
     masks: 'Niqoblar',
   },
   masks: {
-    none: 'Niqobsiz',
+    none: 'Original',
     forest: 'Forest',
     noir: 'Nuar',
     ghoul: 'Ghoul niqobi',
@@ -225,7 +229,7 @@ const EN: ArMasksCopy = {
     masks: 'Masks',
   },
   masks: {
-    none: 'No mask',
+    none: 'Original',
     forest: 'Forest',
     noir: 'Noir',
     ghoul: 'Ghoul Mask',

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Pause, SendHorizontal, Square, SwitchCamera, Zap } from 'lucide-react';
+import { emojify } from '../../lib/emoji';
 import { ArCamera, MaskThumb } from './ArCamera';
 import { MASK_IDS, type MaskId } from './arMasksCopy';
 import type { Tap } from './TgUi';
@@ -15,9 +16,10 @@ import './armasks.css';
  */
 
 /**
- * A mask the demo cannot try: everything but «no mask» and the Ghoul mask. Its
- * icon is only a «?» (owner, 2026-11-02: nothing behind it). The Ghoul mask's
- * icon is the mask itself, drawn without a face; «no mask» is the man.
+ * A mask the demo cannot try: everything but «Оригинал» (no mask) and the
+ * Ghoul mask. Its icon is only a «?» (owner, 2026-11-02: nothing behind it).
+ * The Ghoul mask's icon is the mask itself, drawn without a face; «Оригинал»
+ * is a 🚫 (owner, 2026-11-03: «как на скрине, без лица» — the app's row).
  */
 const isLocked = (id: MaskId): boolean => id !== 'none' && id !== 'ghoul';
 
@@ -155,7 +157,13 @@ export function AndoGramRecorder({
               }}
             >
               <span className="ar-mask-icon" aria-hidden="true">
-                {lock ? <span className="ar-mask-q">?</span> : <MaskThumb masked={id === 'ghoul'} />}
+                {lock ? (
+                  <span className="ar-mask-q">?</span>
+                ) : id === 'none' ? (
+                  <span className="ar-mask-none">{emojify('🚫')}</span>
+                ) : (
+                  <MaskThumb />
+                )}
               </span>
               <span className="ar-mask-name" aria-hidden="true">
                 {labels[id]}
