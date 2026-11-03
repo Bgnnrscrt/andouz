@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { motion, animate, useMotionValue, useMotionValueEvent, useReducedMotion } from 'motion/react';
 import {
-  Lock, LockOpen, ShieldCheck, Check, Send, EyeOff, Eye, Ghost, AlertTriangle, Save,
+  Lock, LockOpen, ShieldCheck, Check, Send, EyeOff, Eye, Ghost, MessageCircle,
   Film, Mic, FileArchive, Image as ImageIcon,
 } from 'lucide-react';
 import { DURATION, EASE_OUT, SPRING } from '../../lib/motion';
@@ -323,7 +323,7 @@ export const GhostScene: React.FC<SceneProps> = ({ lang }) => {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
         {/* Seen receipt struck through */}
         <div className="demo-bubble demo-bubble-in" style={{ alignSelf: 'flex-start' }}>
-          <div style={{ fontSize: '0.74rem' }}>Story · Reels</div>
+          <div style={{ fontSize: '0.74rem' }}>{tx('story')}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4, fontSize: '0.6rem' }}>
             <span style={{ color: 'var(--text-dim)', textDecoration: step >= 1 ? 'line-through' : 'none', transition: 'color 0.3s ease' }}>{tx('seenBefore')}</span>
             <Appear show={step >= 1} y={4} style={{ display: 'inline-flex' }}>
@@ -334,17 +334,17 @@ export const GhostScene: React.FC<SceneProps> = ({ lang }) => {
           </div>
         </div>
 
-        {/* Deleted message preserved */}
+        {/* A Direct message read without a seen mark */}
         <Appear show={step >= 2} y={10} style={{ position: 'relative' }}>
           <div style={{ background: '#251728', border: '1px solid rgba(255,0,127,0.3)', padding: 11, borderRadius: 12, position: 'relative', overflow: 'hidden' }}>
             {step === 2 && <div className="demo-flash" aria-hidden style={{ background: magenta, borderRadius: 12 }} />}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.62rem', color: '#ff5c8a', fontWeight: 700, marginBottom: 4 }}>
-              <AlertTriangle size={12} aria-hidden /> {tx('deletedTag')}
+              <MessageCircle size={12} aria-hidden /> {tx('dmTag')}
             </div>
-            <div style={{ fontSize: '0.74rem' }}>{tx('deletedText')}</div>
+            <div style={{ fontSize: '0.74rem' }}>{tx('dmText')}</div>
             <Appear show={step >= 3} y={4} style={{ marginTop: 6 }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: '0.58rem', color: magenta, fontWeight: 700 }}>
-                <ShieldCheck size={11} aria-hidden /> {tx('preserved')}
+                <EyeOff size={11} aria-hidden /> {tx('dmRead')}
               </span>
             </Appear>
           </div>
@@ -381,18 +381,18 @@ export const ViewOnceScene: React.FC<SceneProps> = ({ lang }) => {
       <div>
         <div style={{ fontWeight: 800, fontSize: '0.9rem', marginBottom: 4 }}>{tx('title')}</div>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-          {tx('views')}: <b style={{ color: magenta }}><CountUp to={24} from={1} active={step >= 1} duration={1} /></b>
+          {tx('views')}: <b style={{ color: magenta }}><CountUp to={2} from={1} active={step >= 1} duration={0.6} /></b>
         </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 9, width: '100%' }}>
         <Appear show={step >= 2} y={6}>
           <div style={{ padding: '7px 12px', background: '#1f1322', borderRadius: 9, fontSize: '0.66rem', color: magenta, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, border: '1px solid rgba(255,0,127,0.25)' }}>
-            <ShieldCheck size={13} aria-hidden /> {tx('flag')}
+            <ShieldCheck size={13} aria-hidden /> {tx('kept')}
           </div>
         </Appear>
         <div aria-hidden className={step >= 3 ? 'demo-save-pulse' : undefined} style={{ padding: '9px 14px', background: 'linear-gradient(135deg, #ff007f 0%, #7928ca 100%)', borderRadius: 9, color: '#fff', fontSize: '0.72rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
-          <Save size={14} /> {tx('save')}
+          <Eye size={14} /> {tx('again')}
         </div>
         <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
           <Check size={11} aria-hidden color={magenta} /> {tx('note')}

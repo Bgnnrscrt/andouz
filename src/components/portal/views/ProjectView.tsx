@@ -11,6 +11,12 @@ import {
   Zap,
   Sparkles,
   Flame,
+  Lock,
+  Mic,
+  Ghost,
+  UserMinus,
+  Music,
+  Eye,
   CheckCircle2,
   PlayCircle
 } from 'lucide-react';
@@ -69,6 +75,12 @@ export const ProjectView: React.FC<ProjectViewProps> = ({
       case 'Trash2': return <Trash2 size={22} />;
       case 'Camera': return <Camera size={22} />;
       case 'Zap': return <Zap size={22} />;
+      case 'Lock': return <Lock size={22} />;
+      case 'Mic': return <Mic size={22} />;
+      case 'Ghost': return <Ghost size={22} />;
+      case 'UserMinus': return <UserMinus size={22} />;
+      case 'Music': return <Music size={22} />;
+      case 'Eye': return <Eye size={22} />;
       default: return <Flame size={22} />;
     }
   };

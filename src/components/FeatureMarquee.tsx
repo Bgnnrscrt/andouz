@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, Lock, Ghost, Shield, Eye, Sparkles, Smartphone, FolderDown, Zap, Download, Mic, MapPin, FileText, UserMinus, Music, History } from 'lucide-react';
+import { Archive, Lock, Ghost, Eye, Sparkles, Smartphone, FolderDown, Zap, Download, Mic, MapPin, FileText, UserMinus, Music, Heart } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Language } from '../types';
 import './FeatureMarquee.css';
@@ -28,13 +28,13 @@ const ROW_A: Chip[] = [
 
 const ROW_B: Chip[] = [
   { Icon: Ghost, color: '#ff007f', label: { ru: 'Ghost Mode', uz: 'Arvoh rejimi', en: 'Ghost Mode' } },
-  { Icon: Shield, color: '#ff007f', label: { ru: 'Анти-удаление в Direct', uz: 'Directda o‘chirishga qarshi', en: 'Direct anti-unsend' } },
-  { Icon: Music, color: '#f59e0b', label: { ru: 'Своя музыка в Stories', uz: 'Stories uchun o‘z musiqangiz', en: 'Your music on Stories' } },
-  { Icon: Eye, color: '#ff007f', label: { ru: 'Бесконечный View-Once', uz: 'Cheksiz View-Once', en: 'Unlimited view-once' } },
-  { Icon: History, color: '#ff007f', label: { ru: 'История правок в Direct', uz: 'Direct tahrir tarixi', en: 'Direct edit history' } },
-  { Icon: Download, color: '#f59e0b', label: { ru: 'Загрузчик Reels и Stories', uz: 'Reels va Stories yuklovchi', en: 'Reels & Stories downloader' } },
+  { Icon: Mic, color: '#ff007f', label: { ru: 'Смена голоса в Direct', uz: 'Directda ovozni o‘zgartirish', en: 'Voice changer in Direct' } },
+  { Icon: Music, color: '#f59e0b', label: { ru: 'Своя музыка в историях', uz: 'Hikoyalarga o‘z musiqangiz', en: 'Your music in stories' } },
+  { Icon: Eye, color: '#ff007f', label: { ru: 'Одноразовые фото — ещё раз', uz: 'Bir martalik rasm — yana', en: 'Reopen view-once photos' } },
+  { Icon: Heart, color: '#00f59b', label: { ru: 'Салатовый лайк', uz: 'Och yashil layk', en: 'Lime-green like' } },
+  { Icon: Download, color: '#f59e0b', label: { ru: 'Скачать фото с экрана', uz: 'Ekrandagi rasmni yuklab olish', en: 'Save photos from the screen' } },
   { Icon: UserMinus, color: '#ff007f', label: { ru: 'Трекер отписок', uz: 'Obunadan chiqqanlar', en: 'Unfollowers tracker' } },
-  { Icon: Zap, color: '#f59e0b', label: { ru: 'Без рекламы', uz: 'Reklamasiz', en: 'Zero ads' } },
+  { Icon: Zap, color: '#f59e0b', label: { ru: 'Меньше рекламной слежки', uz: 'Kamroq reklama kuzatuvi', en: 'Less ad tracking' } },
   { Icon: Lock, color: '#00f59b', label: { ru: 'Данные остаются на телефоне', uz: 'Ma’lumotlar telefonda qoladi', en: 'Data stays on your phone' } },
 ];
 

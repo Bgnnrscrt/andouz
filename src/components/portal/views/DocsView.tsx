@@ -56,7 +56,7 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
     },
     {
       q: "Нужен ли Root-доступ (Magisk/KernelSU) для работы функций?",
-      a: "Root-права не требуются! Все возможности — снятие запрета скриншотов FLAG_SECURE, перехват удалённых сообщений, обход No-Forwards и загрузка Reels — реализованы на прикладном уровне APK."
+      a: "Root-права не требуются! Все возможности — снятие запрета на скриншоты, сохранение удалённых сообщений в AndoGram, обход No-Forwards, скачивание фото в Andusta — работают внутри самого приложения."
     },
     {
       q: "Как работает технология Личного Архива и Моста (A-B-C)?",
@@ -151,14 +151,14 @@ export const DocsView: React.FC<DocsViewProps> = ({ lang }) => {
               <ShieldCheck size={20} />
             </div>
             <h3 className="ptl-security-title">
-              {lang === 'uz' ? 'Nolinchi telemetriya' : 'Zero-Telemetry'}
+              {lang === 'uz' ? 'Kamroq kuzatuv' : lang === 'en' ? 'Less Tracking' : 'Меньше слежки'}
             </h3>
             <p className="ptl-security-desc">
               {lang === 'uz'
-                ? 'Ilovalardan barcha tashqi reklama trekerlari, analitika skriptlari va ortiqcha foniy jarayonlar butunlay olib tashlangan.'
+                ? 'AndoGram va Andusta o‘zidan reklama va analitika qo‘shmaydi. Andusta esa Instagram reklama kuzatuvining bir qismini ham to‘xtatadi.'
                 : lang === 'en'
-                ? 'All third-party ad trackers, analytics scripts and background processes are stripped from the apps.'
-                : 'Полная очистка от маркетинговой телеметрии Facebook/Meta, рекламных идентификаторов и сторонних трекеров.'}
+                ? 'AndoGram and Andusta add no ads or analytics of their own. Andusta also mutes part of Instagram’s ad tracking.'
+                : 'AndoGram и Andusta не добавляют своей рекламы и аналитики. Andusta к тому же глушит часть рекламной слежки Instagram.'}
             </p>
           </div>
         </div>

@@ -128,7 +128,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <h3 className="ptl-prod-name">AndoGram</h3>
             <div className="ptl-prod-tagline">
-              {lang === 'uz' ? 'Telegram ustidan 100% nazorat' : lang === 'en' ? 'Autonomous Telegram client based on AyuGram' : 'Автономный клиент Telegram на базе AyuGram'}
+              {lang === 'uz' ? 'AyuGram asosidagi mustaqil Telegram mijozi' : lang === 'en' ? 'Autonomous Telegram client based on AyuGram' : 'Автономный клиент Telegram на базе AyuGram'}
             </div>
             <p className="ptl-prod-desc">
               {lang === 'uz'
@@ -189,28 +189,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             <h3 className="ptl-prod-name">Andusta</h3>
             <div className="ptl-prod-tagline">
-              {lang === 'uz' ? 'Cheklovlarsiz va reklamasiz Instagram' : lang === 'en' ? 'Autonomous Instagram clone without Root' : 'Автономный клон Instagram без Root-доступа'}
+              {lang === 'uz' ? 'Root kerak bo‘lmagan mustaqil Instagram kloni' : lang === 'en' ? 'Autonomous Instagram clone without Root' : 'Автономный клон Instagram без Root-доступа'}
             </div>
             <p className="ptl-prod-desc">
               {lang === 'uz'
-                ? 'Arvoh rejimi (Ghost Mode), o‘chirilgan xabarlarni saqlab qolish, o‘chuvchi fotosuratlarni cheksiz ko‘rish va Reels yuklash.'
+                ? 'Hikoya va Direct «ko‘rildi» belgisisiz, bir martalik rasmni qayta ko‘rish, obunani bekor qilganlarni aniqlash va hikoyaga o‘z musiqangiz.'
                 : lang === 'en'
-                ? 'Ghost Mode, keeping deleted Direct messages, unlimited viewing of disappearing photos and Reels downloads.'
-                : 'Анонимный просмотр Stories и эфиров, сохранение удалённых сообщений в Direct, бесконечный просмотр View-Once фото/видео.'}
+                ? 'Stories and Direct without a seen mark, reopening view-once photos, an unfollowers tracker and your own music in stories.'
+                : 'Истории и Direct без отметки «просмотрено», повторный просмотр одноразовых фото, детектор отписок и своя музыка в историях.'}
             </p>
 
             <div className="ptl-prod-features-mini">
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Ghost Mode: anonim Stories va efirlar' : lang === 'en' ? 'Ghost Mode: anonymous Stories & lives' : 'Ghost Mode: анонимные Stories'}</span>
+                <span>{lang === 'uz' ? 'Ghost Mode: hikoyalar belgisiz' : lang === 'en' ? 'Ghost Mode: stories without a seen mark' : 'Ghost Mode: истории без отметки'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Anti-Unsend: o‘chirilgan xabarlar saqlanadi' : lang === 'en' ? 'Anti-Unsend: keep deleted Direct messages' : 'Anti-Unsend: сохранение удалённых Direct'}</span>
+                <span>{lang === 'uz' ? 'Kim obunani bekor qilganini ko‘rish' : lang === 'en' ? 'Unfollowers tracker: who left since last time' : 'Детектор отписок: кто ушёл с прошлого раза'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? '1-klikda Reels va postlarni asl sifatda yuklash' : lang === 'en' ? 'Download Reels and Stories in 1 tap' : 'Скачивание Reels и Stories в 1 клик'}</span>
+                <span>{lang === 'uz' ? 'Ekrandagi rasmni galereyaga yuklab olish' : lang === 'en' ? 'Save photos from the screen to the gallery' : 'Скачивание фото с экрана в галерею'}</span>
               </div>
             </div>
 

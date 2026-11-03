@@ -140,14 +140,14 @@ export const APPS_DATA: AppInfo[] = [
       en: "⚡ Instagram Mod v1.0.0"
     },
     tagline: {
-      ru: "Instagram без рекламы, ограничений и слежки",
-      uz: "Reklamasiz, cheklovlarsiz va kuzatuvlarsiz Instagram",
-      en: "Instagram Free from Ads, Tracking & Restrictions"
+      ru: "Instagram с невидимкой и своими фишками",
+      uz: "Arvoh rejimi va o'z imkoniyatlariga ega Instagram",
+      en: "Instagram with Ghost Mode & Extras"
     },
     description: {
-      ru: "Полностью автономный клон Instagram (com.andusta.android) без необходимости Root-доступа. Включает режим невидимки, сохранение удалённых сообщений в Direct, обход одноразовых фото, скачивание любых медиа и блокировку рекламы.",
-      uz: "Mustaqil com.andusta.android paketi bilan alohida o'rnatiladigan Instagram kloni: arvoh rejimi, o'chirilgan xabarlarni saqlash, bir martalik mediani cheksiz ko'rish va to'liq yuklab oluvchi.",
-      en: "Fully autonomous rootless Instagram clone (com.andusta.android). Features ghost mode, anti-unsend for Direct messages, view-once media replay, master quality downloader, and zero ads."
+      ru: "Отдельный клон Instagram (com.andusta.android): ставится рядом с оригиналом, Root не нужен. Истории и Direct без отметки «просмотрено», повторный просмотр одноразовых фото, детектор отписок, своя музыка в историях, смена голоса, скачивание фото с экрана и меньше рекламной слежки.",
+      uz: "Asl ilova yonida alohida o'rnatiladigan Instagram kloni (com.andusta.android), Root kerak emas. Hikoya va Directni «ko'rildi» belgisisiz ko'rish, bir martalik rasmni qayta ochish, obunani bekor qilganlarni aniqlash, hikoyaga o'z musiqangiz, ovozni o'zgartirish, ekrandagi rasmni yuklab olish va kamroq reklama kuzatuvi.",
+      en: "A standalone Instagram clone (com.andusta.android) that installs next to the original, no root needed. Stories and Direct without a seen mark, reopening view-once photos, an unfollowers tracker, your own music in stories, a voice changer, saving photos from the screen and less ad tracking."
     },
     version: "1.0.0 (Clone)",
     size: "82.4 MB",
@@ -165,9 +165,9 @@ export const APPS_DATA: AppInfo[] = [
           en: "Full Ghost Mode"
         },
         description: {
-          ru: "Смотрите Stories, трансляции и читайте Direct без отметки о прочтении (seen). Скрытие статуса онлайн и анимации набора текста.",
-          uz: "Stories va jonli efirlarni yashirin ko'ring, Direct xabarlarini o'qilganlik holatisiz oching. Onlayn va yozmoqda holatini butunlay yashirish.",
-          en: "Stealth viewing for Stories and Live streams. Read Direct messages without sending seen receipts. Conceal online status and typing activity."
+          ru: "Смотрите истории и читайте Direct без отметки «просмотрено». Можно скрыть и «печатает…». У каждой части свой переключатель в меню ⚡.",
+          uz: "Hikoyalarni ko'ring va Directni «ko'rildi» belgisisiz o'qing. «Yozmoqda…» holatini ham yashirish mumkin. Har birining ⚡ menyusida o'z tugmasi bor.",
+          en: "Watch stories and read Direct without a seen mark. You can hide “typing…” too. Each part has its own switch in the ⚡ menu."
         },
         tag: { ru: "Приватность", uz: "Maxfiylik", en: "Privacy" }
       },
@@ -180,9 +180,9 @@ export const APPS_DATA: AppInfo[] = [
           en: "On-Device Unfollowers Tracker"
         },
         description: {
-          ru: "100% безопасный локальный анализ подписчиков без передачи пароля сторонним сервисам. Бейдж взаимной подписки прямо в профиле человека.",
-          uz: "Parol bermasdan ishlaydigan xavfsiz tahlil: kim obunani bekor qilganini va o'zaro obuna holatini bevosita profilda ko'ring.",
-          en: "100% credential-free on-device follower analysis. Unmask who unfollowed you and see mutual follow badges directly in profiles."
+          ru: "Подписчики сверяются прямо на телефоне, пароль никуда не уходит. Долистайте список подписчиков до конца — Andusta покажет, кто отписался с прошлого раза. В профиле человека видно, подписан ли он на вас.",
+          uz: "Obunachilar telefonning o'zida solishtiriladi, parol hech qayerga ketmaydi. Obunachilar ro'yxatini oxirigacha aylantiring — Andusta o'tgan safardan beri kim obunani bekor qilganini ko'rsatadi. Profilda u sizga obunami yoki yo'qligi ko'rinadi.",
+          en: "Followers are compared right on your phone, your password goes nowhere. Scroll your followers list to the end and Andusta shows who unfollowed since last time. A profile shows whether that person follows you."
         },
         tag: { ru: "Безопасность", uz: "Xavfsizlik", en: "Security" }
       },
@@ -190,14 +190,14 @@ export const APPS_DATA: AppInfo[] = [
         id: "music_unlocker",
         iconName: "Music",
         title: {
-          ru: "Своя музыка на видео & Снятие гео-блока",
-          uz: "Videoga o'z musiqangizni qo'yish & Cheklovni yechish",
-          en: "Custom Audio Muxer & Music Region Bypass"
+          ru: "Своя музыка в историях",
+          uz: "Hikoyalarga o'z musiqangiz",
+          en: "Your Own Music in Stories"
         },
         description: {
-          ru: "Наложение любого MP3/M4A с телефона на Stories и Reels с заменой или микшированием звука, плюс разблокировка недоступной в регионе музыки.",
-          uz: "Telefondan istalgan MP3-ni Stories/Reels-ga qo'yish va 'Musiqa mintaqangizda mavjud emas' cheklovlarini butunlay olib tashlash.",
-          en: "Attach local MP3 audio files onto Stories and Reels with audio mixing, plus full bypass of regional music lockouts."
+          ru: "Выберите трек с телефона: при съёмке истории он заменит звук или смешается с вашим голосом.",
+          uz: "Telefondan trek tanlang: hikoya suratga olinayotganda u ovozni almashtiradi yoki ovozingiz bilan aralashadi.",
+          en: "Pick a track from your phone: while you record a story, it replaces the sound or mixes with your voice."
         },
         tag: { ru: "Свобода", uz: "Erkinlik", en: "Freedom" }
       },
@@ -205,29 +205,29 @@ export const APPS_DATA: AppInfo[] = [
         id: "anti_unsend",
         iconName: "Shield",
         title: {
-          ru: "Анти-Удаление в Direct (Anti-Unsend)",
-          uz: "Directda O'chirishga Qarshi Himoya",
-          en: "Direct Anti-Unsend"
+          ru: "Анти-удаление в Direct (тест)",
+          uz: "Directda o'chirishga qarshi (sinov)",
+          en: "Direct Anti-Unsend (Beta)"
         },
         description: {
-          ru: "Если собеседник отменил отправку сообщения в Direct, оно навсегда остаётся в вашем чате с пометкой ⚠️ [Удалено] и точным временем.",
-          uz: "Suhbatdoshingiz Directda xabarni o'chirib tashlasa ham, u sizda ⚠️ [O'chirildi] belgisi bilan abadiy saqlanib qoladi.",
-          en: "When someone unsends a Direct message, it remains permanently in your conversation marked with an unmistakable ⚠️ [Unsent] badge."
+          ru: "Пробует сохранить у вас сообщение, которое собеседник отменил в Direct. Пока это тестовая функция и срабатывает не всегда.",
+          uz: "Suhbatdosh Directda bekor qilgan xabarni sizda saqlab qolishga harakat qiladi. Hozircha bu sinov funksiyasi va har doim ham ishlamaydi.",
+          en: "Tries to keep a message the other person unsent in Direct. It's still a test feature and doesn't always work."
         },
-        tag: { ru: "Эксклюзив", uz: "Eksklyuziv", en: "Exclusive" }
+        tag: { ru: "Тест", uz: "Sinov", en: "Beta" }
       },
       {
         id: "view_once",
         iconName: "Eye",
         title: {
-          ru: "Обход одноразовых фото & видео",
-          uz: "Bir martalik mediani cheksiz ko'rish",
-          en: "Unlimited View-Once Media"
+          ru: "Одноразовые фото — ещё раз",
+          uz: "Bir martalik rasmni qayta ko'rish",
+          en: "Reopen View-Once Photos"
         },
         description: {
-          ru: "Просматривайте исчезающие фото и видео в Direct неограниченное количество раз, делайте скриншоты без уведомления и сохраняйте их в галерею.",
-          uz: "Directdagi 1 marta ko'riladigan rasm va videolarni istalgancha qayta ko'ring, skrinshot qiling va galereyaga saqlab oling.",
-          en: "Replay expiring view-once photos and videos indefinitely, bypass screenshot blocks without notifying the sender, and save them straight to storage."
+          ru: "Одноразовое фото в Direct не сгорает после первого просмотра — его можно открыть ещё раз.",
+          uz: "Directdagi bir martalik rasm birinchi ko'rishdan keyin yo'qolmaydi — uni yana ochish mumkin.",
+          en: "A view-once photo in Direct doesn't burn after the first look — you can open it again."
         },
         tag: { ru: "Свобода", uz: "Erkinlik", en: "Freedom" }
       }
@@ -238,31 +238,28 @@ export const APPS_DATA: AppInfo[] = [
         date: "27.10.2026",
         items: {
           ru: [
-            "Первый публичный релиз автономного клона com.andusta.android",
-            "Режим невидимки (истории, статус прочтения, набор текста)",
-            "Анти-удаление сообщений в Direct с пометкой ⚠️",
-            "Бесконечный просмотр одноразовых фото и видео",
-            "Снятие запрета скриншотов со всех экранов",
-            "Универсальный загрузчик медиа в Pictures/Andusta и Movies/Andusta",
-            "Блокировка рекламы в ленте и историях"
+            "Первый релиз: отдельный клон com.andusta.android, ставится рядом с Instagram",
+            "Режим невидимки: истории и Direct без отметки «просмотрено», скрытие «печатает…»",
+            "Повторный просмотр одноразовых фото",
+            "Снятие запрета на скриншоты",
+            "Скачивание фото с экрана в галерею (Pictures/Andusta)",
+            "Меньше рекламной слежки"
           ],
           uz: [
-            "Mustaqil com.andusta.android klonining ilk rasmiy chiqishi",
-            "Arvoh rejimi (hikoyalar, o'qilganlik holati, yozish ko'rsatkichi)",
-            "Directda o'chirilgan xabarlarni ⚠️ belgisi bilan saqlash",
-            "Bir martalik foto va videolarni cheksiz ko'rish",
-            "Barcha ekranlardan skrinshot taqiqini olib tashlash",
-            "Pictures/Andusta va Movies/Andusta jildlariga yuklovchi",
-            "Lenta va hikoyalarda reklamani bloklash"
+            "Ilk reliz: alohida com.andusta.android kloni, Instagram yonida o'rnatiladi",
+            "Arvoh rejimi: hikoya va Direct «ko'rildi» belgisisiz, «yozmoqda…» holatini yashirish",
+            "Bir martalik rasmni qayta ko'rish",
+            "Skrinshot taqiqini olib tashlash",
+            "Ekrandagi rasmni galereyaga yuklab olish (Pictures/Andusta)",
+            "Kamroq reklama kuzatuvi"
           ],
           en: [
-            "Initial public release of autonomous clone com.andusta.android",
-            "Ghost mode (stories, seen status, typing indicator)",
-            "Anti-unsend for Direct messages marked with ⚠️",
-            "Unlimited view once for disappearing media",
-            "Screenshot protection stripped from all surfaces",
-            "Universal downloader to Pictures/Andusta & Movies/Andusta",
-            "In-feed and stories ad blocker"
+            "First release: a standalone com.andusta.android clone that installs next to Instagram",
+            "Ghost mode: stories and Direct without a seen mark, hide “typing…”",
+            "Reopen view-once photos",
+            "Screenshot block removed",
+            "Save photos from the screen to the gallery (Pictures/Andusta)",
+            "Less ad tracking"
           ]
         }
       }
@@ -329,69 +326,63 @@ export const TELEGRAM_COMPARISON: ComparisonRow[] = [
 
 export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
   {
-    feature: { ru: "Анонимный просмотр историй и эфиров", uz: "Hikoyalarni yashirin ko'rish", en: "Stealth Stories & Live" },
+    feature: { ru: "Просмотр историй невидимкой", uz: "Hikoyalarni yashirin ko'rish", en: "Stealth Stories" },
     official: { ru: "Автор видит вас в списке зрителей", uz: "Muallif sizni ro'yxatda ko'radi", en: "Author sees you in viewer list" },
-    ando: { ru: "100% анонимно, без отметки seen", uz: "100% anonim, belgisiz", en: "100% anonymous, no seen marker sent" },
+    ando: { ru: "Без отметки «просмотрено»", uz: "«Ko'rildi» belgisisiz", en: "No seen mark sent" },
     isWin: true
   },
   {
     feature: { ru: "Анти-удаление сообщений в Direct", uz: "Directda o'chirilgan xabarlarni saqlash", en: "Anti-unsend for Direct messages" },
     official: { ru: "Сообщение исчезает бесследно", uz: "Xabar izsiz yo'qoladi", en: "Message disappears permanently" },
-    ando: { ru: "Сохраняется с меткой ⚠️ [Удалено]", uz: "⚠️ [O'chirildi] belgisi bilan qoladi", en: "Preserved with ⚠️ [Unsent] tag" },
+    ando: { ru: "Тест: пробует сохранить сообщение", uz: "Sinov: xabarni saqlashga harakat qiladi", en: "Beta: tries to keep the message" },
     isWin: true
   },
   {
-    feature: { ru: "Бесконечные одноразовые фото и видео", uz: "Bir martalik o'chuvchi media", en: "Disappearing view-once media" },
+    feature: { ru: "Одноразовые фото", uz: "Bir martalik rasmlar", en: "View-once photos" },
     official: { ru: "Сгорает после 1 просмотра", uz: "1 marta ko'riladi va yo'qoladi", en: "Plays once and expires" },
-    ando: { ru: "Бесконечный просмотр + скачивание", uz: "Cheksiz qayta ko'rish va saqlash", en: "Unlimited replay + save to gallery" },
+    ando: { ru: "Можно открыть ещё раз", uz: "Yana ochish mumkin", en: "Can be opened again" },
     isWin: true
   },
   {
-    feature: { ru: "Скриншоты в исчезающих чатах Direct", uz: "Directda skrinshot qilish", en: "Direct screenshots" },
+    feature: { ru: "Скриншоты в Direct", uz: "Directda skrinshot qilish", en: "Direct screenshots" },
     official: { ru: "Блокируются или шлют уведомление", uz: "Bloklanadi yoki ogohlantiradi", en: "Blocked or alerts sender" },
-    ando: { ru: "FLAG_SECURE снят, без уведомлений", uz: "Taqiq yo'q, xabarsiz", en: "FLAG_SECURE bypassed cleanly" },
+    ando: { ru: "Запрет на скриншоты снят", uz: "Skrinshot taqiqi olib tashlangan", en: "Screenshot block removed" },
     isWin: true
   },
   {
-    feature: { ru: "Установка поверх официального клиента", uz: "Asli yoniga ikkinchi ilova sifatida", en: "Install alongside official app" },
+    feature: { ru: "Установка рядом с официальным приложением", uz: "Asli yoniga ikkinchi ilova sifatida", en: "Install alongside official app" },
     official: { ru: "Только замена оригинального", uz: "Faqat bittasi o'rnatiladi", en: "Replaces original only" },
     ando: { ru: "com.andusta.android — независимый клон", uz: "com.andusta.android mustaqil klon", en: "Autonomous parallel package com.andusta.android" },
     isWin: true
   },
   {
-    feature: { ru: "История правок сообщений в Direct", uz: "Direct xabarlari tahrir tarixi", en: "Direct message edit history" },
-    official: { ru: "Только текущий текст", uz: "Faqat joriy matn", en: "Current text only" },
-    ando: { ru: "Вся история правок: Было / Стало", uz: "Barcha tahrirlar: Dastlab / O'zgartirildi", en: "Full edit history: before / after" },
-    isWin: true
-  },
-  {
-    feature: { ru: "Своя музыка на Stories и Reels", uz: "Stories va Reels uchun o'z musiqangiz", en: "Your own music on Stories & Reels" },
-    official: { ru: "Ограничения по регионам", uz: "Mintaqaviy cheklovlar", en: "Region-locked tracks" },
-    ando: { ru: "Любой MP3 с телефона + снятие гео-блока", uz: "Telefondagi istalgan MP3 + geo-blokni yechish", en: "Any MP3 from your phone + region bypass" },
+    feature: { ru: "Своя музыка в историях", uz: "Hikoyalarga o'z musiqangiz", en: "Your own music in stories" },
+    official: { ru: "Только треки из библиотеки Instagram", uz: "Faqat Instagram kutubxonasidagi treklar", en: "Only tracks from Instagram's library" },
+    ando: { ru: "Свой трек с телефона при съёмке", uz: "Suratga olishda telefondagi o'z trekingiz", en: "Your own track from the phone while recording" },
     isWin: true
   },
   {
     feature: { ru: "Детектор отписок", uz: "Obunani bekor qilganlar", en: "Unfollowers tracker" },
     official: { ru: "Нет / риск бана через сторонние сервисы", uz: "Yo'q / begona servislar orqali ban xavfi", en: "None / ban risk via third-party apps" },
-    ando: { ru: "100% безопасный локальный анализ без пароля", uz: "Parolsiz 100% xavfsiz lokal tahlil", en: "100% safe on-device analysis, no password" },
+    ando: { ru: "На телефоне, без пароля", uz: "Telefonda, parolsiz", en: "On your phone, no password" },
     isWin: true
   },
   {
     feature: { ru: "Голосовой чейнджер в Direct", uz: "Directda ovozni o'zgartirish", en: "Voice changer in Direct" },
     official: { ru: "Отсутствует", uz: "Mavjud emas", en: "Not available" },
-    ando: { ru: "Смена тембра + отправка MP3 как голосового", uz: "Tembrni o'zgartirish + MP3 ni ovozli xabar qilib yuborish", en: "Voice presets + send any MP3 as a voice note" },
+    ando: { ru: "Смена голоса + свой трек вместо голоса", uz: "Ovozni o'zgartirish + ovoz o'rniga o'z trekingiz", en: "Voice presets + your own track instead of your voice" },
     isWin: true
   },
   {
-    feature: { ru: "Эмодзи и шрифты", uz: "Emoji va shriftlar", en: "Emojis & fonts" },
-    official: { ru: "Системные Android", uz: "Tizimdagi Android", en: "Stock Android" },
-    ando: { ru: "Оригинальные Apple iOS Emoji + свои .ttf", uz: "Asl Apple iOS Emoji + o'z .ttf shriftlaringiz", en: "Authentic Apple iOS emojis + custom .ttf" },
+    feature: { ru: "Шрифты", uz: "Shriftlar", en: "Fonts" },
+    official: { ru: "Системный шрифт", uz: "Tizim shrifti", en: "System font" },
+    ando: { ru: "Набор шрифтов + свой .ttf", uz: "Shriftlar to'plami + o'z .ttf shriftingiz", en: "Font picks + your own .ttf" },
     isWin: true
   },
   {
-    feature: { ru: "Аватарки в Full HD", uz: "Full HD profil rasmlari", en: "Full HD avatars" },
-    official: { ru: "Сжатая превью 150×150", uz: "Siqilgan 150×150 eskiz", en: "Compressed 150×150 preview" },
-    ando: { ru: "Оригинал в полном разрешении с зумом", uz: "To'liq o'lchamdagi asl rasm, kattalashtirish bilan", en: "Full-resolution original with zoom" },
+    feature: { ru: "Аватарка крупно", uz: "Profil rasmi kattaroq", en: "Bigger profile photos" },
+    official: { ru: "Только маленький кружок", uz: "Faqat kichik doira", en: "Small circle only" },
+    ando: { ru: "Крупно по долгому нажатию + скачать", uz: "Uzoq bosilganda kattaroq + yuklab olish", en: "Larger on long-press + download" },
     isWin: true
   }
 ];
