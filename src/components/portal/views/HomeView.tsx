@@ -193,10 +193,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
             <p className="ptl-prod-desc">
               {lang === 'uz'
-                ? 'Hikoya va Direct «ko‘rildi» belgisisiz, bir martalik rasmni qayta ko‘rish, obunani bekor qilganlarni aniqlash va hikoyaga o‘z musiqangiz.'
+                ? 'Hikoya va Direct «ko‘rildi» belgisisiz, bir martalik rasmni qayta ko‘rish, hikoyaga o‘z musiqangiz va ekrandagi rasmni yuklab olish.'
                 : lang === 'en'
-                ? 'Stories and Direct without a seen mark, reopening view-once photos, an unfollowers tracker and your own music in stories.'
-                : 'Истории и Direct без отметки «просмотрено», повторный просмотр одноразовых фото, детектор отписок и своя музыка в историях.'}
+                ? 'Stories and Direct without a seen mark, reopening view-once photos, your own music in stories and saving photos from the screen.'
+                : 'Истории и Direct без отметки «просмотрено», повторный просмотр одноразовых фото, своя музыка в историях и скачивание фото с экрана.'}
             </p>
 
             <div className="ptl-prod-features-mini">
@@ -206,7 +206,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />
-                <span>{lang === 'uz' ? 'Kim obunani bekor qilganini ko‘rish' : lang === 'en' ? 'Unfollowers tracker: who left since last time' : 'Детектор отписок: кто ушёл с прошлого раза'}</span>
+                <span>{lang === 'uz' ? 'Bir martalik rasmni yana ochish' : lang === 'en' ? 'Reopen view-once photos' : 'Одноразовые фото — открыть ещё раз'}</span>
               </div>
               <div className="ptl-feature-row">
                 <span className="ptl-feature-dot" />

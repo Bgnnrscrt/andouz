@@ -26,12 +26,17 @@ function Target({
   className,
   label,
   round,
+  role,
+  checked,
   children,
 }: TapProps & {
   sbx: string;
   className?: string;
   label?: string;
   round?: boolean;
+  /** A switch or a radio option: screen readers hear its state. */
+  role?: 'switch' | 'radio';
+  checked?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -43,6 +48,8 @@ function Target({
       data-want={want === sbx}
       tabIndex={want === sbx ? 0 : -1}
       aria-label={label}
+      role={role}
+      aria-checked={role ? checked === true : undefined}
       onClick={() => tap(sbx)}
     >
       {children}
@@ -85,11 +92,11 @@ function SwitchRow({
     </>
   );
   return sbx ? (
-    <Target sbx={sbx} className="as-sw" label={item.title} want={want} tap={tap}>
+    <Target sbx={sbx} className="as-sw" label={item.title} role="switch" checked={on} want={want} tap={tap}>
       {body}
     </Target>
   ) : (
-    <div className="as-sw" role="presentation">
+    <div className="as-sw" role="switch" aria-checked={on} aria-disabled="true" aria-label={item.title}>
       {body}
     </div>
   );
@@ -236,17 +243,17 @@ export function FontManager({
               </>
             );
             return i === 2 ? (
-              <Target key={o} sbx="font-serif" className="as-font" label={o} want={want} tap={tap}>
+              <Target key={o} sbx="font-serif" className="as-font" label={o} role="radio" checked={on} want={want} tap={tap}>
                 {body}
               </Target>
             ) : (
-              <div key={o} className="as-font" role="presentation">
+              <div key={o} className="as-font" role="radio" aria-checked={on} aria-disabled="true" aria-label={o}>
                 {body}
               </div>
             );
           })}
           {custom !== null && (
-            <div className="as-font" role="presentation">
+            <div className="as-font" role="radio" aria-checked="true" aria-disabled="true" aria-label={custom}>
               <span className="as-radio is-on" aria-hidden="true" />
               <span className="as-font-name as-font-name--custom">{emojify(`📁 ${custom}`)}</span>
             </div>

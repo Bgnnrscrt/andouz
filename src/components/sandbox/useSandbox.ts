@@ -309,8 +309,10 @@ export function useSandbox<S extends string>({
     };
     const observer = new ResizeObserver(schedule);
     observer.observe(scr);
-    // Lists and conversations scroll; the spotlight follows them.
+    // Lists and conversations scroll; the spotlight follows them. A target that slides in late (a
+    // notification arriving after the screen) is measured again when its animation ends.
     scr.addEventListener('scroll', schedule, true);
+    scr.addEventListener('animationend', schedule, true);
     const wait = Math.max(0, SETTLE_MS - (performance.now() - stepStartRef.current));
     const timer = window.setTimeout(() => {
       ready = true;
@@ -321,6 +323,7 @@ export function useSandbox<S extends string>({
       cancelAnimationFrame(raf);
       observer.disconnect();
       scr.removeEventListener('scroll', schedule, true);
+      scr.removeEventListener('animationend', schedule, true);
     };
   }, [focusKey, spotKey, spotOn]);
 

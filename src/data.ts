@@ -145,9 +145,9 @@ export const APPS_DATA: AppInfo[] = [
       en: "Instagram with Ghost Mode & Extras"
     },
     description: {
-      ru: "Отдельный клон Instagram (com.andusta.android): ставится рядом с оригиналом, Root не нужен. Истории и Direct без отметки «просмотрено», повторный просмотр одноразовых фото, детектор отписок, своя музыка в историях, смена голоса, скачивание фото с экрана и меньше рекламной слежки.",
-      uz: "Asl ilova yonida alohida o'rnatiladigan Instagram kloni (com.andusta.android), Root kerak emas. Hikoya va Directni «ko'rildi» belgisisiz ko'rish, bir martalik rasmni qayta ochish, obunani bekor qilganlarni aniqlash, hikoyaga o'z musiqangiz, ovozni o'zgartirish, ekrandagi rasmni yuklab olish va kamroq reklama kuzatuvi.",
-      en: "A standalone Instagram clone (com.andusta.android) that installs next to the original, no root needed. Stories and Direct without a seen mark, reopening view-once photos, an unfollowers tracker, your own music in stories, a voice changer, saving photos from the screen and less ad tracking."
+      ru: "Отдельный клон Instagram (com.andusta.android): ставится рядом с оригиналом, Root не нужен. Истории и Direct без отметки «просмотрено», повторный просмотр одноразовых фото, своя музыка в историях, смена голоса, скачивание фото с экрана, меньше рекламной слежки и детектор отписок (тест).",
+      uz: "Asl ilova yonida alohida o'rnatiladigan Instagram kloni (com.andusta.android), Root kerak emas. Hikoya va Directni «ko'rildi» belgisisiz ko'rish, bir martalik rasmni qayta ochish, hikoyaga o'z musiqangiz, ovozni o'zgartirish, ekrandagi rasmni yuklab olish, kamroq reklama kuzatuvi va obunani bekor qilganlarni aniqlash (sinov).",
+      en: "A standalone Instagram clone (com.andusta.android) that installs next to the original, no root needed. Stories and Direct without a seen mark, reopening view-once photos, your own music in stories, a voice changer, saving photos from the screen, less ad tracking and an unfollowers tracker (beta)."
     },
     version: "1.0.0 (Clone)",
     size: "82.4 MB",
@@ -165,9 +165,9 @@ export const APPS_DATA: AppInfo[] = [
           en: "Full Ghost Mode"
         },
         description: {
-          ru: "Смотрите истории и читайте Direct без отметки «просмотрено». Можно скрыть и «печатает…». У каждой части свой переключатель в меню ⚡.",
-          uz: "Hikoyalarni ko'ring va Directni «ko'rildi» belgisisiz o'qing. «Yozmoqda…» holatini ham yashirish mumkin. Har birining ⚡ menyusida o'z tugmasi bor.",
-          en: "Watch stories and read Direct without a seen mark. You can hide “typing…” too. Each part has its own switch in the ⚡ menu."
+          ru: "Смотрите истории и читайте Direct без отметки «просмотрено». Можно скрыть и «печатает…».",
+          uz: "Hikoyalarni ko'ring va Directni «ko'rildi» belgisisiz o'qing. «Yozmoqda…» holatini ham yashirish mumkin.",
+          en: "Watch stories and read Direct without a seen mark. You can hide “typing…” too."
         },
         tag: { ru: "Приватность", uz: "Maxfiylik", en: "Privacy" }
       },
@@ -175,16 +175,16 @@ export const APPS_DATA: AppInfo[] = [
         id: "unfollowers_tracker",
         iconName: "UserMinus",
         title: {
-          ru: "Детектор отписок (Кто отписался)",
-          uz: "Obunani bekor qilganlar (Kim ketdi)",
-          en: "On-Device Unfollowers Tracker"
+          ru: "Детектор отписок (тест)",
+          uz: "Obunani bekor qilganlar (sinov)",
+          en: "Unfollowers Tracker (Beta)"
         },
         description: {
-          ru: "Подписчики сверяются прямо на телефоне, пароль никуда не уходит. Долистайте список подписчиков до конца — Andusta покажет, кто отписался с прошлого раза. В профиле человека видно, подписан ли он на вас.",
-          uz: "Obunachilar telefonning o'zida solishtiriladi, parol hech qayerga ketmaydi. Obunachilar ro'yxatini oxirigacha aylantiring — Andusta o'tgan safardan beri kim obunani bekor qilganini ko'rsatadi. Profilda u sizga obunami yoki yo'qligi ko'rinadi.",
-          en: "Followers are compared right on your phone, your password goes nowhere. Scroll your followers list to the end and Andusta shows who unfollowed since last time. A profile shows whether that person follows you."
+          ru: "Подписчики сверяются прямо на телефоне, пароль никуда не уходит: долистайте список подписчиков до конца — Andusta покажет, кто отписался с прошлого раза. Пока это тестовая функция: в нынешней версии приложения она ещё не срабатывает, исправление — в следующем обновлении.",
+          uz: "Obunachilar telefonning o'zida solishtiriladi, parol hech qayerga ketmaydi: obunachilar ro'yxatini oxirigacha aylantiring — Andusta o'tgan safardan beri kim obunani bekor qilganini ko'rsatadi. Hozircha bu sinov funksiyasi: ilovaning hozirgi versiyasida u hali ishlamaydi, tuzatish keyingi yangilanishda.",
+          en: "Followers are compared right on your phone, your password goes nowhere: scroll your followers list to the end and Andusta shows who unfollowed since last time. It's still a beta: it doesn't work in the current version yet, the fix comes in the next update."
         },
-        tag: { ru: "Безопасность", uz: "Xavfsizlik", en: "Security" }
+        tag: { ru: "Тест", uz: "Sinov", en: "Beta" }
       },
       {
         id: "music_unlocker",
@@ -364,7 +364,7 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
   {
     feature: { ru: "Детектор отписок", uz: "Obunani bekor qilganlar", en: "Unfollowers tracker" },
     official: { ru: "Нет / риск бана через сторонние сервисы", uz: "Yo'q / begona servislar orqali ban xavfi", en: "None / ban risk via third-party apps" },
-    ando: { ru: "На телефоне, без пароля", uz: "Telefonda, parolsiz", en: "On your phone, no password" },
+    ando: { ru: "Тест: на телефоне, без пароля", uz: "Sinov: telefonda, parolsiz", en: "Beta: on your phone, no password" },
     isWin: true
   },
   {

@@ -134,9 +134,9 @@ export const scenes: Record<DemoTab, SceneCopy> = {
       en: 'Invisible stories and Direct',
     },
     desc: {
-      ru: 'Andusta смотрит истории и читает Direct без отметки «просмотрено». Можно скрыть и «печатает…» — у каждой части свой переключатель.',
-      uz: 'Andusta hikoyalarni koʻradi va Directni «koʻrildi» belgisisiz oʻqiydi. «Yozmoqda…» holatini ham yashirish mumkin — har birining oʻz tugmasi bor.',
-      en: 'Andusta watches stories and reads Direct without a seen mark. You can hide “typing…” too — each part has its own switch.',
+      ru: 'Andusta смотрит истории и читает Direct без отметки «просмотрено». Можно скрыть и «печатает…».',
+      uz: 'Andusta hikoyalarni koʻradi va Directni «koʻrildi» belgisisiz oʻqiydi. «Yozmoqda…» holatini ham yashirish mumkin.',
+      en: 'Andusta watches stories and reads Direct without a seen mark. You can hide “typing…” too.',
     },
     phone: {
       header: { ru: 'Andusta · Instagram', uz: 'Andusta · Instagram', en: 'Andusta · Instagram' },
@@ -165,7 +165,7 @@ export const scenes: Record<DemoTab, SceneCopy> = {
       views: { ru: 'Просмотров', uz: 'Koʻrishlar', en: 'Views' },
       kept: { ru: 'Фото не сгорело', uz: 'Rasm yoʻqolmadi', en: 'The photo didn’t burn' },
       again: { ru: 'Открыть ещё раз', uz: 'Yana ochish', en: 'Open again' },
-      note: { ru: 'Включается в меню Andusta', uz: 'Andusta menyusida yoqiladi', en: 'Turned on in the Andusta menu' },
+      note: { ru: 'Включено сразу', uz: 'Darhol yoqilgan', en: 'On from the start' },
     },
   },
 };

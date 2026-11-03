@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, Lock, Ghost, Eye, Sparkles, Smartphone, FolderDown, Zap, Download, Mic, MapPin, FileText, UserMinus, Music, Heart } from 'lucide-react';
+import { Archive, Lock, Ghost, Eye, Sparkles, Smartphone, FolderDown, Zap, Download, Mic, MapPin, FileText, ZoomIn, Music, Heart } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Language } from '../types';
 import './FeatureMarquee.css';
@@ -33,7 +33,7 @@ const ROW_B: Chip[] = [
   { Icon: Eye, color: '#ff007f', label: { ru: 'Одноразовые фото — ещё раз', uz: 'Bir martalik rasm — yana', en: 'Reopen view-once photos' } },
   { Icon: Heart, color: '#00f59b', label: { ru: 'Салатовый лайк', uz: 'Och yashil layk', en: 'Lime-green like' } },
   { Icon: Download, color: '#f59e0b', label: { ru: 'Скачать фото с экрана', uz: 'Ekrandagi rasmni yuklab olish', en: 'Save photos from the screen' } },
-  { Icon: UserMinus, color: '#ff007f', label: { ru: 'Трекер отписок', uz: 'Obunadan chiqqanlar', en: 'Unfollowers tracker' } },
+  { Icon: ZoomIn, color: '#ff007f', label: { ru: 'Аватарка крупно', uz: 'Avatar kattaroq', en: 'Bigger profile photos' } },
   { Icon: Zap, color: '#f59e0b', label: { ru: 'Меньше рекламной слежки', uz: 'Kamroq reklama kuzatuvi', en: 'Less ad tracking' } },
   { Icon: Lock, color: '#00f59b', label: { ru: 'Данные остаются на телефоне', uz: 'Ma’lumotlar telefonda qoladi', en: 'Data stays on your phone' } },
 ];

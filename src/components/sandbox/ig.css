@@ -801,8 +801,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ig-big-heart {
-    animation: ig-fade-out 1s step-end forwards;
+  /* Shown for 1 s, then hidden — not motion. !important and .sbx beat the
+     global «.sbx * { animation-duration: 0.01ms !important }». */
+  .sbx .ig-big-heart {
+    animation: ig-fade-out 1s step-end forwards !important;
+  }
+
+  /* No 0.6 s wait and no slide: the notification is just there. */
+  .sbx .sbx-screen .ig-notif {
+    animation: none !important;
   }
 
   @keyframes ig-fade-out {

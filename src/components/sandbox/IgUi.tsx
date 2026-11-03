@@ -305,8 +305,17 @@ export function IgViewers({
   );
 }
 
-/** A Direct notification over the top of the screen (data-sbx="notif"). */
-export function IgNotification({ from, text, now, ...tp }: { from: IgPerson; text: string; now: string } & TapProps) {
+/**
+ * A Direct notification over the top of the screen (data-sbx="notif"). `app` is the
+ * label Android puts in its header: Instagram, or Andusta for the clone.
+ */
+export function IgNotification({
+  from,
+  text,
+  now,
+  app = 'Instagram',
+  ...tp
+}: { from: IgPerson; text: string; now: string; app?: string } & TapProps) {
   return (
     <Btn sbx="notif" className="ig-notif" label={text} {...tp}>
       <span className="ig-notif-app" aria-hidden="true">
@@ -314,7 +323,7 @@ export function IgNotification({ from, text, now, ...tp }: { from: IgPerson; tex
       </span>
       <span className="ig-notif-body">
         <span className="ig-notif-top">
-          Instagram · {now}
+          {app} · {now}
         </span>
         <span className="ig-notif-text">{text}</span>
       </span>
@@ -421,10 +430,13 @@ export function IgPhoto({ from, art, ms, labels }: { from: IgPerson; art: React.
   );
 }
 
-/** An Android toast at the bottom of the screen. */
+/**
+ * An Android toast at the bottom of the screen. Screen readers get its text from
+ * the sandbox's live region (SandboxFrame `live`), not from here.
+ */
 export function IgToast({ text }: { text: string }) {
   return (
-    <div className="ig-toast" role="status">
+    <div className="ig-toast" aria-hidden="true">
       {emojify(text)}
     </div>
   );

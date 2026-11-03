@@ -102,6 +102,11 @@ export function LikeFontsSandbox({ lang, onBuy }: Props) {
   const within = step === 'tLine' ? lineT / LINE_END : step === 'outro' ? outroT / OUTRO_END : 0;
 
   const andusta = app === 'a';
+  // The toasts of the fonts window, also read out by the live region (when no hint is showing).
+  let toast: string | null = null;
+  if (step === 'aFontPicked') toast = fill(ig.fonts.picked, { font: ig.fonts.short[2] });
+  if (step === 'aFontLoaded') toast = ig.fonts.loaded;
+  if (toast && !live) live = toast;
   let view: React.ReactNode;
   switch (screen) {
     case 'start':
@@ -122,9 +127,6 @@ export function LikeFontsSandbox({ lang, onBuy }: Props) {
         { id: 'timur', person: P.timur, seen: true },
         { id: 'liza', person: P.liza, seen: true },
       ];
-      let toast: string | null = null;
-      if (step === 'aFontPicked') toast = fill(ig.fonts.picked, { font: ig.fonts.short[2] });
-      if (step === 'aFontLoaded') toast = ig.fonts.loaded;
       view = (
         <div className={`ig-app${customFontAt(step) && layer === 'none' ? ' ig-font--custom' : ''}`}>
           <IgTopBar />

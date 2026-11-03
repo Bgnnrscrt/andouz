@@ -130,6 +130,7 @@ export function ViewOnceSandbox({ lang, onBuy }: Props) {
               from={P.timur}
               text={fill(ig.ig.sentPhoto, { nick: P.timur.nick })}
               now={ig.ig.now}
+              app={andusta ? 'Andusta' : 'Instagram'}
               want={want}
               tap={tap}
             />
