@@ -35,4 +35,6 @@ export interface ComparisonRow {
   official: Record<Language, string>;
   ando: Record<Language, string>;
   isWin: boolean;
+  /** Feature id of a «Проверь сам» sandbox for this row; a «Проверить» link shows only once it is listed (not UNLISTED). */
+  demo?: string;
 }

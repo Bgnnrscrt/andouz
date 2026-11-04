@@ -192,3 +192,39 @@
     line-height: 1.25;
   }
 }
+
+/* «Проверить» — link to a feature's interactive sandbox (shown only for a listed demo) */
+.cmp-try {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 8px;
+  padding: 1px 9px 1px 10px;
+  border: 1px solid color-mix(in srgb, var(--accent-ando) 40%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent-ando) 12%, transparent);
+  color: var(--accent-ando);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.6;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+.cmp-try svg {
+  transition: transform 0.2s var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cmp-try:hover {
+    background: color-mix(in srgb, var(--accent-ando) 22%, transparent);
+    border-color: color-mix(in srgb, var(--accent-ando) 70%, transparent);
+  }
+  .cmp-try:hover svg {
+    transform: translateX(2px);
+  }
+}
+.cmp-try:focus-visible {
+  outline: 2px solid var(--accent-ando);
+  outline-offset: 2px;
+}

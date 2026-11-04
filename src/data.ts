@@ -329,7 +329,8 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
     feature: { ru: "Просмотр историй невидимкой", uz: "Hikoyalarni yashirin ko'rish", en: "Stealth Stories" },
     official: { ru: "Автор видит вас в списке зрителей", uz: "Muallif sizni ro'yxatda ko'radi", en: "Author sees you in viewer list" },
     ando: { ru: "Без отметки «просмотрено»", uz: "«Ko'rildi» belgisisiz", en: "No seen mark sent" },
-    isWin: true
+    isWin: true,
+    demo: 'ghost_mode'
   },
   {
     feature: { ru: "Анти-удаление сообщений в Direct", uz: "Directda o'chirilgan xabarlarni saqlash", en: "Anti-unsend for Direct messages" },
@@ -341,7 +342,8 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
     feature: { ru: "Одноразовые фото", uz: "Bir martalik rasmlar", en: "View-once photos" },
     official: { ru: "Сгорает после 1 просмотра", uz: "1 marta ko'riladi va yo'qoladi", en: "Plays once and expires" },
     ando: { ru: "Можно открыть ещё раз", uz: "Yana ochish mumkin", en: "Can be opened again" },
-    isWin: true
+    isWin: true,
+    demo: 'view_once'
   },
   {
     feature: { ru: "Скриншоты в Direct", uz: "Directda skrinshot qilish", en: "Direct screenshots" },
@@ -377,7 +379,8 @@ export const INSTAGRAM_COMPARISON: ComparisonRow[] = [
     feature: { ru: "Шрифты", uz: "Shriftlar", en: "Fonts" },
     official: { ru: "Системный шрифт", uz: "Tizim shrifti", en: "System font" },
     ando: { ru: "Набор шрифтов + свой .ttf", uz: "Shriftlar to'plami + o'z .ttf shriftingiz", en: "Font picks + your own .ttf" },
-    isWin: true
+    isWin: true,
+    demo: 'like_fonts'
   },
   {
     feature: { ru: "Аватарка крупно", uz: "Profil rasmi kattaroq", en: "Bigger profile photos" },

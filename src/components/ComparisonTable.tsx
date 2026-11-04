@@ -3,9 +3,10 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { Variants } from 'motion/react';
 import { Language } from '../types';
 import { TELEGRAM_COMPARISON, INSTAGRAM_COMPARISON } from '../data';
-import { Check, X, Sparkles } from 'lucide-react';
+import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { DURATION, EASE_OUT, VIEWPORT, fade, fadeUp, staggerContainer } from '../lib/motion';
 import { emojify } from '../lib/emoji';
+import { isListedDemo, demoHref } from './sandbox/demos';
 import { SectionHeader } from './ui/SectionHeader';
 import { SegmentedControl } from './ui/SegmentedControl';
 import './ComparisonTable.css';
@@ -50,7 +51,8 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
           tabUsta: "Instagram vs Andusta",
           thFeature: "Imkoniyat / Funksiya",
           thOfficial: "Rasmiy Ilova",
-          thAndo: "ANDO Versiyasi"
+          thAndo: "ANDO Versiyasi",
+          tryIt: "Sinab ko‘rish"
         };
       case 'en':
         return {
@@ -62,7 +64,8 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
           tabUsta: "Instagram vs Andusta",
           thFeature: "Feature / Capability",
           thOfficial: "Official App",
-          thAndo: "ANDO Version"
+          thAndo: "ANDO Version",
+          tryIt: "Try it"
         };
       default:
         return {
@@ -74,12 +77,22 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
           tabUsta: "Instagram vs Andusta",
           thFeature: "Возможность / Функция",
           thOfficial: "Официальное приложение",
-          thAndo: "Версия ANDO"
+          thAndo: "Версия ANDO",
+          tryIt: "Проверить"
         };
     }
   };
 
   const l = getLabels();
+
+  // «Проверить» link to a feature's sandbox — only once that demo is listed (not gated behind a phone check).
+  const tryLink = (demo?: string) =>
+    demo && isListedDemo(demo) ? (
+      <a className="cmp-try" href={demoHref(demo)}>
+        <span>{l.tryIt}</span>
+        <ArrowRight size={13} aria-hidden="true" />
+      </a>
+    ) : null;
 
   return (
     <section id="compare" className="cmp-section" style={{ '--cmp-color': activeColor } as React.CSSProperties}>
@@ -129,7 +142,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
                         <motion.span className="cmp-icon cmp-icon--yes" variants={reduce ? fade : checkPop} aria-hidden="true">
                           <Check size={14} />
                         </motion.span>
-                        <span>{emojify(row.ando[lang])}</span>
+                        <span>{emojify(row.ando[lang])}{tryLink(row.demo)}</span>
                       </span>
                     </td>
                   </motion.tr>
@@ -152,7 +165,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({ lang }) => {
                     <motion.span className="cmp-icon cmp-icon--yes" variants={reduce ? fade : checkPop} aria-hidden="true">
                       <Check size={14} />
                     </motion.span>
-                    <span><span className="cmp-card-label">{l.thAndo}:</span> {emojify(row.ando[lang])}</span>
+                    <span><span className="cmp-card-label">{l.thAndo}:</span> {emojify(row.ando[lang])}{tryLink(row.demo)}</span>
                   </div>
                 </motion.li>
               ))}
