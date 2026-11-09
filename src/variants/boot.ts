@@ -1,4 +1,4 @@
-// Style previews (owner's request 09.11): /style/1 … /style/5 show the same portal in five
+// Style previews (owner's request 09.11): /style/1 … /style/6 show the same portal in six
 // different looks so the owner can compare them before a redesign. main.tsx loads this module
 // lazily and only on those URLs: the normal site never downloads this code or its CSS.
 import './bridge.css'
@@ -29,39 +29,48 @@ export const VARIANTS: Variant[] = [
   },
   {
     id: 2,
-    slug: 'swiss',
-    name: 'Швейцария',
-    scheme: 'light',
-    themeColor: '#f2f1ec',
-    fonts: 'family=Inter+Tight:wght@500;600;700;800;900',
-    probe: '800 1em "Inter Tight"',
+    slug: 'samarkand',
+    name: 'Самарканд',
+    scheme: 'dark',
+    themeColor: '#0d2149',
+    fonts: 'family=Philosopher:ital,wght@0,400;0,700;1,400&family=Onest:wght@400;500;600;700',
+    probe: '700 1em "Philosopher"',
   },
   {
     id: 3,
-    slug: 'aurora',
-    name: 'Северное сияние',
-    scheme: 'dark',
-    themeColor: '#090e1c',
-    fonts: 'family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800',
-    probe: '600 1em "Unbounded"',
+    slug: 'brutal',
+    name: 'Необрутализм',
+    scheme: 'light',
+    themeColor: '#fff4de',
+    fonts: 'family=Dela+Gothic+One&family=Rubik:wght@400;500;600;700;800',
+    probe: '400 1em "Dela Gothic One"',
   },
   {
     id: 4,
-    slug: 'terminal',
-    name: 'Терминал 84',
+    slug: 'noir',
+    name: 'Нуар',
     scheme: 'dark',
-    themeColor: '#0d0b08',
-    fonts: 'family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400',
-    probe: '600 1em "IBM Plex Mono"',
+    themeColor: '#0b0b0c',
+    fonts: 'family=Oswald:wght@400;500;600;700&family=Golos+Text:wght@400;500;600;700',
+    probe: '600 1em "Oswald"',
   },
   {
     id: 5,
-    slug: 'clouds',
-    name: 'Облака',
+    slug: 'notebook',
+    name: 'Блокнот',
     scheme: 'light',
-    themeColor: '#eef2fb',
-    fonts: 'family=Nunito:wght@500;600;700;800;900',
-    probe: '800 1em "Nunito"',
+    themeColor: '#fbfaf4',
+    fonts: 'family=Caveat:wght@500;600;700&family=PT+Sans:ital,wght@0,400;0,700;1,400',
+    probe: '700 1em "Caveat"',
+  },
+  {
+    id: 6,
+    slug: 'seventies',
+    name: 'Семидесятые',
+    scheme: 'light',
+    themeColor: '#f4e7cc',
+    fonts: 'family=Unbounded:wght@600;700;800&family=Montserrat:wght@400;500;600;700',
+    probe: '800 1em "Unbounded"',
   },
 ]
 
@@ -117,7 +126,7 @@ function writeHidden(hidden: boolean) {
   }
 }
 
-/** Small fixed bar: 1–5, the current name, «Оригинал» (the live site) and hide. */
+/** Small fixed bar: 1–6, the current name, «Оригинал» (the live site) and hide. */
 function mountSwitcher(current: Variant) {
   const bar = document.createElement('nav')
   bar.className = 'vsw'

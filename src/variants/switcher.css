@@ -1,4 +1,4 @@
-/* Style previews — the floating 1–5 switcher (same neutral look on every theme). */
+/* Style previews — the floating 1–6 switcher (same neutral look on every theme). */
 .vsw,
 .vsw-show {
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -114,5 +114,16 @@
   .vsw-label,
   .vsw-name {
     display: none;
+  }
+  .vsw-num,
+  .vsw-hide {
+    width: 27px;
+    height: 27px;
+  }
+  .vsw {
+    gap: 3px;
+  }
+  .vsw-orig {
+    padding: 7px 10px;
   }
 }

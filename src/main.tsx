@@ -10,9 +10,9 @@ const render = () =>
     </StrictMode>,
   )
 
-// Style previews: /style/1 … /style/5 show the same site in another look (src/variants/).
+// Style previews: /style/1 … /style/6 show the same site in another look (src/variants/).
 // Only these addresses load that code; every other address renders exactly as before.
-const styleVariant = /^\/style\/([1-5])\/?$/.exec(window.location.pathname)?.[1]
+const styleVariant = /^\/style\/([1-6])\/?$/.exec(window.location.pathname)?.[1]
 if (styleVariant) {
   import('./variants/boot.ts')
     .then((m) => m.boot(Number(styleVariant)))
