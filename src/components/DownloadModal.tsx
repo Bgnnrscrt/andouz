@@ -7,6 +7,7 @@ import { APPS_DATA, DOWNLOAD_URLS } from '../data';
 import { Star, Sparkles, Download, AlertCircle, Copy, Check, KeyRound, Loader2 } from 'lucide-react';
 import { DURATION, EASE_OUT } from '../lib/motion';
 import { Modal } from './ui/Modal';
+import { emojify } from '../lib/emoji';
 import { SegmentedControl } from './ui/SegmentedControl';
 import './DownloadModal.css';
 
@@ -31,7 +32,45 @@ interface Activation {
   app: AppId | 'all';
   apkUrl: string | null;
   code: string;
+  /** Licences v2: one code per app (a bundle coupon gives two). */
+  codes?: Partial<Record<AppId, string>>;
 }
+
+/** Live catalogue from the bot (`/api/v2/products`): prices and discounts set by the owner, the opening trial. */
+interface Catalog {
+  products: Partial<Record<string, { stars: number; discount: number; trial: boolean }>>;
+  trialOpen: boolean;
+  trialPrice: number;
+  trialDays: number;
+}
+
+/** Fetched once per open; any failure (old API, no network) leaves the static texts in place. */
+const useCatalog = (): Catalog | null => {
+  const [catalog, setCatalog] = useState<Catalog | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch(`${API_BASE}/api/v2/products`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!alive || !d || !Array.isArray(d.products)) return;
+        const products: Catalog['products'] = {};
+        for (const p of d.products) {
+          products[String(p.key)] = { stars: Number(p.stars) || 0, discount: Number(p.discount) || 0, trial: !!p.trial };
+        }
+        setCatalog({
+          products,
+          trialOpen: !!d.trial_open,
+          trialPrice: Number(d.trial_price) || 1,
+          trialDays: Number(d.trial_days) || 7
+        });
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return catalog;
+};
 
 const APP_COLORS: Record<AppId, string> = { andogram: '#00b4d8', andusta: '#ff007f' };
 const CONFETTI_COLORS = ['#00f59b', '#00b4d8', '#ff007f', '#f59e0b', '#ffffff'];
@@ -80,6 +119,9 @@ const getLabels = (lang: Language) => {
         codeHint: 'Ilovani birinchi marta ochganda shu kodni kiriting. Kod qurilmangizga bog‘lanadi.',
         copyCode: 'Kodni nusxalash',
         codedCopied: 'Kod nusxalandi',
+        payBot: (n: number) => `Botda ${n} Stars to'lash`,
+        trialBtn: (n: number, days: number) => `🎁 ${days} kun — ${n}⭐, ochilish sharafiga`,
+        trialNote: 'Har bir telefonga bir marta. Birinchi ishga tushirishdan boshlanadi.',
         download: (name: string, version: string) => `Yuklab olish: ${name} (${version})`
       };
     case 'en':
@@ -96,6 +138,9 @@ const getLabels = (lang: Language) => {
         codeHint: 'Enter this code on first launch. It binds to your device.',
         copyCode: 'Copy code',
         codedCopied: 'Code copied',
+        payBot: (n: number) => `Pay ${n} Stars in the bot`,
+        trialBtn: (n: number, days: number) => `🎁 ${days} days for ${n}⭐ — opening offer`,
+        trialNote: 'Once per phone. It starts at the first launch.',
         download: (name: string, version: string) => `Download ${name} (${version})`
       };
     default:
@@ -112,6 +157,9 @@ const getLabels = (lang: Language) => {
         codeHint: 'Введите этот код при первом запуске приложения. Он привязан к вашему устройству.',
         copyCode: 'Скопировать код',
         codedCopied: 'Код скопирован',
+        payBot: (n: number) => `Оплатить ${n} Stars в боте`,
+        trialBtn: (n: number, days: number) => `🎁 ${days} дней за ${n}⭐ — в честь открытия`,
+        trialNote: 'Один раз на телефон. Начнётся с первого запуска.',
         download: (name: string, version: string) => `Скачать ${name} (${version})`
       };
   }
@@ -165,7 +213,11 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
   const [activation, setActivation] = useState<Activation | null>(readActivation);
   const [justUnlocked, setJustUnlocked] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [codeCopied, setCodeCopied] = useState(false);
+  const [codeCopied, setCodeCopied] = useState<string | false>(false);
+  const catalog = useCatalog();
+  const live = catalog?.products[selectedApp];
+  const livePrice = live ? (live.discount ? Math.max(1, Math.round((live.stars * (100 - live.discount)) / 100)) : live.stars) : null;
+  const showTrial = !!(catalog?.trialOpen && live?.trial);
   const copyTimer = useRef<number | undefined>(undefined);
   const codeTimer = useRef<number | undefined>(undefined);
   const [inputScope, animateInput] = useAnimate<HTMLDivElement>();
@@ -218,7 +270,11 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
         const act: Activation = {
           app: (data.app as Activation['app']) || 'all',
           apkUrl: typeof data.apk_url === 'string' ? data.apk_url : null,
-          code: String(data.activation_code)
+          code: String(data.activation_code),
+          codes:
+            data.activation_codes && typeof data.activation_codes === 'object'
+              ? (data.activation_codes as Activation['codes'])
+              : undefined
         };
         writeStorage(STORAGE_KEY, JSON.stringify(act));
         setActivation(act);
@@ -251,11 +307,12 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
     }
   };
 
-  const handleCopyCode = async () => {
+  const handleCopyCode = async (code?: string) => {
     if (!activation) return;
+    const value = code || activation.code;
     try {
-      await navigator.clipboard.writeText(activation.code);
-      setCodeCopied(true);
+      await navigator.clipboard.writeText(value);
+      setCodeCopied(value);
       window.clearTimeout(codeTimer.current);
       codeTimer.current = window.setTimeout(() => setCodeCopied(false), 2000);
     } catch {
@@ -332,10 +389,22 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
                 <KeyRound size={16} aria-hidden="true" />
                 <span>{l.codeTitle}</span>
               </div>
-              <button type="button" className="dl-code-value" onClick={handleCopyCode} title={l.copyCode} aria-label={l.copyCode}>
-                <code>{activation!.code}</code>
-                {codeCopied ? <Check size={16} color="#00f59b" /> : <Copy size={16} />}
-              </button>
+              {Object.keys(activation!.codes ?? {}).length > 1 ? (
+                (Object.entries(activation!.codes ?? {}) as [AppId, string][]).map(([appId, code]) => (
+                  <div key={appId} className="dl-code-row">
+                    <span className="dl-code-app">{APPS_DATA.find((a) => a.id === appId)?.name ?? appId}</span>
+                    <button type="button" className="dl-code-value" onClick={() => void handleCopyCode(code)} title={l.copyCode} aria-label={`${l.copyCode}: ${appId}`}>
+                      <code>{code}</code>
+                      {codeCopied === code ? <Check size={16} color="#00f59b" /> : <Copy size={16} />}
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <button type="button" className="dl-code-value" onClick={() => void handleCopyCode()} title={l.copyCode} aria-label={l.copyCode}>
+                  <code>{activation!.code}</code>
+                  {codeCopied ? <Check size={16} color="#00f59b" /> : <Copy size={16} />}
+                </button>
+              )}
               <div className="dl-code-hint" aria-live="polite">{codeCopied ? l.codedCopied : l.codeHint}</div>
             </motion.div>
 
@@ -386,7 +455,16 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
                     <span className="dl-price-sparkle" aria-hidden="true">
                       <Star size={18} fill="currentColor" />
                     </span>
-                    <div className="dl-price-value">{t.starsPrice[lang]}</div>
+                    <div className="dl-price-value">
+                      {livePrice !== null ? (
+                        <>
+                          {live!.discount > 0 && <s className="dl-price-old">{live!.stars}</s>}
+                          {livePrice} Telegram Stars
+                        </>
+                      ) : (
+                        t.starsPrice[lang]
+                      )}
+                    </div>
                     <div className="dl-muted dl-price-desc">{t.starsDesc[lang]}</div>
                   </div>
 
@@ -397,8 +475,22 @@ const DownloadPanel: React.FC<PanelProps> = ({ lang, initialAppId }) => {
                     className="btn btn-stars btn-shine dl-wide"
                   >
                     <Star size={20} fill="#0c0802" />
-                    <span>{t.btnPayBot[lang]}</span>
+                    <span>{livePrice !== null ? l.payBot(livePrice) : t.btnPayBot[lang]}</span>
                   </a>
+
+                  {showTrial && (
+                    <>
+                      <a
+                        href={`https://t.me/andouzbot?start=trial_${selectedApp}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline dl-wide dl-trial"
+                      >
+                        <span>{emojify(l.trialBtn(catalog!.trialPrice, catalog!.trialDays))}</span>
+                      </a>
+                      <div className="dl-hint">{l.trialNote}</div>
+                    </>
+                  )}
 
                   <div className="dl-hint">{l.afterPay}</div>
                 </motion.div>
