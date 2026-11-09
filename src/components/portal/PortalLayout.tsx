@@ -13,6 +13,7 @@ import { Footer } from '../Footer';
 import { BackToTop } from '../BackToTop';
 import { ChunkBoundary } from '../ui/ChunkBoundary';
 import './PortalLayout.css';
+import { isOverlayEntry, useBackToClose } from '../../hooks/useBackToClose';
 
 // «Как работает» pages carry the sandbox code: load them on first visit only.
 const DemoView = lazy(() => import('./views/DemoView').then((m) => ({ default: m.DemoView })));
@@ -61,6 +62,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const [focusFeatures, setFocusFeatures] = useState<boolean>(initialRoute.features ?? false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+  // Phones: the system Back button closes the open menu instead of leaving the page.
+  useBackToClose(mobileSidebarOpen, () => setMobileSidebarOpen(false));
 
   // Sync hash changes (e.g. browser back/forward buttons)
   useEffect(() => {
@@ -72,6 +75,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
       }
       setActiveDemo(route.demo);
       setFocusFeatures(route.features ?? false);
+      setMobileSidebarOpen(false);
       if (!route.features) {
         scrollToTop();
       }
@@ -96,7 +100,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
     } else if (section !== 'home') {
       newHash = `#/${section}`;
     }
-    window.location.hash = newHash;
+    // From the open phone menu: replace the menu's own history entry (useBackToClose), so one
+    // Back press later returns to the previous section, not to a copy of this one.
+    if (isOverlayEntry()) {
+      window.history.replaceState(null, '', newHash);
+    } else {
+      window.location.hash = newHash;
+    }
     scrollToTop();
   };
 

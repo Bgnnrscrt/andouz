@@ -1,0 +1,344 @@
+/* ==========================================================================
+   ANDO site style «Старые деньги» (old money) — chosen by the owner on 2026-11-09.
+   Ivory paper, racing green, brass; Cormorant Garamond for display, Jost for text;
+   the sidebar and the footer are green "leather".
+   How it works: index.html sets <html data-style="old-money">; bridge.css points every
+   colour that components write directly at the --v-* variables; this file sets them,
+   the fonts, the radii and the signature touches. Phone-first: see the mobile block at
+   the end.
+   ========================================================================== */
+
+/* Display headings take the theme's display face when it has one. */
+html[data-style] .ptl-hero-title,
+html[data-style] .ptl-section-title,
+html[data-style] .ptl-prod-name,
+html[data-style] .ptl-app-name,
+html[data-style] .ptl-demo-title,
+html[data-style] .demo-side-title,
+html[data-style] .section-title,
+html[data-style] .footer-wordmark,
+html[data-style] .ptl-brand-name {
+  font-family: var(--v-display, var(--font-heading));
+}
+
+/* =========================================================================
+   1 · «Старые деньги» — ivory paper, racing green, brass.
+   Cormorant Garamond for display, Jost for text. Sidebar and footer are
+   green leather; thin brass rules instead of glows.
+   ========================================================================= */
+html[data-style='old-money'] {
+  color-scheme: light;
+  -webkit-tap-highlight-color: rgba(30, 74, 55, 0.12);
+  --font-heading: 'Jost', 'Segoe UI', sans-serif;
+  --font-body: 'Jost', 'Segoe UI', sans-serif;
+  --v-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-pill: 3px;
+  --v-r-card: 4px;
+  --v-r-inner: 3px;
+  --v-r-btn: 2px;
+  --v-r-chip: 2px;
+  --v-r-icon: 4px;
+
+  --v-bg: #f1ece2;
+  --v-bg-image: radial-gradient(120% 70% at 50% -10%, rgba(255, 255, 255, 0.75), transparent 60%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.32 0 0 0 0 0.26 0 0 0 0 0.16 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --v-surface: #faf7f0;
+  --v-surface-2: #f4efe4;
+  --v-surface-hover: #fffdf8;
+  --v-surface-solid: #faf7f0;
+  --v-panel: #fbf8f2;
+  --v-overlay: rgba(24, 33, 28, 0.45);
+  --v-line: #ddd3c1;
+  --v-line-soft: #e8e0d1;
+  --v-line-strong: #c4b496;
+  --v-text: #1f2a24;
+  --v-text-2: #4d5952;
+  --v-text-3: #6a6556;
+  --v-heading: #17251e;
+
+  --v-accent: #1e4a37;
+  --v-accent-text: #1e4a37;
+  --v-accent-ink: #f6f1e6;
+  --v-accent-soft: rgba(30, 74, 55, 0.08);
+  --v-accent-line: rgba(30, 74, 55, 0.3);
+  --v-accent-rgb: 30, 74, 55;
+  --v-gram: #23395d;
+  --v-gram-text: #23395d;
+  --v-gram-ink: #f6f1e6;
+  --v-gram-soft: rgba(35, 57, 93, 0.08);
+  --v-gram-line: rgba(35, 57, 93, 0.3);
+  --v-gram-rgb: 35, 57, 93;
+  --v-usta: #7a2c3a;
+  --v-usta-text: #7a2c3a;
+  --v-usta-ink: #f6f1e6;
+  --v-usta-soft: rgba(122, 44, 58, 0.08);
+  --v-usta-line: rgba(122, 44, 58, 0.3);
+  --v-usta-rgb: 122, 44, 58;
+  --v-stars: #b08d57;
+  --v-stars-text: #7c5f2e;
+  --v-stars-ink: #1f1a10;
+  --v-stars-soft: rgba(176, 141, 87, 0.14);
+  --v-stars-line: rgba(176, 141, 87, 0.45);
+  --v-danger: #9b2c2c;
+  --v-danger-soft: rgba(155, 44, 44, 0.1);
+  --v-ok: #3f7a5a;
+
+  --v-chip-bg: transparent;
+  --v-input-bg: #fffdf8;
+  --v-focus: #a88446;
+  --v-selection: rgba(176, 141, 87, 0.35);
+  --v-selection-ink: #1f2a24;
+  --v-scroll-thumb: #cdbf9f;
+  --v-btn-bg: #1e4a37;
+  --v-btn-ink: #f6f1e6;
+  --v-btn-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 22px -14px rgba(30, 74, 55, 0.8);
+  --v-btn-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 14px 26px -14px rgba(30, 74, 55, 0.95);
+  --v-btn2-bg: transparent;
+  --v-btn2-ink: #1e4a37;
+  --v-btn2-line: rgba(30, 74, 55, 0.4);
+  --v-btn2-bg-hover: rgba(30, 74, 55, 0.06);
+  --v-btn2-line-hover: #1e4a37;
+  --v-stars-btn-bg: #b08d57;
+  --v-stars-btn-ink: #1f1a10;
+  --v-shine: rgba(255, 255, 255, 0.3);
+  --v-seg-bg: rgba(30, 74, 55, 0.1);
+  --v-seg-line: rgba(30, 74, 55, 0.35);
+
+  --v-sidebar-bg: #183a2c;
+  --v-topbar-bg: rgba(241, 236, 226, 0.88);
+  --v-footer-bg: #183a2c;
+  --v-nav-active-bg: rgba(201, 168, 106, 0.14);
+  --v-nav-active-ink: #f6efdf;
+  --v-nav-active-line: rgba(201, 168, 106, 0.45);
+  --v-nav-active-icon: #d8b878;
+  --v-nav-bar: #c9a86a;
+  --v-logo-bg: transparent;
+  --v-logo-line: rgba(201, 168, 106, 0.6);
+
+  --v-elev: 0 1px 2px rgba(64, 48, 22, 0.06), 0 24px 48px -28px rgba(64, 48, 22, 0.35);
+  --v-elev-card: 0 1px 2px rgba(64, 48, 22, 0.05);
+  --v-elev-hover: 0 1px 2px rgba(64, 48, 22, 0.06), 0 18px 36px -22px rgba(64, 48, 22, 0.4);
+  --v-menu-shadow: 0 16px 40px -18px rgba(40, 30, 15, 0.45);
+  --v-panel-shadow: 0 40px 80px -30px rgba(30, 24, 12, 0.55);
+  --v-drawer-shadow: 18px 0 40px -20px rgba(20, 16, 8, 0.5);
+  --v-icon-shadow: none;
+  --v-hero-bg: #faf7f0;
+  --v-hero-line: #cfc1a4;
+  --v-hero-glow-1: none;
+  --v-hero-glow-2: none;
+  --v-title-grad: linear-gradient(135deg, #17251e 30%, #2f6b4f 100%);
+  --v-title-fill: transparent;
+  --v-title-color: #1e4a37;
+  --v-gram-icon-bg: #23395d;
+  --v-gram-icon-ink: #f3ead6;
+  --v-usta-icon-bg: #7a2c3a;
+  --v-usta-icon-ink: #f3ead6;
+  --v-footer-glow: linear-gradient(90deg, transparent, #c9a86a, transparent);
+  --v-wordmark: linear-gradient(180deg, rgba(201, 168, 106, 0.3), rgba(201, 168, 106, 0));
+  --v-phone-glow: transparent;
+  --v-phone-shadow: 0 40px 70px -30px rgba(40, 30, 15, 0.55);
+  --v-accent-on-dark: #d8b878;
+  --v-usta-on-dark: #e9a5b1;
+  --v-spot: rgba(176, 141, 87, 0.07);
+  --v-spot-line: rgba(176, 141, 87, 0.5);
+}
+
+/* green leather: sidebar and footer get their own light-on-dark palette */
+html[data-style='old-money'] .ptl-sidebar,
+html[data-style='old-money'] .site-footer {
+  --v-text: #eee6d4;
+  --v-text-2: #c7bda5;
+  --v-text-3: #a0977f;
+  --v-heading: #f6efdf;
+  --text-main: #eee6d4;
+  --text-muted: #c7bda5;
+  --text-dim: #a0977f;
+  --v-line: rgba(201, 168, 106, 0.22);
+  --v-line-soft: rgba(201, 168, 106, 0.14);
+  --border-subtle: rgba(201, 168, 106, 0.22);
+  --v-surface-2: rgba(255, 255, 255, 0.04);
+  --v-surface-hover: rgba(255, 255, 255, 0.07);
+  --v-accent: #c9a86a;
+  --v-accent-text: #d8b878;
+  --v-accent-ink: #1a2a21;
+  --v-accent-soft: rgba(201, 168, 106, 0.14);
+  --v-accent-line: rgba(201, 168, 106, 0.42);
+  --accent-ando: #d8b878;
+  --v-gram-text: #b5c8ea;
+  --v-usta: #e9a5b1;
+  --v-usta-text: #eeb3bd;
+  --v-usta-soft: rgba(233, 165, 177, 0.12);
+  --v-usta-line: rgba(233, 165, 177, 0.4);
+  --v-stars: #c9a86a;
+  --v-stars-text: #d8b878;
+  --v-stars-soft: rgba(201, 168, 106, 0.14);
+  --v-stars-line: rgba(201, 168, 106, 0.42);
+  --accent-gram: #b5c8ea;
+  --accent-usta: #eeb3bd;
+  --accent-stars: #d8b878;
+  --v-ok: #9fd0ae;
+  --v-btn-bg: #c9a86a;
+  --v-btn-ink: #1a2a21;
+  --v-btn2-bg: transparent;
+  --v-btn2-ink: #eee6d4;
+  --v-btn2-line: rgba(201, 168, 106, 0.5);
+  --v-btn2-bg-hover: rgba(255, 255, 255, 0.06);
+  --v-btn2-line-hover: #c9a86a;
+  color: var(--v-text);
+}
+html[data-style='old-money'] .ptl-sidebar {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.08)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.32 0 0 0 0 0.26 0 0 0 0 0.16 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  border-right: 1px solid #0f2a1f;
+  box-shadow: inset -1px 0 0 rgba(201, 168, 106, 0.25);
+}
+html[data-style='old-money'] .ptl-brand-logo {
+  position: relative;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px #183a2c, inset 0 0 0 4px rgba(201, 168, 106, 0.45);
+}
+html[data-style='old-money'] .ptl-brand-logo img {
+  visibility: hidden;
+}
+html[data-style='old-money'] .ptl-brand-logo::after {
+  content: 'A';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  font: 600 1.3rem/1 var(--v-display);
+  color: #d8b878;
+}
+html[data-style='old-money'] .ptl-brand-name {
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.18em;
+}
+html[data-style='old-money'] .ptl-group-label {
+  letter-spacing: 0.18em;
+}
+
+/* type: big serif display, calm sans text, small-caps labels */
+html[data-style='old-money'] .ptl-hero-title {
+  font-weight: 600;
+  font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+  line-height: 1.04;
+  letter-spacing: -0.005em;
+}
+html[data-style='old-money'] .ptl-section-title {
+  font-weight: 600;
+  font-size: 2.3rem;
+  letter-spacing: 0;
+}
+/* serif display lines sit close (the components inherit the body's 1.6) */
+html[data-style='old-money'] .ptl-section-title,
+html[data-style='old-money'] .section-title,
+html[data-style='old-money'] .ptl-prod-name,
+html[data-style='old-money'] .ptl-app-name,
+html[data-style='old-money'] .ptl-demo-title,
+html[data-style='old-money'] .demo-side-title {
+  line-height: 1.12;
+}
+html[data-style='old-money'] .ptl-section-title::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin-top: 12px;
+  background: linear-gradient(90deg, #b08d57, rgba(176, 141, 87, 0));
+}
+html[data-style='old-money'] .ptl-prod-name {
+  font-weight: 600;
+  font-size: 1.85rem;
+}
+html[data-style='old-money'] .ptl-app-name {
+  font-weight: 600;
+  font-size: 2.7rem;
+}
+html[data-style='old-money'] .ptl-demo-title {
+  font-weight: 600;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+}
+html[data-style='old-money'] .section-title {
+  font-weight: 600;
+  letter-spacing: 0;
+}
+html[data-style='old-money'] .demo-side-title {
+  font-weight: 600;
+  font-size: clamp(1.8rem, 2.9vw, 2.25rem);
+}
+html[data-style='old-money'] .ptl-prod-tagline,
+html[data-style='old-money'] .ptl-app-tagline {
+  font-family: var(--v-display);
+  font-style: italic;
+  font-size: 1.12rem;
+  font-weight: 600;
+}
+html[data-style='old-money'] .ptl-hero-badge,
+html[data-style='old-money'] .ptl-demo-kicker,
+html[data-style='old-money'] .ptl-feature-tag,
+html[data-style='old-money'] .ptl-badge-pill {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+html[data-style='old-money'] .ptl-btn-primary,
+html[data-style='old-money'] .ptl-btn-secondary,
+html[data-style='old-money'] .ptl-feature-demo-btn {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* brass frame and rules instead of glows */
+html[data-style='old-money'] .ptl-hero-banner {
+  box-shadow: var(--v-elev), inset 0 0 0 7px #faf7f0, inset 0 0 0 8px rgba(176, 141, 87, 0.5);
+}
+html[data-style='old-money'] .ptl-product-card,
+html[data-style='old-money'] .ptl-app-banner {
+  box-shadow: inset 0 2px 0 #b08d57, var(--v-elev-card);
+}
+html[data-style='old-money'] .ptl-product-card:hover {
+  box-shadow: inset 0 2px 0 #b08d57, var(--v-elev-hover);
+}
+html[data-style='old-money'] .marquee-chip {
+  background: transparent;
+  font-weight: 500;
+}
+html[data-style='old-money'] .footer-wordmark {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- phone first (95% of visitors are on a phone) ---------- */
+/* The paper scrolls with the page: a fixed background makes phones repaint on every scroll. */
+html[data-style='old-money'] body {
+  background-attachment: scroll;
+}
+/* The leather sidebar is opaque: no blur needed (expensive while the drawer slides). */
+html[data-style='old-money'] .ptl-sidebar {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+/* Finger-sized targets and readable labels on phones (from the phone audit 09.11). */
+@media (max-width: 760px) {
+  html[data-style='old-money'] .footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  html[data-style='old-money'] .ptl-demo-back,
+  html[data-style='old-money'] .seg-btn {
+    min-height: 40px;
+  }
+  html[data-style='old-money'] .ptl-prod-badge,
+  html[data-style='old-money'] .ptl-feature-tag {
+    font-size: 0.75rem;
+  }
+}

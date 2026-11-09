@@ -1,23 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+// Site style «Старые деньги» (index.html sets <html data-style="old-money">): after index.css
+// and with a higher specificity than component CSS, so lazily loaded chunks can't override it.
+import './theme/bridge.css'
+import './theme/old-money.css'
 import App from './App.tsx'
 
-const render = () =>
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  )
-
-// Style previews: /style/1 … /style/6 show the same site in another look (src/variants/).
-// Only these addresses load that code; every other address renders exactly as before.
-const styleVariant = /^\/style\/([1-6])\/?$/.exec(window.location.pathname)?.[1]
-if (styleVariant) {
-  import('./variants/boot.ts')
-    .then((m) => m.boot(Number(styleVariant)))
-    .catch(() => undefined)
-    .finally(render)
-} else {
-  render()
-}
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)

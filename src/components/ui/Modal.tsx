@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { X } from 'lucide-react';
 import { DURATION, EASE_OUT } from '../../lib/motion';
+import { useBackToClose } from '../../hooks/useBackToClose';
 
 interface ModalProps {
   open: boolean;
@@ -41,6 +42,9 @@ export const Modal: React.FC<ModalProps> = ({
   useEffect(() => {
     onCloseRef.current = onClose;
   });
+
+  // Phones: the system Back button closes the dialog instead of leaving the page.
+  useBackToClose(open, onClose);
 
   useEffect(() => {
     if (!open) return;

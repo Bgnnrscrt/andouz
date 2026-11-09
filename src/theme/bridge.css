@@ -1,10 +1,9 @@
 /* ==========================================================================
-   Style previews — the bridge (src/variants/, routes /style/1 … /style/5).
-   The live site keeps its colours written straight into component CSS. Here every such
-   place is pointed at semantic --v-* variables, and each theme in themes.css only sets
-   those variables (plus its own signature touches). Everything is scoped to
-   html[data-style], so nothing applies on the normal site — this file isn't even
-   downloaded there.
+   Theme bridge. Components write many colours directly (in their own CSS and in
+   style={{…}}); here each such place is pointed at a semantic --v-* variable, so the
+   site style (old-money.css) only sets variables plus its own touches. Everything is
+   scoped to html[data-style] — higher specificity than component CSS, so lazy chunks
+   loaded later can't override it.
    ========================================================================== */
 
 /* ---------- base ---------- */
@@ -309,6 +308,12 @@ html[data-style] #root [style*="linear-gradient(135deg, rgb(0, 180, 216)"]:not(.
   background: var(--v-btn-bg) !important;
   color: var(--v-btn-ink) !important;
 }
+/* icon colours passed as props (lucide writes them as stroke/fill attributes) */
+html[data-style] #root svg[stroke="#00f59b"]:not(.phone-screen *, .sbx *) { stroke: var(--v-accent-text); }
+html[data-style] #root svg[stroke="#00b4d8"]:not(.phone-screen *, .sbx *) { stroke: var(--v-gram-text); }
+html[data-style] #root svg[stroke="#ff007f"]:not(.phone-screen *, .sbx *) { stroke: var(--v-usta-text); }
+html[data-style] #root svg[stroke="#f59e0b"]:not(.phone-screen *, .sbx *) { stroke: var(--v-stars-text); }
+html[data-style] #root svg[fill="#f59e0b"]:not(.phone-screen *, .sbx *) { fill: var(--v-stars-text); }
 html[data-style] [style*="--chip-color: #00f59b"] { --chip: var(--v-accent-text); }
 html[data-style] [style*="--chip-color: #00b4d8"] { --chip: var(--v-gram-text); }
 html[data-style] [style*="--chip-color: #ff007f"] { --chip: var(--v-usta-text); }
