@@ -45,9 +45,9 @@
   flex: none;
   margin: 10px 12px 0;
   padding: 9px 10px 8px;
-  border: 1px solid rgba(0, 245, 155, 0.38);
+  border: 1px solid rgba(216, 184, 120, 0.38);
   border-radius: 14px;
-  background: rgba(0, 245, 155, 0.06);
+  background: rgba(216, 184, 120, 0.06);
   font-family: var(--font-body);
 }
 
@@ -144,8 +144,8 @@
   left: 0;
   height: var(--row-h);
   border-radius: 8px;
-  background: rgba(0, 245, 155, 0.13);
-  box-shadow: inset 0 0 0 1px rgba(0, 245, 155, 0.34);
+  background: rgba(216, 184, 120, 0.13);
+  box-shadow: inset 0 0 0 1px rgba(216, 184, 120, 0.34);
   transform: translateY(calc(var(--row, 0) * var(--row-h)));
 }
 
@@ -183,8 +183,8 @@
   border-radius: 50%;
   background: #05070b;
   box-shadow:
-    0 0 0 1px rgba(0, 245, 155, 0.3),
-    0 0 22px rgba(0, 245, 155, 0.16);
+    0 0 0 1px rgba(216, 184, 120, 0.3),
+    0 0 22px rgba(216, 184, 120, 0.16);
 }
 
 /* Only the shield: the logo's lettering stays outside the circle. */

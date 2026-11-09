@@ -1,7 +1,7 @@
 # CLAUDE.md — ANDO / andouz
 
 > **Читать первым.** Это главный и достаточный источник контекста по проекту. Новая сессия Claude, субагент или человек: прочитай файл целиком, и изучать весь репозиторий заново не понадобится.
-> Актуально на **2026-11-09**. Проверка свежести: `git log --oneline $(git log -1 --format=%h -- CLAUDE.md)..HEAD` выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
+> Актуально на **2026-11-09** (сайт пересобран с нуля, §6). Проверка свежести: `git log --oneline $(git log -1 --format=%h -- CLAUDE.md)..HEAD` выводит коммиты после последней правки этого файла. Если список не пуст, сверь их diff с файлом.
 
 ---
 
@@ -52,13 +52,12 @@
 ---
 
 ## 1. Что это
-**ANDO** (ando.uz) — веб-портал (SPA с хеш-навигацией по разделам, без бэкенда) экосистемы Android-приложений владельца:
+**ANDO** (ando.uz) — сайт (SPA с хеш-маршрутами, без бэкенда; пересобран с нуля 09.11, §6) экосистемы Android-приложений владельца:
 
 | Продукт | Суть | На сайте |
 |---|---|---|
 | **AndoGram** | мод Telegram на базе AyuGram. Отдельный проект пользователя на Java, в этом репо его нет | v10.9.2 (arm64-v8a), 96.5 MB, Android 8.0+ |
 | **Andusta** | мод/клон Instagram, пакет `com.andusta.android`, ставится рядом с оригиналом | v1.0.0 |
-| AndoTube / AndoVPN | только карточки в Roadmap («в разработке 60%» / «в планах») | — |
 
 Задача сайта: показать фичи, сравнить с официальными клиентами, продать доступ (1000 Telegram Stars или промокод), выдать APK и QR-код. Языки: `uz` (по умолчанию, латиница), `ru`, `en`. Стиль — светлый «Старые деньги» (выбор владельца 09.11, §10). **95% посетителей — с телефона (владелец 09.11): телефон в приоритете, ПК вторичен.**
 
@@ -84,52 +83,48 @@ npm run preview   # раздать dist/
 
 ## 4. Стек
 - **React 19.3 + Vite 8 (rolldown) + TypeScript ~7.0**. Линтер **oxlint** (плагины react/typescript/oxc; `rules-of-hooks` = error, `only-export-components` = warn).
-- `motion` (`motion/react`) — все JS-анимации. `lucide-react` v1 — иконки; брендовых иконок в нём нет. `qrcode.react` — QR-код. `canvas-confetti` грузится динамически при активации промокода.
-- **Стили — ванильный CSS**: глобальный `src/index.css` и отдельный `.css` у каждого компонента (импортируется в самом компоненте). Без Tailwind и CSS-модулей. У классов префикс компонента: `hdr-`, `hero-`, `marquee-`, `apps-`/`app-`, `demo-`/`phone-`, `cmp-`, `install-`, `rm-`, `footer-`, `to-top`, `dl-`, `adm-`.
-- Шрифты подключены в `index.html` через Google Fonts: Cormorant Garamond 600/700/600 italic (крупные заголовки), Jost 400–700 (текст и мелкие заголовки), JetBrains Mono. Outfit и Inter убраны 09.11 (токены в `:root` index.css их ещё называют, но стиль их переопределяет).
-- Роутинг свой: по `window.location.hash` (`#/projects/andogram`, `#/docs`, …) в `PortalLayout`; библиотеки-роутера нет. Нет стейт-менеджера, контекстов, бэкенда, env-переменных, тестов, аналитики. Язык — проп `lang` из `App` во все разделы.
+- `lucide-react` v1 — иконки (брендовых нет). `qrcode.react` — QR в окне доступа (только ПК). `canvas-confetti` грузится динамически при активации промокода. Библиотека `motion` в зависимостях осталась, но сайтом не используется (с 09.11).
+- **Стили — ванильный CSS**: `src/site/site.css` (токены + все стили сайта), `demo.css` и `access.css` грузятся со своими ленивыми чанками; у песочниц свои `.css`. Без Tailwind и CSS-модулей.
+- Шрифты подключены в `index.html` через Google Fonts: Cormorant Garamond 600/700/600 italic (крупные заголовки), Jost 400–700 (текст), JetBrains Mono (промокод, код установки).
+- Роутинг свой: по `window.location.hash` (`src/site/router.ts`), без библиотеки. Состояние — в `Site.tsx` и React-контексте `SiteContext` (язык, тексты, navigate, openAccess). Нет бэкенда, env-переменных (кроме `VITE_ANDO_API`), аналитики. Юнит-тестов нет — проверки Playwright вне репо (§0.3).
 - tsconfig.app: `noUnusedLocals`/`noUnusedParameters` выключены, `allowImportingTsExtensions` включён.
 
 ## 5. Карта файлов
 ```
-index.html              SEO/OG-мета (только RU, все URL на https://ando.uz), шрифты, #root
+index.html              SEO/OG-мета (только RU, все URL на https://ando.uz; og:image ?v=20261109), шрифты, #root
 vercel.json             деплой, rewrite, заголовки (см. 2)
-public/                 favicon.svg · logo-96.webp (хедер, центр QR) · logo-256.webp (эмблема hero)
-                        logo-192.png / logo-512.png (manifest) · apple-touch-icon.png · og-image.jpg (1200×630, «Старые деньги», 09.11;
-                        в мета `?v=20261109` — новый адрес сбрасывает кэш превью; пересобрать: /root/Apps/andouz-e2e/og/ — og.html + render.cjs)
-                        site.webmanifest · logo.jpg (644 КБ, нигде не используется)
-README.md, CHANGELOG.md документация для людей (RU): фичи приложений, стек, история релизов
-src/main.tsx            вход (StrictMode); подключает index.css, затем стиль `theme/bridge.css` + `theme/old-money.css`
-src/App.tsx             каркас: язык (state+localStorage, по умолчанию uz), рендерит PortalLayout, ленивые модалки (в ChunkBoundary `modal`), PAGE_TITLES, skip-link
-src/types.ts            Language, AppId, AppFeature, AppInfo, ComparisonRow
-src/data.ts             APPS_DATA (расширен: tagline, minAndroid, updatedAt, features[].tag, changelog[].items), *_COMPARISON, DOWNLOAD_URLS
-src/translations.ts     словарь старых переиспользуемых секций translations.<секция>.<ключ>[lang]
-src/portalTypes.ts      PortalSection = 'home'|'projects'|'stats'|'docs'|'support'|'community'
-src/portalTranslations.ts  portalI18n[lang] — весь текст портала (сайдбар/топбар/разделы), 3 языка
-src/index.css           токены :root, база, глобальные классы (см. 10)
-src/lib/motion.ts       токены анимаций: EASE_OUT/EASE_IN_OUT/EASE_DRAWER, DURATION, SPRING, VIEWPORT, fadeUp/fade, staggerContainer
-src/lib/emoji.tsx       эмодзи картинками Apple на всём сайте: emojify(текст) / emojifyNode(узел) → <img class="emoji">
+public/                 favicon.svg · logo-192.png / logo-512.png (manifest) · apple-touch-icon.png · site.webmanifest (#f1ece2)
+                        og-image.jpg (1200×630, «Старые деньги», 09.11; пересобрать: /root/Apps/andouz-e2e/og/ — og.html + render.cjs)
+                        logo-96.webp / logo-256.webp / logo.jpg — сайтом больше не используются
+README.md, CHANGELOG.md документация для людей (RU)
+src/main.tsx            вход: site/site.css + <Site/> (StrictMode)
+src/types.ts            Language, AppId
+src/site/               САЙТ (пересобран с нуля 09.11, §6):
+  Site.tsx              корень: язык (localStorage ando_lang, по умолчанию uz), маршрут, меню, окно доступа (лениво), заголовок
+                        вкладки, прокрутка: новая страница — сверху, адрес раздела — к разделу; navigate (из меню — replaceState)
+  router.ts             parseHash → home(+раздел) / app / demo; старые адреса портала (#/docs, #/support, #/community, #/projects)
+  context.tsx           SiteContext (lang, t, setLang, navigate, openAccess), useSite, Link (обычный тап → navigate)
+  copy.ts               ВСЕ тексты сайта uz/ru/en: COPY (разделы, меню, окно доступа, ошибки, заголовки вкладки) и APPS (по
+                        приложению и языку: версия, размер, слоган, пункты, «главное», «ещё», сравнение, «что нового»);
+                        DOWNLOAD_URLS, BOT_URL
+  Chrome.tsx            TopBar (бренд, навигация ПК, LangMenu, «Получить доступ» ПК / ☰ телефон), MenuSheet, StickyCta, Footer
+  Home.tsx              главная: Hero, Highlights (#features), Demos (#demos), Apps (#apps), Compare (#compare), Install
+                        (#install), Faq (#faq); CompareList (общий с AppPage)
+  AppPage.tsx           страница приложения #/projects/<app>
+  DemoPage.tsx          страница «Проверь сам» (лениво, + demo.css): текст из sandbox/demoPages.ts + SANDBOXES (каждая — чанк)
+  AccessSheet.tsx       окно «Получить доступ» (лениво, + access.css), логика оплаты/промокода — §9
+  Sheet.tsx             оболочка окон: `sheet` (снизу на телефоне, по центру на ПК ≥700px) и `menu` (справа); портал,
+                        фокус-ловушка и возврат фокуса, Esc, тап по фону, «Назад» (useBackToClose), без прокрутки страницы
+  ChunkBoundary.tsx     сбой загрузки чанка (демо, окно) → одна перезагрузка за минуту, иначе сообщение с «Обновить»
+  parts.tsx             SectionHead (кикер + заголовок + лид), MemberCard (приложение как клубная карта)
+  icons.tsx             ICONS (IconName → lucide), Icon, AppEmblem (самолётик AndoGram / камера Andusta)
+  site.css              токены :root и все стили сайта, телефон первым (§10); demo.css; access.css
+src/hooks/useBackToClose.ts  системная «Назад» закрывает меню/окно: пока открыто — лишняя запись истории; isOverlayEntry
+src/lib/emoji.tsx       эмодзи картинками Apple: emojify(текст) / emojifyNode(узел) → <img class="emoji">
 src/assets/emoji/       PNG 64px из emoji-datasource-apple 15.1.2, имя = коды без FE0F (2764.png = ❤️); импорт ?no-inline
 src/assets/ar/          «камера» AR-масок: cam.webm (VP9, ~845 КБ) / cam.mp4 (H.264, ~930 КБ) — 5 с, 1440×720, слева без маски,
                         справа с маской Гуля; poster.jpg (кадр 0, те же половины); thumb-ghoul.jpg — иконка «Маски Гуля» в ряду масок
-src/hooks/useMediaQuery.ts  useMediaQuery, useCanHover (hover:hover + pointer:fine)
-src/hooks/useBackToClose.ts  системная «Назад» на телефоне закрывает меню/диалог (лишняя запись истории); isOverlayEntry
-src/hooks/useTilt.ts        3D-наклон за мышью (владеет transform элемента)
 src/components/
-  portal/                   КАРКАС ПОРТАЛА (рендерится из App):
-    PortalLayout.tsx        сайдбар+топбар+активный раздел; хеш-роутинг (#/projects/andogram…), back/forward, общий Footer+BackToTop
-    Sidebar.tsx             боковое меню (сворачивание, мобильный оверлей), подменю Проектов (AndoTube «в разработке», другие «в планах»)
-    Topbar.tsx              только язык в правом углу: текущий + иконка, по клику список из трёх (`LanguageMenu`); ☰ — только
-                            ≤900px (открывает шторку сайдбара). Крошек нет (владелец 02.11; бейдж статуса и «Скачать APK» убраны 30.10)
-    views/HomeView          баннер, 3 стата, FeatureMarquee, 2 карточки продуктов, PhoneMockup
-    views/ProjectView       вкладки AndoGram/Andusta: спеки, все фичи (из data.ts), ComparisonTable, changelog
-    views/DocsView          InstallGuide + карточка безопасности + FAQ (3 языка)
-    views/SupportView       карточки «бот поддержки» и «Предложить фичу» → несуществующий @ando_stars_bot (§11.7) + статус-бар
-    views/CommunityView     канал/чат (заглушки → несуществующий @ando_stars_bot, §11.7) + бот оплаты @Andouzbot + GitHub
-    views/StatsView         ⛔ ВЫКЛЮЧЕН (не смонтирован): цифры были выдуманы, вернуть на реальных данных API бота
-    views/DemoView          «Как работает» фичи (#/projects/andogram/<id фичи>): текст из demoPages.ts + песочница из
-                            SANDBOXES; сама страница и каждая песочница — отдельные ленивые чанки. Кнопки «Купить» на
-                            странице нет (02.11): она только показывает фичу, «Купить» — в финале песочницы
   sandbox/                  «ПРОВЕРЬ САМ» — интерактивные демо фич (мост A-B-C, Honeypot, обход No-Forwards):
     engine.ts               общий движок: тип Flow (steps, auto, tap/taps, look, nextButton, hintDelay/hintDelayAt, docked),
                             stepAfter / isReached / progressAt; финальная сцена OutroTiming → outroPhases / lineAt
@@ -196,63 +191,29 @@ src/components/
     ghostStories* / GhostStoriesSandbox  №1 «Невидимка в историях» (два телефона: твой и Лизы)
     viewOnce* / ViewOnceSandbox          №6 «Одноразовые фото» (Тимур, подсказка у пузыря встроена в чат)
     likeFonts* / LikeFontsSandbox        №13 «Салатовый лайк и шрифты» (шрифты Merriweather/Caveat — Google Fonts, грузит песочница)
-  Header.tsx/.css           шапка: меню + scroll-spy, язык, CTA, бургер-панель <960px, полоса прогресса скролла
-  header/useActiveSection.ts  SECTION_IDS + scroll-spy (pin при клике)
-  Hero.tsx/.css             первый экран: STATS, тайминги интро T
-  hero/                     HeroBackdrop (аврора, сетка, Constellation, виньетка) · Constellation (canvas с частицами)
-                            HeroEmblem · HeroTitle (слова + градиент) · Magnetic (магнитная кнопка) · ScrollCue
-  FeatureMarquee.tsx/.css   2 бегущие строки чипов (чистый CSS)
-  AppsShowcase.tsx/.css     #apps — карточки приложений; экспортирует AppIcon и FeatureIcon (FEATURE_ICONS)
-  PhoneMockup.tsx/.css      #demo — телефон с 5 сценами и автопоказом
-  demo/copy.ts              тексты демо: DemoTab, TAB_ORDER, SCENE_COLOR, scenes, benefits, underHood, autoplayLabel
-  demo/Scenes.tsx           сцены Archive, Honeypot, MediaSort, Ghost, ViewOnce
-  demo/useSceneSteps.ts     пошаговые таймеры сцен
-  ComparisonTable.tsx/.css  #compare — таблица (десктоп) / карточки (телефон)
-  InstallGuide.tsx/.css     #install — 3 шага + предупреждение «неизвестные источники»
-  Roadmap.tsx/.css          #roadmap — 4 карточки + призыв «предложить идею»
-  Footer.tsx/.css           футер; в «Сообщество & Бот» только бот оплаты (GitHub убран 02.11 по просьбе владельца)
-  BackToTop.tsx/.css        кнопка «наверх» с кольцом прогресса
-  DownloadModal.tsx/.css    модалка доступа (lazy): Stars / промокод → API бота → APK + код установки + QR
-  AppDetailsModal.tsx/.css  модалка «Все возможности» (lazy): спеки, фичи, changelog
-  ui/Modal.tsx              оболочка диалога: портал, фокус-трап, Esc/клик по фону, блок скролла, возврат фокуса
-  ui/ChunkBoundary.tsx      граница ошибок ленивых страниц и модалок: сбой чанка → перезагрузка 1 раз (не чаще раза в
-                            минуту), иначе сообщение на 3 языках с «Обновить»: внутри макета (маршрут демо) или поверх
-                            страницы с «Закрыть» (`modal`: DownloadModal / AppDetailsModal в App.tsx)
-  ui/SegmentedControl.tsx   доступные вкладки с «едущей» плашкой (variant bar|pills, size sm|md, idPrefix → aria)
-  ui/SectionHeader.tsx      шапка секции: бейдж (ScrambleText) + заголовок + подзаголовок + слот
-  fx/Reveal.tsx             Reveal, Stagger, StaggerItem — появление при скролле
-  fx/ScrambleText.tsx       «расшифровка» коротких однострочных надписей
-  fx/spotlight.ts           trackSpotlight — подсветка за курсором (--mx/--my)
-src/theme/                СТИЛЬ САЙТА «Старые деньги» (§10); index.html ставит <html data-style="old-money">
-  bridge.css                «мост»: зашитые в компонентах цвета (CSS, style={{…}} как rgb()/rgba(), color-пропсы lucide —
-                            атрибуты stroke/fill) → переменные --v-*, радиусы блоков → --v-r-*; всё под html[data-style]
-  old-money.css             палитра --v-* и токены сайта, шрифты, размеры заголовков, детали (латунные линии, «кожа» меню и
-                            футера, монограмма A), блок «телефон в приоритете» в конце
 ```
 
-**Сейчас НЕ смонтированы** (остались от старого лендинга, порталом не используются; удалять по согласованию): `Header`+`header/`, `Hero`+`hero/`, `Roadmap`, `AppDetailsModal` (его роль теперь у ProjectView) и `AppsShowcase` (нужен только AppDetailsModal). Порталом переиспользуются: `PhoneMockup`, `ComparisonTable`, `InstallGuide`, `FeatureMarquee`, `Footer`, `BackToTop`.
+## 6. Сайт (страницы, адреса, поведение)
+Пересобран с нуля 09.11 (владелец: «подними сам с нуля, сохранив только цвет, стиль и шрифт… телефон должен быть на все 100»; 95% посетителей — с телефона). Портал Антигравити (сайдбар, разделы Docs/Support/Community/Stats, PhoneMockup, бегущая строка, DownloadModal, translations*) удалён — он в git до a0890e0.
 
-## 6. Портал (разделы и навигация)
-Единый экран `PortalLayout`: слева `Sidebar`, сверху `Topbar`, в центре активный раздел, снизу общий `Footer` + `BackToTop`. Навигация — свой хеш-роутер; работает back/forward, при переходе скролл наверх.
-
-| Раздел | hash | Что внутри |
+| Страница | Адрес | Что внутри |
 |---|---|---|
-| Home | `#/` | баннер, 3 стата, `FeatureMarquee`, 2 карточки продуктов, интерактивное демо `PhoneMockup` |
-| Projects | `#/projects/andogram`·`/andusta` | вкладки приложений, спеки, все фичи (из `data.ts`), `ComparisonTable`, changelog |
-| Как работает: фича | `#/projects/andogram/<id>` (`honeypot`, `no_forwards_bypass`, `archive_bridge`, `ar_masks`), `#/projects/andusta/<id>` (`ghost_mode`, `view_once`, `like_fonts` — только по ссылке, см. §6) | объяснение простыми словами + песочница «Проверь сам» (`DemoView`, лениво) |
-| Фичи приложения | `#/projects/<app>/features` | тот же ProjectView, прокручен к сетке фич (`focusFeatures`); сюда ведёт «Другие сценарии» в финале песочницы |
-| Docs | `#/docs` | `InstallGuide`, карточка «Архитектура безопасности», FAQ |
-| Support | `#/support` | карточки «бот поддержки» и «Предложить фичу» (→ несуществующий `@ando_stars_bot`, §11.7), статус-бар |
-| Community | `#/community` | канал/чат (заглушки → несуществующий `@ando_stars_bot`, §11.7), бот оплаты `@Andouzbot`, GitHub |
-| ~~Stats~~ | — | ВЫКЛЮЧЕН 30.10 (цифры были выдуманы; вернуть только на реальных данных API бота) |
+| Главная | `#/` | Hero (заголовок «Ваши переписки. / Ваши правила.», 2 кнопки, «без Root · Android 8+ · Stars», две клубные карты), «Возможности» (6 карточек → демо или страница приложения), «Попробуйте сами» (лента 4 демо на «коже», на телефоне листается пальцем), «Выберите своё» (карты приложений с 5 пунктами, «Купить · 1000 ★» / «Подробнее»), «Сравнение» (вкладки AndoGram / Andusta), «Три шага» (+ кнопка), «Вопросы» (8, `details`) |
+| Раздел главной | `#/features` `#/demos` `#/apps` `#/compare` `#/install` `#/faq` `#/contact` | главная, прокрученная к разделу. Старые адреса: `#/docs` → install, `#/support` → faq, `#/community` → contact (футер), `#/projects` → apps |
+| Приложение | `#/projects/andogram` · `/andusta` | назад, шапка (кикер, имя, слоган, текст, «Купить · 1000 ★», «Попробовать» → первое опубликованное демо), большая карта, 4 факта, «Главное» (5; у фич с опубликованным демо — «Попробовать»), «И ещё» (тесты с меткой), сравнение, «Что нового», полоса «купить» |
+| Фичи приложения | `#/projects/<app>/features` | страница приложения у «Главное» (сюда ведёт «Другие сценарии» в финале песочницы) |
+| Демо | `#/projects/<app>/<id>` | DemoPage: назад к приложению, кикер, заголовок, лид и «Кто есть кто» (demoPages.ts) + песочница. Andusta-демо — только по ссылке (`UNLISTED`) |
 
 Поведение:
-- Весь текст портала — в `portalTranslations.ts` (3 языка); часть ручного текста во вью — инлайн тернаром на 3 языка (§8).
-- Все кнопки «Скачать»/«Получить доступ»/«1000 Stars» открывают `DownloadModal` (`onOpenDownload(appId)`, по умолчанию `andogram`). Оплата Stars ведёт на `@Andouzbot` (`?start=buy_<app>`).
-- Решение владельца: у каждого приложения ровно **5 фич** (топ, порядок = приоритет). AndoGram: `honeypot`, `no_forwards_bypass`, `archive_bridge`, `ar_masks`, `voice_changer`. Andusta: `ghost_mode`, `unfollowers_tracker`, `music_unlocker`, `anti_unsend`, `view_once`. На карточках Home — превью, в ProjectView — все (из `data.ts`). Широта — в сравнении и бегущей строке. Тексты Andusta (с 03.11) обещают только то, что есть в приложении: что работает, что нет — таблица «Честно о функциях» в `/root/Apps/andouz-e2e/andusta-scenario/scenario-2026-11-03.md` §4 (вне репо); анти-удаление подписано «тест».
-- Подменю «Проекты» декоративно показывает будущее: **AndoTube — в разработке**, другие — в планах.
-- `PhoneMockup` листает сцены сам; пауза вне экрана и при reduced-motion.
-- **«Как работает» / «Проверь сам»** (решение владельца 01.11: вместо видео — интерактив): у фичи из `DEMO_IDS` на карточке ProjectView кнопка «Как работает» (`t.projects.howItWorks`, uz «Ishlatib ko‘rish») → страница демо. Карточка (02.11): название рядом с иконкой, кнопка внизу по центру; у фич без демо там же тег. На странице демо кнопки «Купить» нет. Все песочницы на одном движке (`engine.ts` + `useSandbox.ts` + `SandboxFrame.tsx`), у каждой свои сценарий (`*Flow.ts`), тексты (`*Copy.ts`) и сцены (`*Sandbox.tsx`); тексты страниц — `demoPages.ts`. Финал у всех: кнопки «Купить AndoGram» / «Другие сценарии» / «Пройти ещё раз». Остальные фичи и Andusta — с тегами, сценарий каждой придумываем с владельцем отдельно.
+- Верхняя панель: на телефоне — бренд, язык (UZ ▾ → список из трёх), ☰ (меню-шторка справа: 6 пунктов, языки кнопками, «Получить доступ», бот); на ПК (≥900px) ещё навигация и кнопка «Получить доступ».
+- Нижняя кнопка на телефоне (<900px): «Получить доступ · 1000 ★» после 520px прокрутки, прячется над футером, на страницах демо и при открытом меню/окне её нет.
+- Все «Получить доступ» / «Купить» открывают окно доступа (`openAccess(app)`); из карточки или страницы приложения — уже с ним.
+- «Назад» на телефоне закрывает меню и окно (useBackToClose); переход из меню заменяет его запись истории (`navigate`), так что следующая «Назад» ведёт на прошлую страницу без «пустого» нажатия. Тот же адрес ещё раз — снова прокрутка к разделу.
+- Новая страница открывается сверху; адрес раздела — плавная прокрутка (при reduced motion — мгновенно). Заголовок вкладки — по странице и языку (`COPY.titles`).
+- Тексты честные: только то, что работает; тесты подписаны «тест»; у моста без «24/7»; Andusta — 370 МБ (реальный APK).
+- Песочницы и их сценарии не менялись (ниже); на главной и на страницах приложений к ним ведут «Попробовать».
+
+- **«Как работает» / «Проверь сам»** (решение владельца 01.11: вместо видео — интерактив): к демо ведут «Попробовать» на главной (лента «Попробуйте сами», карточки «Возможности») и на странице приложения (у фич из `DEMO_IDS`, кроме `UNLISTED`). На странице демо кнопки «Купить» нет. Все песочницы на одном движке (`engine.ts` + `useSandbox.ts` + `SandboxFrame.tsx`), у каждой свои сценарий (`*Flow.ts`), тексты (`*Copy.ts`) и сцены (`*Sandbox.tsx`); тексты страниц — `demoPages.ts`. Финал у всех: кнопки «Купить AndoGram» / «Другие сценарии» / «Пройти ещё раз». Остальные фичи и Andusta — с тегами, сценарий каждой придумываем с владельцем отдельно.
 - **Песочницы Andusta** (03.11, сценарий `/root/Apps/andouz-e2e/andusta-scenario/scenario-2026-11-03.md`, волна 1 — решение владельца «да»): «Невидимка в историях» (`ghost_mode`), «Одноразовые фото» (`view_once`), «Салатовый лайк и шрифты» (`like_fonts`). **Не опубликованы:** владелец — «пока да, после проверки на телефоне»: в `demos.ts` они в `UNLISTED`, на карточках кнопки «Как работает» нет, страница открывается только по прямой ссылке `#/projects/andusta/<id>`. Опубликовать = убрать id из `UNLISTED` (у `like_fonts` карточки нет — кнопку ставить по вопросу 3 сценария). Схема как у AndoGram: домашний экран (Instagram первым, Andusta вторым — значок как у Instagram, подпись «Andusta»), попытка 1 — Instagram, строка «… / Теперь попробуй в / Andusta» (5,3 с), попытка 2 — Andusta (⚡ → «Центр Управления»), финал: слоган с розовым «Andusta», кнопки «Купить Andusta» (DownloadModal на Andusta) / «Другие сценарии» (`#/projects/andusta/features`) / «Пройти ещё раз». Скриншоты одноразовых не показываем (вопрос 5 владельцу открыт). Салатовое сердечко стоит у лайкнутого поста в ленте Andusta во всех трёх. uz/en — черновики (владелец перепишет). Прохождение ≈45–55 с.
 - Песочница моста, v2 (сценарий владельца 01.11). Телефон 1 — AndoGram (ты), телефон 2 — обычный Telegram (второй аккаунт); телефона собеседника нет.
   - Сюжет: Даниль присылает длинное сообщение и через 1 с правит его (шаг `aEdited`, шага `aEditing` больше нет): «утопил» → «потерял» меняется молча, без подсветки, а в конце новой строкой добавляется «пожалуйста» (uz «iltimos», en «my bad») — пузырь вырастает на строку, и загорается надпись «изменено»: зелёная плашка вспыхивает дважды и гаснет (владелец 02.11: какое слово поменялось, не показывать — пусть задумается «а что изменилось?»). Чтобы пузырь точно рос, в тексте перенос после «проблемка:» — последняя строка короткая и одна (время до правки стоит рядом с ней, правка ничего выше не сдвигает). В карточке «Было/Стало» подсвечены «утопил» и «потерял» + «пожалуйста». Подсказка ведёт назад из чата: в списке появился «Личный архив» → тема «Даниль» → оригинал и карточка «Было/Стало» (на телефоне 1, в самом AndoGram) → кнопка «Взять второй телефон». На втором телефоне тот же архив; оттуда подкалываешь Даниля от имени основного аккаунта. При возврате телефон 1 открыт на списке чатов (владелец 02.11): у Даниля последним — твой подкол (18:43, прочитано), через 1,5 с подсказка «Твой ответ уже в чате с Данилем. Открой его» (шаг `aBack`, цель `row-friend`) → чат: он печатает, «Как ты успел прочитать?», ты: «Я пользуюсь AndoGram 😎».
@@ -273,24 +234,22 @@ src/theme/                СТИЛЬ САЙТА «Старые деньги» (�
   - Домашний экран: Telegram первым, AndoGram вторым (`HomeUi` grid). Попытка 1 — Telegram (18:41): «Открой Telegram» (2 с; тап по AndoGram — мимо) → заставка 1,3 с → список → «Открой чат с Максом» (uz Baxa, en Alex) → чат: «Как ты там? Запиши кружок 😄» → «Запиши кружок: нажми на камеру» (подсказка встроена над вводом) → запись кружка (`tRec`, 5,6 с): затемнение, в круге «камера» — реалистичный парень (сгенерированное фото, 5-секундный ролик: голова чуть вправо, к центру, чуть влево, моргает), таймер, «Отмена», ничего необычного → затемнение и строка «Теперь попробуй в / AndoGram» (`LINE`, 5,3 с).
   - Попытка 2 — AndoGram (18:42): «Теперь открой AndoGram» (1,5 с; тап по Telegram — мимо) → заставка → «Снова чат с Максом» → «Запиши кружок» → запись: тот же круг без маски и ряд масок под ним, как в приложении (владелец 03.11 по скрину AndoGram) — «Оригинал» (uz/en «Original»; первый и выбран, значок 🚫 без лица), «Маска Гуля» (вторая), Forest, Нуар, «Борода и усы», «Маска Гая Фокса», «Блеск». Пробуется только «Маска Гуля» (подсказка «Выбери «Маску Гуля»»), остальные — только крупный «?» (иконок за ним нет, владелец 02.11); тап по ним — тост «Чтобы примерить эту маску, купи AndoGram». После выбора та же «камера» показывает тот же кадр с маской: маска садится на лицо посреди поворота и двигается с ним; круглая подсветка на кружке: «Маска сидит как настоящая и двигается вместе с лицом. Остальные — в полной версии» → через 5,6 с финал (`AR_OUTRO`, как у Honeypot): затемнение, «AndoGram / Обычное приложение, / необычные возможности» (слоган владельца 02.11; uz «Oddiy ilova, / noodatiy imkoniyatlar» (владелец), en «An ordinary app, / extraordinary features»), кнопки поверх. «Начать заново» / «Пройти ещё раз» → домашний экран попытки 1.
 
-- **Стиль «Старые деньги»** выбран владельцем 09.11 из 10 вариантов-превью (два круга по ссылкам `/style/1…6`; код превью удалён, он в git: b2d1ca8, c9694d8). Адреса `/style/…` теперь просто открывают сайт.
-- **«Назад» на телефоне** (09.11): открытое меню (☰) и любой диалог на `ui/Modal` (DownloadModal) закрываются системной кнопкой «Назад», страница не меняется (`useBackToClose`: пока открыто — лишняя запись истории с тем же URL). Закрытие крестиком/Esc/тапом снаружи убирает эту запись. Переход из открытого меню заменяет его запись (`replaceState` в `handleNavigate`), так что следующая «Назад» ведёт в прошлый раздел без «пустого» нажатия. Смена хеша (вперёд/назад) закрывает меню.
+- **Стиль** «Старые деньги» выбран владельцем 09.11 из 10 превью; в новом сайте он задан прямо в `site.css` (§10), без прежнего «моста» `src/theme/`.
 
 ## 7. Где что менять
 | Что | Где |
 |---|---|
-| Версия, размер, описание, фичи, changelog приложения | `src/data.ts` → `APPS_DATA` |
-| Иконка фичи (`iconName`) | имя из `FEATURE_ICONS` в AppsShowcase.tsx; неизвестное имя превращается в Sparkles |
-| Откуда брать тексты фич | `ECOSYSTEM_FEATURES.md` в репозитории дирижёра `Bgnnrscrt/andouzcto`: полный список фич обоих приложений на ru/uz/en. На карточки идёт только топ-5 (раздел 6), остальное — в сравнение и бегущую строку. ⚠ Для Andusta он обещает лишнее — сверяй с §4 сценария Andusta (раздел 6) |
-| Ссылки на APK | `src/data.ts` → `DOWNLOAD_URLS` (⚠ 0.5) |
-| Проверка промокода, код установки | DownloadModal.tsx (`handleActivateCoupon` → `API_BASE/api/redeem-coupon`); адрес API — `VITE_ANDO_API` или `https://api.ando.uz` |
-| Строки сравнения | `src/data.ts` → `TELEGRAM_COMPARISON` / `INSTAGRAM_COMPARISON` |
-| Цена и тексты модалки доступа | `translations.modal` + DownloadModal.tsx `getLabels()` |
-| Ссылка на бота | DownloadModal.tsx (`?start=buy_<appId>`), Footer.tsx, Roadmap.tsx |
-| Карточки roadmap и % готовности | Roadmap.tsx `getCards()`, `PROGRESS` |
-| Заголовок вкладки браузера | App.tsx `PAGE_TITLES` |
-| SEO, OG, canonical | `index.html` (только RU, от выбранного языка не зависит; URL только https://ando.uz) |
-| Цвета, радиусы, шрифты сайта | `src/theme/old-money.css` (палитра --v-* и токены); новый зашитый цвет в компоненте — отвести на переменную в `src/theme/bridge.css`; шрифты — ещё и ссылка в `index.html`. `:root` в index.css — только база |
+| Любой текст сайта (3 языка) | `src/site/copy.ts`: `COPY` (разделы, меню, окно доступа, ошибки), `APPS` (приложения) |
+| Версия, размер, дата, фичи, сравнение, «что нового» | `copy.ts` → `APPS.<app>.<lang>` (у каждого языка свой блок — менять во всех трёх) |
+| Ссылки на APK (запасные) | `copy.ts` → `DOWNLOAD_URLS` (⚠ 0.5) |
+| Бот оплаты | `copy.ts` → `BOT_URL`; кнопка «Оплатить в боте» — AccessSheet.tsx (`?start=buy_<app>`) |
+| Проверка промокода, код установки | AccessSheet.tsx (`redeem` → `API_BASE/api/redeem-coupon`); адрес API — `VITE_ANDO_API` или `https://api.ando.uz` |
+| Цвета, шрифты, радиусы, отступы | `src/site/site.css` `:root` (+ ссылка шрифтов в index.html) |
+| Разделы главной: порядок и состав | `Home.tsx` → `Home()` |
+| Меню, верхняя панель, футер, нижняя кнопка | `Chrome.tsx` |
+| Адреса страниц и старые адреса | `router.ts` |
+| SEO, OG, canonical | `index.html` (только RU, URL только https://ando.uz) |
+| Демо: какие есть и какие опубликованы | `sandbox/demos.ts` (`DEMO_IDS`, `UNLISTED`); лента на главной — `COPY.<lang>.demos.items` |
 | Тексты песочницы моста (имена, сообщения, подсказки, слоган) | `src/components/sandbox/bridgeCopy.ts` (3 языка) |
 | Тексты, чаты и аккаунты Honeypot / тексты No-Forwards | `sandbox/honeypotCopy.ts` / `sandbox/noForwardsCopy.ts` |
 | Вид экранов Honeypot / канала No-Forwards | `HoneypotUi.tsx` + `honeypot.css` / `ChannelUi.tsx` + `noforwards.css` |
@@ -298,72 +257,41 @@ src/theme/                СТИЛЬ САЙТА «Старые деньги» (�
 | Кнопки финала, «Начать заново», «Проверь сам», шапка страниц демо | `src/components/sandbox/commonCopy.ts` |
 | Шаги, тайминги, что нажимать в песочнице; тайминги финальной сцены | `src/components/sandbox/<сценарий>Flow.ts` (`AUTO_MS`, `HINT_DELAY_MS`; финал: у моста `OUTRO`, у Honeypot `HONEYPOT_OUTRO`, у No-Forwards `SHRUG` / `T_OUTRO`) |
 | Поведение подсказок, подсветки, размер телефона (для всех песочниц) | `src/components/sandbox/useSandbox.ts`, `SandboxFrame.tsx` |
-| «Как работает» для другой фичи | `sandbox/demos.ts` (`DEMO_IDS` + `DEMO_APP`; `UNLISTED` — без кнопки на карточке) + `*Flow.ts` / `*Copy.ts` / `*Sandbox.tsx` на общем движке + страница в `demoPages.ts` + строка в `SANDBOXES` (views/DemoView.tsx). Andusta: экраны — `IgUi.tsx`, слой Andusta — `AndustaUi.tsx`, общие тексты — `igCopy.ts` |
+| «Как работает» для другой фичи | `sandbox/demos.ts` (`DEMO_IDS` + `DEMO_APP`; `UNLISTED` — без кнопки на карточке) + `*Flow.ts` / `*Copy.ts` / `*Sandbox.tsx` на общем движке + страница в `demoPages.ts` + строка в `SANDBOXES` (site/DemoPage.tsx). Andusta: экраны — `IgUi.tsx`, слой Andusta — `AndustaUi.tsx`, общие тексты — `igCopy.ts` |
 | Эмодзи (картинки Apple) — добавить новый | PNG 64px из `emoji-datasource-apple@15.1.2/img/apple/64/` в `src/assets/emoji/`, имя — коды без `fe0f`; текст выводить через `emojify` / `emojifyNode` (`src/lib/emoji.tsx`). Эмодзи без картинки остаётся текстом |
-| Языки в топбаре (названия, порядок) | `portal/Topbar.tsx` `LANGUAGES` |
 | Ролик «камеры» AR-масок (лицо, движение, маска Гуля, иконки) | файлы `src/assets/ar/`; пересоздать — скрипты и порядок в `/root/Apps/andouz-e2e/ar-media/README.md` (вне репо). Слоганы и тексты AR — `sandbox/arMasksCopy.ts` |
 
 **Новая версия приложения** обновляется во всех местах сразу:
-- data.ts: `badge` (3 языка), `version`, `size`, новая запись в `changelog`;
-- Roadmap.tsx: заголовки карточек (3 языка);
+- `copy.ts` → `APPS.<app>.{uz,ru,en}`: `version`, `size`, `updated`, `changelog`;
 - `CHANGELOG.md`;
 - `DOWNLOAD_URLS` и ассет релиза.
 
 ## 8. i18n
-- `Language = 'ru' | 'uz' | 'en'`. Выбор хранится в localStorage `ando_lang`, по умолчанию `uz`. App выставляет `<html lang>` и `document.title`.
-- Тексты лежат в нескольких местах:
-  1. `portalTranslations.ts`: `portalI18n[lang].<раздел>.<ключ>` — весь текст портала (сайдбар, топбар, разделы);
-  2. `translations.ts`: `translations.<секция>.<ключ>[lang]` — для переиспользованных старых секций (демо, сравнение, установка);
-  3. локальные словари/тернары в компонентах: вью портала местами держат текст инлайн тернаром `lang === 'uz' ? … : lang === 'en' ? … : …` (все 3 языка; `en` не забывать — раньше падал в русский);
-  4. `data.ts` и `demo/copy.ts`: поля `Record<Language, string>`;
-  5. `sandbox/*Copy.ts`: словари песочниц (по объекту на язык); страницы демо — `sandbox/demoPages.ts`; общее — `sandbox/commonCopy.ts`.
-  Новый текст клади рядом с соседними, в том же стиле.
-- **Каждый видимый текст и aria-label пишется сразу на трёх языках.** Узбекский — латиница; в нём встречается и `'`, и `‘` (o‘, g‘).
-- Мёртвые ключи `translations.ts`, не используются нигде: вся секция `apps`, вся секция `compare`, `install.playProtectNotice`, `footer.copyright`, `footer.communityTitle`, `footer.channelLink`, `footer.botLink`. Прежде чем править текст, найди по разделу 6, какой источник реально выводится.
+- `Language = 'ru' | 'uz' | 'en'`. Выбор — в localStorage `ando_lang`, по умолчанию `uz`. Site ставит `<html lang>` и заголовок вкладки.
+- Тексты: сайт — `src/site/copy.ts` (`COPY[lang]`, `APPS[app][lang]`); песочницы — `sandbox/*Copy.ts`; страницы демо — `sandbox/demoPages.ts`; общее у песочниц — `sandbox/commonCopy.ts`.
+- **Каждый видимый текст и aria-label пишется сразу на трёх языках.** Узбекский — латиница (в нём и `'`, и `‘`: o‘, g‘). uz и en на сайте — черновики, владелец может переписать.
 
-## 9. Доступ, оплата, скачивание (DownloadModal)
-- Переключатели: приложение (AndoGram / Andusta) и способ доступа.
+## 9. Доступ, оплата, скачивание (окно «Получить доступ», AccessSheet)
+- Окно (09.11, новый вид, логика прежняя): выбор приложения (две карточки-радио), цена «1000 ★», кнопка «Оплатить в боте», под ней свёрнутое «У меня есть промокод».
   - **Stars**: ссылка `https://t.me/andouzbot?start=buy_<appId>` (бот @Andouzbot), цена 1000 Telegram Stars, подпись «после оплаты бот пришлёт код установки».
   - **Промокод**: ввод нормализуется (`trim` + верхний регистр) и отправляется на **реальный API бота** `POST ${API_BASE}/api/redeem-coupon` (`API_BASE` = `VITE_ANDO_API` или `https://api.ando.uz`). Сервер сжигает купон и возвращает `{ success, app, apk_url, activation_code }`. Статусы: успех → разблокировка; `already_used` → «уже активирован»; прочее → «неверный»; сеть/CORS недоступны → ошибка связи (все на 3 языках).
 - При успехе результат (`{app, apkUrl, code}`) пишется в localStorage `ando_activation` (переживает рефреш — чтобы не потерять одноразовый код), затем конфетти. Экран показывает: кнопку(и) скачивания APK (из `apk_url`, для `all` — обе), **карточку кода установки с копированием в один клик** (`.dl-code-*`), QR-код и «скопировать ссылку».
 - **Код установки** — это одноразовый код, который вводится в приложении при первом запуске (привязка к устройству, см. CLAUDE.md бота andouzbot). Сайт его только показывает; проверяет и привязывает его API бота `/api/activate`.
 - Проверка купона теперь **серверная** (бот + БД). Если API недоступен (бот не развёрнут / нет сети), купон не проверится — показывается ошибка связи, кнопка не разблокирует. Захардкоженного списка кодов на клиенте больше нет.
 
-## 10. Дизайн-система и анимации
-**Стиль «Старые деньги»** (`src/theme/old-money.css`, механизм — `bridge.css`, §5):
-- Фон — слоновая кость `#f1ece2` + зерно бумаги (SVG-шум), карточки `#faf7f0`, рамки `#ddd3c1`, текст `#1f2a24` / `#4d5952` / `#6a6556`, заголовки `#17251e`.
-- Акценты: бренд — тёмно-зелёный `#1e4a37` (кнопки, активные пункты), AndoGram — тёмно-синий `#23395d`, Andusta — бордо `#7a2c3a`, Stars — латунь `#b08d57` (текст `#7c5f2e`), декор — латунь `#c9a86a`.
-- Меню и футер — зелёная «кожа» `#183a2c` со своей светлой палитрой (переменные переопределены на `.ptl-sidebar` / `.site-footer`).
-- Шрифты: крупные заголовки — Cormorant Garamond 600 (`--v-display`, межстрочный 1.12), текст и мелкие заголовки — Jost; метки — капс с разрядкой. Радиусы 2–6px.
-- Внутри телефонов (песочницы, PhoneMockup) — свои тёмные экраны приложений, акцент в них латунный (`--v-accent-on-dark`).
-- Телефон в приоритете: фон прокручивается со страницей (fixed на телефонах дёргает перерисовку), у меню нет размытия, на ≤760px цели касания ≥40px (ссылки футера, «назад» на демо, вкладки), метки ≥12px.
-- Токены `:root` index.css (`--bg-dark`, `--accent-*`, `--text-*`, шрифты, радиусы) остались, но стиль переопределяет их через `html[data-style='old-money']`.
+- Экран «Доступ открыт»: кнопки скачивания (по выданным приложениям), код установки (тап — копия), три шага; QR и «Скопировать ссылку» — только на ПК (≥700px). Ошибки промокода — под полем, с «тряской» (без неё при reduced motion). Конфетти — цвета стиля.
 
-**Глобальные классы** (index.css):
-- `.container`;
-- кнопки: `.btn` + `.btn-primary-ando` / `.btn-outline` / `.btn-stars` / `.btn-shine`;
-- бейджи: `.badge-pill` + `.badge-ando` / `.badge-gram` / `.badge-usta`;
-- `.glass-panel`, `.spotlight` (вместе с `trackSpotlight`), `.gradient-text-ando/-gram/-usta`;
-- `.section-header/-title/-subtitle/-badge`, `.seg*`, `.modal-root/-panel/-close`;
-- `.sr-only`, `.skip-link`;
-- `.nowrap` — объявлен в Hero.css.
-
-Брейкпоинты свои в каждом компоненте (max-width 359–1000px). Основной — 960px, меню хедера. Hover-стили только внутри `@media (hover: hover) and (pointer: fine)`.
-
-**Правила анимаций:**
-- Анимируются только `transform` и `opacity`. `filter: blur` и `clip-path` — точечно, только на входе.
-- Кривые и длительности бери из `src/lib/motion.ts` (JS) и `--ease-*` (CSS), значения в них зеркальные. UI-анимации не дольше 0.3 с.
-- У каждой анимации есть вариант для `prefers-reduced-motion`: `<MotionConfig reducedMotion="user">` в App, `useReducedMotion()` в компонентах, CSS-медиа в стилях.
-- Эффекты от курсора (tilt, magnetic, spotlight, частицы) работают только с мышью: `useCanHover()` или `pointerType === 'mouse'`.
-- Canvas и бесконечные циклы ставятся на паузу вне экрана и в фоновой вкладке. Constellation стартует после первой отрисовки, DPR ≤ 2, на тач-устройствах 30 fps.
-- `useTilt`, `Reveal` и `Magnetic` владеют transform своего элемента. Hover-transform вешай на обёртку.
-- Готовые примитивы, новые не изобретать:
-  - появление при скролле — `Reveal`, `Stagger`/`StaggerItem`, `SectionHeader`;
-  - вкладки — `SegmentedControl` (с уникальным `layoutId`);
-  - диалоги — `ui/Modal`.
+## 10. Дизайн-система
+**Стиль «Старые деньги»** (`src/site/site.css`, телефон первым):
+- Токены `:root`: бумага `--paper #f1ece2` (+ зерно `--grain`, SVG-шум), полосы `--paper-2`, карточки `--card #faf7f0`, линии `--line #ddd3c1`, текст `--ink #1f2a24` / `--ink-2` / `--ink-3`, заголовки `--heading #17251e`, бренд `--green #1e4a37`, латунь `--brass #b08d57` (текст `--brass-ink`, на тёмном `--brass-light`), AndoGram `--navy #23395d`, Andusta `--burgundy #7a2c3a`, «кожа» `--leather #183a2c` (меню, лента демо, футер, полоса «купить»).
+- Шрифты: Cormorant Garamond 600 — крупные заголовки (цены, версии, номера — `lining-nums`: старые цифры читались как «IOOO»), Jost — текст, кнопки (капс с разрядкой), метки ≥12px.
+- Компоненты: `.btn` (`--primary` зелёная, `--outline`, `--brass` — оплата; `--lg` 54px, `--sm` 40px, `--block`), `.kicker`, `.h1`/`.h2`, `.lead`, `.text-link`, `.tag`, клубная карта `.mcard` (`--andogram`/`--andusta`, латунная рамка, «№ 01»), `.feat`, `.demo-card`, `.cmp-row`, `.step`, `.faq-item`, `.sheet` (`--sheet` / `--menu`).
+- Телефон первым: база — для телефона, `@media (min-width: …)` добавляют шире (600–1180). Цели касания ≥40px, текст ≥12px, без горизонтальной прокрутки (лента демо листается внутри себя), фон не fixed, у меню нет размытия.
+- Анимации — только CSS-переходы (окна, нижняя кнопка, стрелки, «+» в вопросах); при reduced motion выключены. Песочницы — свои правила (ниже).
+- Песочницам нужны токены `--accent-ando`, `--accent-usta`, `--text-main`, `--text-muted`, `--font-heading`, `--font-body`, `--font-mono`, `--ease-out`, `--ease-in-out` и `--header-h` (высота верхней панели для подгонки телефона: 60px, на ПК 72px) — они в site.css; внутри телефона (`.sbx-phone`) акцент латунный `#d8b878`.
 
 **Песочница (`sbx-`):**
-- Своя палитра тёмного Telegram (`--tg-*` на `.sbx`), интерфейс общий андроидный, не копия конкретного клиента. Зелёный ANDO — только наш слой: подсказки, подсветка, кнопки старта и финала.
+- Своя палитра тёмного Telegram (`--tg-*` на `.sbx`), интерфейс общий андроидный, не копия конкретного клиента. Цвет ANDO (с 09.11 латунь `#d8b878`/`rgba(216, 184, 120, …)`, был неоновый зелёный) — только наш слой: подсказки, подсветка, кнопки старта и финала.
 - Общий движок (`useSandbox` + `SandboxFrame`) одинаков для всех песочниц: подсказка через `hintDelay` (у моста 3 с), тап мимо цели показывает её сразу, повторный трясёт; тапы в первые 300 мс шага игнорируются; цель с `taps: N` нужно нажать N раз (PIN). Каждая кнопка внутри телефона вызывает `tap(ключ)`, фокусируема только ожидаемая цель.
 - `go(s)` поднимает счётчик прогона `run`: шаг (даже тот, что уже на экране) входит заново и перезапускает свои таймеры — так работают «Начать заново» и «Пройти ещё раз». Ключи в SandboxFrame с префиксами (`view-<viewKey>-<run>`, `hint-<step>`, `dock-<step>`), поэтому viewKey может совпадать с именем шага. Замер подсветки привязан к шагу и прогону (после рестарта старый замер не используется).
 - Подсказка у цели внизу чата (кнопка отправки, новые сообщения — `DOCKED`) встраивается в колонку чата между сообщениями и вводом и раздвигает переписку; у остальных целей — плавающая рядом. Подсветка меряется после анимации входа (400 мс).
@@ -371,7 +299,7 @@ src/theme/                СТИЛЬ САЙТА «Старые деньги» (�
 - Размер телефона (владелец 02.11, в третий раз: «выглядит нелепо»): всегда форма телефона — логически 360×760 (≈9:19, пропорция 2,11, как современный Android), и весь телефон масштабируется свойством `scale` под окно: по высоте 0,64…1,1 (`FIT_MIN`/`FIT_MAX`), ширина — жёсткий предел. Так на всех экранах, и на телефонах тоже (резиновый режим убран; раньше на низких окнах логическая высота падала до 648 — пропорция 1,8, «приплюснутый»). Ниже `FIT_MIN` (окно ниже ~600px по высоте) страница прокручивается; 1366×625 (ноутбук 1366×768 с панелями браузера) показывает телефон целиком. Высота окна берётся из пробы `100svh`, не из innerHeight: на телефоне фит не прыгает, когда прячется адресная строка. Подсветка пересчитывается в логические px (`rect.width / offsetWidth`). Примеры: 1536×732 → 293×618, 1920×960 → 388×819, 390×844 → 318×670, 360×740 → 268×566.
 - Телефон почти на весь экран (владелец 01.11): если хватает ширины (`sbx--rail`), подпись («Телефон 1 / AndoGram / Это ты…») стоит в колонке 132px слева (зазор 20px; `RAIL_W` / `GAP`), и телефону достаётся высота окна минус шапка и 40px (`FIT_AIR`). Иначе подпись — строкой над телефоном; JS берёт вариант с бо́льшим телефоном. Колонка песочницы на странице до 560px (текст не уже 360px), страница до 1200px; две колонки только шире 1280px, ниже — песочница под текстом. `.sbx` с `scroll-margin-bottom: 12px`: «Проверь сам» прокручивает так, что под телефоном остаётся воздух.
 - Финальная сцена длиннее UI-анимаций по решению владельца (`OUTRO`, всего 11,2 с): 1 с список → затемнение 3 с до 85% → слоган 2,5 с печать → пауза 1,2 с (в её начале приходит чат Лизы, через 0,5 с исчезает) → 2,5 с стирание → возврат 1 с → подсказка сразу (`HINT_DELAY_AT`). При reduced motion слоган появляется и исчезает целиком, тайминг тот же. Курсор слогана — обычный inline (inline-block разрывал бы слово при печати). Слои: подсветка 20, подсказка 21, затемнение 22, слоган 23; строка Лизы во время финала тоже 23 (`sbx-row--lifted`, видна сквозь затемнение).
-- Карточки архива: пустая строка после заголовка и между «Было»/«Стало» (и в карточке удаления — перед «Статус»); пузыри карточек шире (`sbx-msg--wide`, 94%), чтобы «Было/Стало» помещалось на экран. В заголовке страницы «A-B-C» не переносится (`ptl-demo-nowrap`).
+- Карточки архива: пустая строка после заголовка и между «Было»/«Стало» (и в карточке удаления — перед «Статус»); пузыри карточек шире (`sbx-msg--wide`, 94%), чтобы «Было/Стало» помещалось на экран. В заголовке страницы «A-B-C» не переносится (`.nowrap`).
 - Переписка (`.sbx-msgs`) прокручивается и, как в Telegram, держится на последнем сообщении, пока её не прокрутили вверх (нужно для длинных карточек архива). Подсветка пересчитывается при прокрутке.
 - В карточке «Было/Стало» изменённое слово подсвечено (`.sbx-mark`) — это подсказка демо, в приложении карточка обычным текстом.
 - Правка Даниля в чате: подсвечивается надпись «изменено» (`.sbx-edited--flash`: зелёная плашка `::before` (растёт влево от правого края, в пределах зазора до времени) + белая копия текста `.sbx-edited-copy` с aria-hidden, чтобы скринридер не читал «изменено» дважды; только opacity/transform, 2,8 с), слово меняется плавной сменой прозрачности (старое гаснет 0,7 с, новое проявляется 0,3 с). При reduced motion «изменено» просто горит, пока длится шаг.
@@ -381,45 +309,36 @@ src/theme/                СТИЛЬ САЙТА «Старые деньги» (�
 - AR-маски (`ar-`): запись — слой 6 над чатом (под подсветкой 20 и подсказкой 21). «Камера» (владелец 02.11: «реалистичнее… фото молодого парня, не мультяшное», «гиф 5 секундный») — ролик `src/assets/ar/cam.*`: 5 с, 30 к/с, бесшовный цикл, 1440×720 = две половины одного и того же кадра — слева без маски, справа с маской Гуля. `.ar-cam-media` (video, при reduced motion — img постера) шириной 200% круга; маска включена = `translateX(-50%)`: тот же момент того же кадра, поэтому маска «садится» посреди поворота и дальше идёт с лицом, видео не перезапускается; включение — мягкая вспышка 0,45 с (`ar-mask-flash`, при reduced motion нет). Ролик грузится один раз в blob (`arCameraClip.ts`: WebM VP9, где играет, иначе MP4 H.264 для Safari) со старта попытки — к записи уже готов; до загрузки виден постер. iOS: `muted` выставляется свойством перед `play()`. Как сделан (всё вне репо, `/root/Apps/andouz-e2e/ar-media/README.md`): фото — Z-Image-Turbo (Apache-2.0) через бесплатный HF Space; анимация (с 02.11, владелец смотрит на сайте) — LivePortrait (MIT: код KwaiVGI, веса KlingTeam; точки лица — MediaPipe, InsightFace с некоммерческими весами не используется): голова ±14° объёмно (уши, волосы, шея), фон стоит, взгляд держится на камере (правка «eyeball direction» LivePortrait), одно моргание (2,55 с, модуль глаз LivePortrait), лёгкая тряска «в руке»; LivePortrait рисует лицо мягко (вход 256 px), поэтому поверх возвращена деталь исходного фото — остаток «фото − кадр нейросети в исходной позе», сдвинутый оптическим потоком DIS. Маска Гуля отрисована по 3D-сетке лица MediaPipe (ткань с мостом от носа к подбородку, шов, серый кант, резинки к ушам, тень на шее) и едет по тому же потоку (сглаженному), ткань над ртом — с небольшим параллаксом. Прежний вариант — свой 2.5D-варп ±8° (WebM 326 КБ) — лежит в `ar-media/variant-2.5d/`: вернуть = скопировать 3 файла в `src/assets/ar/`. Иконка «Маска Гуля» — сама маска без лица (владелец 02.11: «просто нарисованная без человеческого лица»): рендер той же маски на светлом фоне с мягкой тенью, `ar-media/mask_icon.py`. «Оригинал» (без маски; владелец 03.11: «как на скрине, без лица») — эмодзи 🚫 картинкой Apple (`assets/emoji/1f6ab.png`, `emojify`) 32px в тёмном круге; у Apple 🚫 внутри прозрачный, поэтому под ним белый круг внутри кольца (`.ar-mask-none::before`, inset 11%: кольцо занимает 62–92% радиуса) — читается как в приложении (Android рисует 🚫 с белым центром). Прежняя иконка-лицо `thumb-plain.jpg` удалена. Кольцо записи вокруг круга растёт за 30 с (длина окружности посчитана: pathLength на <circle> в старом Safari ненадёжен). Таймер `0:05,2` (en — точка). Закрытая маска: только крупный «?», за ним ничего; тап — тост под рядом масок (подсказка Гуля стоит над рядом) + счёт как тап мимо.
 - Эмодзи — картинки Apple на всём сайте (владелец 02.11: «везде должна быть смайлики ios»): `src/lib/emoji.tsx` находит эмодзи (пиктограмма + VS16 / тон кожи, ZWJ-цепочки, флаги) и меняет на `<img class="emoji">` (1.2em, по базовой линии, alt — сам эмодзи; стиль в index.css). Картинки из `src/assets/emoji/` грузятся через `import.meta.glob` с `?no-inline` (иначе мелкие PNG попали бы в JS base64), отдельными файлами по мере показа. Подключено: в песочницах — строки чатов и тем, шапки, сообщения, подсказки, слоганы (и в невыпечатанном хвосте — строки не прыгают), посты, реакции, тосты; на портале — бейдж главной (⚡), «Поддержка» (⚡), описания фич и changelog, колонка AndoGram/Andusta в сравнении (⚠️). aria-label и live-область — обычным текстом. «©» — не эмодзи, не трогаем.
 - Слоганы на тёмном экране: «AndoGram» всегда отдельной строкой; точек в слоганах нет нигде — ни после AndoGram, ни в конце строк, запятые остаются (владелец 02.11; e2e проверяют); строки разбиты в тексте `\n` (`white-space: pre-line`), чтобы не висели одиночные слова. 22px, поля 20px (у No-Forwards 21px): каждая строка влезает в 300px даже самым широким запасным шрифтом для кириллицы (в Outfit кириллицы нет: на Windows рисует Arial, на Linux — DejaVu Sans; проверено на обоих).
-- Каждая песочница — свой ленивый чанк (`SANDBOXES` в DemoView), общий код движка (SandboxFrame + sandbox.css) — отдельный чанк. Маршрут демо в PortalLayout обёрнут в `ChunkBoundary` (ключ — id демо): без неё сбой загрузки чанка размонтировал весь сайт (пустая страница). Ленивые модалки в App.tsx — в `ChunkBoundary modal` (02.11, «да» владельца): сообщение поверх страницы с «Обновить» / «Закрыть», фокус на «Обновить», Esc закрывает. Плейсхолдеры загрузки (`.ptl-demo-loading`) — на весь экран под топбаром; правило для внешнего лежит в PortalLayout.css (основной бандл), иначе футер мелькал под топбаром.
+- Каждая песочница — свой ленивый чанк (`SANDBOXES` в `site/DemoPage.tsx`), общий код движка (SandboxFrame + sandbox.css) — отдельный чанк. Страница демо в `Site.tsx` обёрнута в `ChunkBoundary` (ключ — id демо): без неё сбой загрузки чанка размонтировал бы весь сайт; окно доступа — в `ChunkBoundary modal` (сообщение поверх страницы с «Обновить» / «Закрыть»). Плейсхолдеры загрузки — `.page-loading` / `.demo-loading` (на высоту экрана, футер не мелькает).
 - Слова с дефисом, которые нельзя переносить («A-B-C», «No-Forwards»), — `splitNoWrap` (demos.ts) + nowrap-span в заголовке страницы; U+2011 не используем: в шрифте Outfit его нет.
 - `backdrop-filter`: сначала `-webkit-backdrop-filter`, потом `backdrop-filter`. В обратном порядке Lightning CSS при сборке оставляет только префиксную строку, и в Chrome/Firefox размытия нет (исправлено в Topbar.css, остальное — §11).
 - Honeypot (`hp-`): экран PIN — size-контейнер (`container: hp-lock / size`): ниже 580px высоты логотип скрыт, квадраты 42px, клавиши `clamp(42px, 7.4cqh, 54px)`, так подсказка над клавиатурой не закрывает квадраты (с логической высотой 760 сейчас не срабатывает, оставлен про запас). Легенда — 5 строк, подсветка строки едет вниз (`--row`). Меню 86% ширины, с ним скрим — слой 5; 5 аккаунтов помещаются вместе с подсказкой. Фон экрана через `screenClassName` (`hp-screen--home` / `hp-screen--lock`). В финале карандаш списка гаснет (`hp-fab-out`). 🃏️ записан с VS16 (`\uFE0F`), иначе на Windows/Linux он монохромный.
 - No-Forwards (`nf-`): слои внутри экрана — скрим меню 5, пост под меню 6, меню 7 (`top` меряет JS над постом, на низких экранах прижато к верху), тост 8. Строка после попытки 1 — 29px в 2 строки (`.nf-outro--shrug`). Логотип канала в списке — `RowData.avatar` общего ChatRow. Закрывающееся меню `inert`, закрывающийся тост `aria-hidden`.
 
 **Доступность:**
-- язык в топбаре — кнопка-раскрывашка (`aria-expanded`, `aria-controls` пока открыт; aria-label «Язык: Русский» на языке сайта); список закрывается по Esc (фокус на кнопку), клику снаружи и уходу фокуса Tab-ом; у вариантов `lang` и `aria-current`. ☰ (≤900px) с `aria-expanded` и подписью на языке сайта;
-- skip-link фокусирует `<main id="main">` без смены хеша (переход на `#main` хеш-роутер понимал как «Главная»); tabindex у main временный, снимается на blur (иначе любой клик по контенту забирал фокус); aria-label на всех трёх языках;
-- прокрутка наверх при навигации (PortalLayout) при reduced motion мгновенная;
-- tablist/tabpanel связываются через `idPrefix`;
-- в модалках фокус-трап и возврат фокуса;
-- `aria-current` в меню; декор помечен `aria-hidden`.
+- язык — кнопка-раскрывашка (`aria-expanded`, `aria-controls`, aria-label «Язык: Русский» на языке сайта), закрывается по Esc, клику снаружи, уходу фокуса; у вариантов `lang` и `aria-current`;
+- меню и окно — `role="dialog"` + `aria-modal`, фокус-ловушка, возврат фокуса, Esc; ☰ с `aria-expanded`;
+- skip-link фокусирует `<main id="main">` без смены хеша; вкладки сравнения — `tablist` со стрелками; вопросы — `details`;
+- в сравнении на телефоне видимые подписи «Telegram / AndoGram», на ПК — шапка + скрытые подписи для скринридера; декор помечен `aria-hidden`.
 
 ## 11. Известные проблемы и долги
-1. Платный доступ теперь проверяется на сервере (API бота). Но APK-ссылки по-прежнему публичные (GitHub-релиз) — купон/код защищают запуск приложения, а не скачивание файла. API бота должен быть развёрнут на `api.ando.uz`, иначе промокод-вкладка не работает.
-2. Размер Andusta: в data.ts `82.4 MB`, а APK в релизе весит 387 707 487 Б ≈ 369.7 MiB. Сайт пишет MiB как «MB»: у AndoGram 101 211 974 Б = 96.5 MiB, совпадает.
-3. SEO-мета в index.html только на русском, не меняется при смене языка и описывает старый лендинг (не портал).
-4. Главный JS-чанк ~536 kB (gzip ~172 kB), один бандл; Vite предупреждает о >500 kB. Code-split по вью не делали (скоро большой редизайн).
-5. Мёртвые ключи в translations.ts (раздел 8). Неиспользуемый `public/logo.jpg` (644 КБ) попадает в `dist`.
-6. В спеках AppDetailsModal архитектура `ARM64-v8a` захардкожена для обоих приложений.
-7. Видимые кнопки, ведущие на несуществующего `@ando_stars_bot` (старый бот оплаты): Community — «канал» и «чат», Support — «бот поддержки» и «Предложить фичу» (`?start=idea`); пятая такая ссылка — в Roadmap, он не смонтирован. (До 03.11 здесь ошибочно было написано, что они ведут на `@Andouzbot`.) Отдельных Telegram-канала/чата/Instagram пока нет. Владелец 03.11: «пока не надо» — ждём реальные ссылки или его слово.
-8. Stats-раздел выключен 30.10 (были выдуманные метрики). Вернуть только на реальных данных (API бота `api.ando.uz` / статистика andouzbot), иначе не возвращать.
-9. Песочница моста показывает карточки архива на языке сайта, а приложение пишет их только по-русски (`ArchiveNamingHelper` в andogram).
-10. Описание моста в `data.ts` обещает «24/7», хотя мост работает, только пока телефон A включён и в сети. В песочнице это условие не показываем (решение владельца 01.11).
-11. В песочнице чат Лизы после удаления исчезает целиком, без пометки (решение владельца 01.11, ради эффекта). В приложении по умолчанию (AyuGram `saveDeletedMessages=true`) удалённое сообщение остаётся в чате с пометкой.
-12. Honeypot-демо прячет аккаунты только в меню. Уведомлений в сценарии владельца нет, о них говорит только текст страницы.
-13. GitHub из футера убран (02.11), но страница «ANDO в сети» (CommunityView) всё ещё показывает карточку открытого репозитория `github.com/Bgnnrscrt/andouz`. Убирать ли её — не решено (владелец позже привяжет Telegram andouzdev / andouzsupport).
-14. No-Forwards: в приложении пункт называется «В Избранное (обход защиты)» и только по-русски (захардкожен в ChatActivity). В демо он «Сохранить в «Избранное»» / «Save to Saved Messages» / «Saqlangan xabarlarga», без «(обход защиты)», чтобы запрет раскрылся только во 2-й попытке. Официальный Telegram пишет о запрете подписью в меню, в демо это тост на 3 с (сценарий владельца). На 320px ru/en этот пункт обрезается многоточием (ниже диапазона проверки 360–400).
-15. Узбекские тексты песочниц и страниц правил не носитель языка. Владелец 02.11: для узбекского «почти всё перепишем» — ждём его тексты (03.11: «позже»). Пока на uz карточка фичи — «Ishlatib ko‘rish», а шапка страницы демо — «Qanday ishlaydi».
-16. ~~«Назад» при открытой модалке~~ — исправлено 09.11: «Назад» закрывает модалку и меню (§6, `useBackToClose`).
-17. `backdrop-filter` в обратном порядке (без размытия в Chrome/Firefox) остался в Sidebar.css (2 места), index.css (`.glass-panel`, `.modal-root`) и BackToTop.css. Владелец 02.11: оставить как есть (размытие только у топбара).
-18. AR-маски: «камера» — сгенерированное фото (Z-Image-Turbo, синтетический человек, не реальный), анимация LivePortrait. **Владелец 03.11: ролик оставить** («оставь, нормально»). Внешность получилась восточноазиатской (так понял генератор); другой типаж — новое фото: анонимная квота HF ZeroGPU ≈ 3 картинки в сутки (больше — с HF-токеном) или оплата Gemini (ключ бота CTO на бесплатном тарифе: Nano Banana и Veo отвечают 429 «limit: 0»). WebM 843 КБ; запасные варианты вне репо: облегчённый `ar-media/variant-liveportrait/lighter/` (WebM 602 КБ, кожа чуть глаже) и прежний 2.5D-варп ±8° `ar-media/variant-2.5d/`. Пересборка LivePortrait — временный venv с torch (~1,8 ГБ) + веса 0,6 ГБ, после — удалить; порядок в README. Маски «Forest», «Нуар»… в демо закрыты («?»), их вида у нас нет.
-19. Все эмодзи сайта — картинки Apple (просьба владельца). Картинки эмодзи Apple — собственность Apple; ими пользуются многие (Telegram Desktop и др.), но формально лицензии на сайт нет. Замена без риска — свободные наборы (Twemoji, Noto): поменять PNG в `src/assets/emoji/`.
-20. На низких окнах телефон мельче: на 1366×625 масштаб ≈0,67 (243×511), ниже ~600px высоты упирается в `FIT_MIN` 0,64 и страница прокручивается; на маленьких телефонах текст в песочнице мелкий (≈0,74 на 360×740). Цена естественной формы.
-21. e2e-скрипты (`/root/Apps/andouz-e2e`) обновлены 02.11 (5 раундов Honeypot, AR-маски, кольцо в статус-баре, эмодзи-картинки через `window.__txt`); затем ещё раз: AR — ролик «камеры» (играет из blob, половина без маски / с маской, тот же кадр после тапа, постер при reduced motion), во всех 4 — слоган без точек. AR при reduced motion: после включения маски проверка ждёт 2 кадра — в `.sbx` у всего переход 0,01 мс, половина сменяется на следующем кадре (иначе ложный провал). 03.11 — ряд масок: «Оригинал» первый и выбран (значок 🚫 на белом круге), «Маска Гуля» вторая, после её выбора «Оригинал» не выбран. Старые версии — `*.bak-20261102`, `*.bak-20261102b`, `run-armasks.cjs.bak-20261102c`, `run-armasks.cjs.bak-20261103` рядом.
-
-22. Выложенный APK Andusta (v1.0.0, 27.10) старше всех исправлений 03.11: детектор отписок в нём не подключён (карточка и строка сравнения — «тест»), скачивание пишет в галерею по-старому. Тексты сайта рассчитаны на новую сборку (её собирает Антигравити), в старой часть функций работает хуже.
-23. Песочницы Andusta (03.11) — только по прямой ссылке до проверки функций на телефоне (решение владельца). Экраны «как Instagram» — общий тёмный вид, подписи Instagram на uz/en с телефоном не сверены (сценарий, «Вид «как Instagram»»). Шрифты песочницы шрифтов грузятся с Google Fonts при её открытии. Остальные 10 песочниц Andusta (волны 2–3, звук) не сделаны.
+1. Платный доступ проверяется на сервере (API бота), но APK-ссылки публичные (GitHub-релиз): код защищает запуск приложения, а не скачивание файла. API бота должен работать на `api.ando.uz`, иначе промокод не проверится.
+2. Размер Andusta: сайт пишет 370 МБ — реальный APK релиза 387 707 487 Б (раньше в data.ts было 82.4 MB). Новый APK — обновить `copy.ts` во всех языках.
+3. SEO-мета в index.html только на русском и не меняется при смене языка.
+4. Главный JS-чанк ~317 kB (без motion); демо, песочницы и окно доступа — отдельные ленивые чанки.
+5. `public/logo.jpg`, `logo-96.webp`, `logo-256.webp` сайтом не используются (попадают в dist).
+6. Песочница моста показывает карточки архива на языке сайта, а приложение пишет их только по-русски (`ArchiveNamingHelper` в andogram).
+7. Мост в приложении работает, только пока телефон A включён и в сети. Сайт больше не обещает «24/7»; в песочнице это условие не показываем (решение владельца 01.11).
+8. В песочнице чат Лизы после удаления исчезает целиком, без пометки (решение владельца 01.11, ради эффекта). В приложении по умолчанию (AyuGram `saveDeletedMessages=true`) удалённое сообщение остаётся в чате с пометкой.
+9. Honeypot-демо прячет аккаунты только в меню. Уведомлений в сценарии владельца нет, о них говорит только текст страницы.
+10. No-Forwards: в приложении пункт называется «В Избранное (обход защиты)» и только по-русски (захардкожен в ChatActivity). В демо он «Сохранить в «Избранное»» / «Save to Saved Messages» / «Saqlangan xabarlarga», без «(обход защиты)», чтобы запрет раскрылся только во 2-й попытке. Официальный Telegram пишет о запрете подписью в меню, в демо это тост на 3 с (сценарий владельца). На 320px ru/en этот пункт обрезается многоточием (ниже диапазона проверки 360–400).
+11. Узбекские тексты песочниц и страниц правил не носитель языка. Владелец 02.11: для узбекского «почти всё перепишем» — ждём его тексты (03.11: «позже»). Пока на uz карточка фичи — «Ishlatib ko‘rish», а шапка страницы демо — «Qanday ishlaydi».
+12. AR-маски: «камера» — сгенерированное фото (Z-Image-Turbo, синтетический человек, не реальный), анимация LivePortrait. **Владелец 03.11: ролик оставить** («оставь, нормально»). Внешность получилась восточноазиатской (так понял генератор); другой типаж — новое фото: анонимная квота HF ZeroGPU ≈ 3 картинки в сутки (больше — с HF-токеном) или оплата Gemini (ключ бота CTO на бесплатном тарифе: Nano Banana и Veo отвечают 429 «limit: 0»). WebM 843 КБ; запасные варианты вне репо: облегчённый `ar-media/variant-liveportrait/lighter/` (WebM 602 КБ, кожа чуть глаже) и прежний 2.5D-варп ±8° `ar-media/variant-2.5d/`. Пересборка LivePortrait — временный venv с torch (~1,8 ГБ) + веса 0,6 ГБ, после — удалить; порядок в README. Маски «Forest», «Нуар»… в демо закрыты («?»), их вида у нас нет.
+13. Все эмодзи сайта — картинки Apple (просьба владельца). Картинки эмодзи Apple — собственность Apple; ими пользуются многие (Telegram Desktop и др.), но формально лицензии на сайт нет. Замена без риска — свободные наборы (Twemoji, Noto): поменять PNG в `src/assets/emoji/`.
+14. На низких окнах телефон мельче: на 1366×625 масштаб ≈0,67 (243×511), ниже ~600px высоты упирается в `FIT_MIN` 0,64 и страница прокручивается; на маленьких телефонах текст в песочнице мелкий (≈0,74 на 360×740). Цена естественной формы.
+15. e2e (`/root/Apps/andouz-e2e`): песочницы — `run*.cjs` + `matrix/` (селекторы страницы демо обновлены 09.11 под новый сайт: `.demo-title`, `.roles li`, `.top-list`), Andusta — `andusta/autopilot.cjs`; новый сайт — `site/` (phone-audit, back-button, access-flow, см. README там). `portal.cjs` и `topbar.cjs` проверяли удалённый портал — устарели.
+16. Выложенный APK Andusta (v1.0.0, 27.10) старше всех исправлений 03.11: детектор отписок в нём не подключён (карточка и строка сравнения — «тест»), скачивание пишет в галерею по-старому. Тексты сайта рассчитаны на новую сборку (её собирает Антигравити), в старой часть функций работает хуже.
+17. Песочницы Andusta (03.11) — только по прямой ссылке до проверки функций на телефоне (решение владельца). Экраны «как Instagram» — общий тёмный вид, подписи Instagram на uz/en с телефоном не сверены (сценарий, «Вид «как Instagram»»). Шрифты песочницы шрифтов грузятся с Google Fonts при её открытии. Остальные 10 песочниц Andusta (волны 2–3, звук) не сделаны.
 
 ## 12. Журнал
 История до CLAUDE.md (2026-10-27, `d14fdff`…`b672fc5`):
@@ -433,7 +352,6 @@ src/theme/                СТИЛЬ САЙТА «Старые деньги» (�
 
 | Дата | Изменение | Файлы |
 |---|---|---|
-| 2026-11-01 | `main` перемотан на `ba19ac6`: песочница v2 и правки портала на ando.uz | — |
 | 2026-11-01 | Песочница моста: вернули шаг владельца, потерянный в v2 — после правки Даниля выходишь из чата, на телефоне 1 появляется «Личный архив» → тема «Даниль» → «Было/Стало», и только потом «Взять второй телефон» (раньше кнопка была прямо в чате). Новые шаги `aArchiveIn` / `aFriendTopic` / `aEditCard`, цель `card-edit`, подсказки на 3 языках. build+lint чистые; e2e ru/uz/en, 360–1920 px, reduced motion | sandbox/{bridgeFlow,bridgeCopy,BridgeSandbox}, CLAUDE.md |
 | 2026-11-01 | Песочница моста, правки владельца: телефон почти на весь экран (подпись и управление в колонке слева, `sbx--rail`, ≈84% высоты окна; колонка до 540px, две колонки страницы шире 1280px); правку Даниля видно (зачёркнуто → подсвечено, шаг `aEditing`); пустые строки в карточках «Было/Стало» и удаления; затемнение 85%; Лиза приходит, когда слоган напечатан, и исчезает через 0,5 с поверх затемнения, стирание + возврат за 1 с, подсказка «удалила сообщение…» сразу; широкие пузыри карточек; «A-B-C» без переноса. build+lint чистые; e2e ru/uz/en, 360–1920 px, reduced motion | sandbox/*, BridgeDemoView.{tsx,css}, CLAUDE.md |
 | 2026-11-01 | Общий движок песочниц (engine.ts, useSandbox.ts, SandboxFrame.tsx, commonCopy.ts), мост переведён на него без изменения поведения; страница демо обобщена (`BridgeDemoView` → `DemoView` с DEMOS). Мост по просьбе владельца: светится «изменено», а не слово; у Лизы «прости меня» (было «прочти»), uz «meni kechir», en «please forgive me»; «Другие функции» → «Другие сценарии». build+lint чистые; e2e моста ru/uz/en, 390–1920 px, reduced motion | sandbox/*, portal/views/DemoView.*, PortalLayout.tsx, CLAUDE.md |
@@ -453,3 +371,4 @@ src/theme/                СТИЛЬ САЙТА «Старые деньги» (�
 | 2026-11-09 | Превью стилей, круг 2 (владелец: «понравился первый… ещё 5 вообще других»): `/style/1` «Старые деньги» оставлен, 2–6 — новые «Самарканд», «Необрутализм», «Нуар», «Блокнот», «Семидесятые» (свои шрифты, узоры SVG, детали); прежние 2–5 убраны; плашка 1–6. Основной сайт не тронут (главный CSS прежний). build+lint чистые; снимки 6 стилей: главная, проекты, установка, демо, окно покупки, телефон 390px | src/main.tsx, src/variants/*, CLAUDE.md |
 | 2026-11-09 | **Стиль сайта — «Старые деньги»** (выбор владельца; 95% посетителей с телефона — телефон в приоритете): `src/theme/` (bridge + old-money) подключён в main.tsx, `<html data-style="old-money">`, шрифты Cormorant Garamond + Jost (Outfit/Inter убраны), theme-color/manifest `#f1ece2`; превью `/style/…` и `src/variants/` удалены. Телефон: «Назад» закрывает меню и окно покупки (`useBackToClose`, переход из меню без «пустого» нажатия), фон без fixed, меню без размытия, цели касания ≥40px, метки ≥12px, плотные заголовки; исправлено: невидимая кнопка бота в футере, неоновые иконки (FAQ, поддержка, копирование). Проверки: аудит телефонов 360/375/390/412 × uz/ru/en × 10 страниц — без выхода за край, обрезаний и ошибок; сценарии «Назад» 10/10; матрица песочниц 28/28 (4 прогона повторены: падали из-за пересборки посреди прогона и нагрузки), topbar.cjs и portal.cjs — ок; повторный аудит телефонов — 0 замечаний; build+lint чистые | index.html, public/site.webmanifest, src/main.tsx, src/theme/*, src/hooks/useBackToClose.ts, ui/Modal.tsx, portal/PortalLayout.tsx, CLAUDE.md |
 | 2026-11-09 | Новая картинка превью ссылки (Telegram и др.) в стиле «Старые деньги»: ANDO, «Экосистема абсолютной свободы и приватности», AndoGram/Andusta, телефон с новым сайтом; `og:image` с `?v=20261109` (сброс кэша), `og:image:alt`, `og:image:type`. Шаблон и скрипты — `/root/Apps/andouz-e2e/og/` (вне репо). Кэш превью в Telegram обновляется через @WebpageBot | public/og-image.jpg, index.html, CLAUDE.md |
+| 2026-11-09 | **Сайт пересобран с нуля** (владелец: «подними сам с нуля, сохранив только цвет, стиль и шрифт»; телефон первым): `src/site/` — главная из 7 разделов, страницы приложений, страницы демо, окно «Получить доступ» (логика оплаты прежняя), меню-шторка, нижняя кнопка на телефоне, новые честные тексты uz/ru/en; портал Антигравити, `src/theme/`, translations*, data.ts удалены; песочницы перекрашены в латунь. Проверки: аудит телефонов 360–412 × 3 языка × 9 страниц — 0 замечаний, «Назад» 10/10, окно доступа с подменённым API, матрица песочниц 28/28 (проверка масок теперь ждёт буферизацию ролика до 1,5 с), Andusta 3/3 (цвет «Andusta» в слогане — розовый стиля), build+lint чистые. Не выложено — владелец проверит | src/*, CLAUDE.md |
