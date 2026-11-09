@@ -138,7 +138,7 @@ export const Roadmap: React.FC<RoadmapProps> = ({ lang }) => {
             </div>
 
             <a
-              href="https://t.me/ando_stars_bot"
+              href="https://t.me/Andouzbot"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-outline btn-shine rm-callout-btn"

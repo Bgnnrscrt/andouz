@@ -107,9 +107,9 @@ export const translations = {
     couponTab: { ru: "Промокод (VIP)", uz: "Promokod (VIP)", en: "Promo Coupon" },
     starsPrice: { ru: "1000 Telegram Stars", uz: "1000 Telegram Stars", en: "1,000 Telegram Stars" },
     starsDesc: {
-      ru: "Единоразовый доступ ко всем будущим обновлениям. Оплата происходит мгновенно в официальном боте Telegram.",
-      uz: "Barcha yangilanishlarga cheksiz ruxsat. To'lov rasmiy Telegram boti orqali darhol amalga oshiriladi.",
-      en: "One-time access including all future updates. Instant payment via official Telegram Bot."
+      ru: "Покупка навсегда, для одного телефона. Оплата мгновенно в официальном боте @Andouzbot — он же пришлёт APK и код активации.",
+      uz: "Bitta telefon uchun butunlay xarid. To'lov rasmiy @Andouzbot botida darhol — u APK va faollashtirish kodini yuboradi.",
+      en: "A one-time purchase, forever, for one phone. Pay instantly in the official @Andouzbot — it sends the APK and an activation code."
     },
     btnPayBot: { ru: "Оплатить 1000 Stars в боте", uz: "Botda 1000 Stars to'lash", en: "Pay 1,000 Stars in Bot" },
     couponPlaceholder: { ru: "ВВЕДИТЕ ПРОМОКОД (НАПР. ANDO-VIP-2026)", uz: "PROMOKODNI KIRITING", en: "ENTER PROMO CODE" },
