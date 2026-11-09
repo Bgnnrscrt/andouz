@@ -1,0 +1,966 @@
+/* ==========================================================================
+   Style previews — the bridge (src/variants/, routes /style/1 … /style/5).
+   The live site keeps its colours written straight into component CSS. Here every such
+   place is pointed at semantic --v-* variables, and each theme in themes.css only sets
+   those variables (plus its own signature touches). Everything is scoped to
+   html[data-style], so nothing applies on the normal site — this file isn't even
+   downloaded there.
+   ========================================================================== */
+
+/* ---------- base ---------- */
+html[data-style] {
+  --bg-dark: var(--v-bg);
+  --bg-card: var(--v-surface);
+  --bg-card-hover: var(--v-surface-hover);
+  --border-subtle: var(--v-line);
+  --border-hover: var(--v-accent-line);
+  --accent-ando: var(--v-accent-text);
+  --accent-ando-glow: var(--v-accent-soft);
+  --accent-gram: var(--v-gram-text);
+  --accent-gram-glow: var(--v-gram-soft);
+  --accent-usta: var(--v-usta-text);
+  --accent-usta-glow: var(--v-usta-soft);
+  --accent-stars: var(--v-stars-text);
+  --text-main: var(--v-text);
+  --text-muted: var(--v-text-2);
+  --text-dim: var(--v-text-3);
+}
+html[data-style] body {
+  background-color: var(--v-bg);
+  background-image: var(--v-bg-image, none);
+  background-attachment: fixed;
+  color: var(--v-text);
+}
+html[data-style] ::selection {
+  background: var(--v-selection);
+  color: var(--v-selection-ink);
+}
+html[data-style] :focus-visible {
+  outline-color: var(--v-focus);
+}
+html[data-style] ::-webkit-scrollbar-track {
+  background: var(--v-bg);
+}
+html[data-style] ::-webkit-scrollbar-thumb {
+  background: var(--v-scroll-thumb);
+}
+html[data-style] ::-webkit-scrollbar-thumb:hover {
+  background: var(--v-accent);
+}
+html[data-style] .skip-link {
+  background: var(--v-accent);
+  color: var(--v-accent-ink);
+}
+html[data-style] h1,
+html[data-style] h2,
+html[data-style] h3,
+html[data-style] h4 {
+  font-family: var(--font-heading);
+}
+
+/* gradient text: only background-image, the shorthand would reset background-clip */
+html[data-style] .gradient-text-ando,
+html[data-style] .gradient-text-gram,
+html[data-style] .gradient-text-usta {
+  background-image: var(--v-title-grad);
+  -webkit-text-fill-color: var(--v-title-fill, transparent);
+}
+
+/* ---------- global primitives (index.css) ---------- */
+html[data-style] .glass-panel {
+  background: var(--v-surface);
+  border-color: var(--v-line);
+}
+html[data-style] .spotlight {
+  --spot-color: var(--v-spot, transparent);
+  --spot-border: var(--v-spot-line, transparent);
+}
+html[data-style] .btn-primary-ando {
+  background: var(--v-btn-bg);
+  color: var(--v-btn-ink);
+  box-shadow: var(--v-btn-shadow);
+}
+html[data-style] .btn-outline {
+  background: var(--v-btn2-bg);
+  color: var(--v-btn2-ink);
+  border-color: var(--v-btn2-line);
+}
+html[data-style] .btn-stars {
+  background: var(--v-stars-btn-bg);
+  color: var(--v-stars-btn-ink);
+  box-shadow: none;
+}
+html[data-style] .btn-shine::after {
+  background: linear-gradient(105deg, transparent 35%, var(--v-shine) 50%, transparent 65%);
+}
+html[data-style] .badge-pill {
+  background: var(--v-chip-bg);
+  border-color: var(--v-line);
+  color: var(--v-text-2);
+}
+html[data-style] .badge-ando {
+  background: var(--v-accent-soft);
+  color: var(--v-accent-text);
+  border-color: var(--v-accent-line);
+}
+html[data-style] .badge-gram {
+  background: var(--v-gram-soft);
+  color: var(--v-gram-text);
+  border-color: var(--v-gram-line);
+}
+html[data-style] .badge-usta {
+  background: var(--v-usta-soft);
+  color: var(--v-usta-text);
+  border-color: var(--v-usta-line);
+}
+html[data-style] .seg-bar {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .seg-pills .seg-btn {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .seg-pills .seg-btn.is-active {
+  color: var(--v-text);
+}
+html[data-style] .seg-btn {
+  --seg-color: var(--v-accent-text) !important;
+}
+html[data-style] .seg-btn.is-active {
+  color: var(--v-text);
+}
+html[data-style] .seg-indicator {
+  background: var(--v-seg-bg, var(--v-accent-soft));
+  border-color: var(--v-seg-line, var(--v-accent-line));
+  box-shadow: none;
+}
+html[data-style] .modal-root {
+  background: var(--v-overlay);
+}
+html[data-style] .modal-panel {
+  background: var(--v-panel);
+  border-color: var(--v-line-strong);
+  box-shadow: var(--v-panel-shadow);
+}
+html[data-style] .modal-close {
+  background: var(--v-surface-2);
+  color: var(--v-text-2);
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-style] .glass-panel:hover {
+    background: var(--v-surface-hover);
+    border-color: var(--v-line-strong);
+    box-shadow: var(--v-elev-hover);
+  }
+  html[data-style] .glass-panel-glow:hover {
+    border-color: var(--v-accent-line);
+    box-shadow: var(--v-elev-hover);
+  }
+  html[data-style] .btn-primary-ando:hover {
+    box-shadow: var(--v-btn-shadow-hover);
+  }
+  html[data-style] .btn-outline:hover {
+    background: var(--v-btn2-bg-hover);
+    border-color: var(--v-btn2-line-hover);
+  }
+  html[data-style] .btn-stars:hover {
+    box-shadow: none;
+    filter: brightness(1.05);
+  }
+  html[data-style] .seg-btn:not(.is-active):hover {
+    color: var(--v-text);
+  }
+  html[data-style] .seg-pills .seg-btn:not(.is-active):hover {
+    border-color: var(--v-line-strong);
+  }
+  html[data-style] .modal-close:hover {
+    background: var(--v-surface-hover);
+    color: var(--v-text);
+  }
+}
+
+/* ---------- shape: every theme sets its own corner radii ----------
+   (components write many radii directly, so the main blocks are listed here) */
+html[data-style] .ptl-hero-banner,
+html[data-style] .ptl-product-card,
+html[data-style] .ptl-feature-card,
+html[data-style] .ptl-app-banner,
+html[data-style] .ptl-changelog-card,
+html[data-style] .ptl-docs-security-card,
+html[data-style] .ptl-faq-item,
+html[data-style] .ptl-support-card,
+html[data-style] .ptl-community-card,
+html[data-style] .ptl-demo-roles,
+html[data-style] .ptl-project-tabs,
+html[data-style] .install-card,
+html[data-style] .cmp-card,
+html[data-style] .modal-panel {
+  border-radius: var(--v-r-card);
+}
+html[data-style] .ptl-hero-stat-card,
+html[data-style] .ptl-prod-features-mini,
+html[data-style] .ptl-spec-item,
+html[data-style] .ptl-security-item,
+html[data-style] .ptl-lang-menu,
+html[data-style] .ptl-status-card,
+html[data-style] .ptl-support-status-bar,
+html[data-style] .install-notice,
+html[data-style] .dl-price,
+html[data-style] .dl-code-box,
+html[data-style] .dl-qr-box,
+html[data-style] .dl-input,
+html[data-style] .dl-code-value {
+  border-radius: var(--v-r-inner);
+}
+html[data-style] .btn,
+html[data-style] .ptl-btn-primary,
+html[data-style] .ptl-btn-secondary,
+html[data-style] .ptl-card-btn-view,
+html[data-style] .ptl-card-btn-dl,
+html[data-style] .ptl-feature-demo-btn,
+html[data-style] .ptl-support-link-btn,
+html[data-style] .ptl-community-btn,
+html[data-style] .ptl-project-tab-btn,
+html[data-style] .ptl-nav-item,
+html[data-style] .ptl-sub-item,
+html[data-style] .ptl-toggle-btn,
+html[data-style] .ptl-menu-trigger,
+html[data-style] .ptl-lang-trigger,
+html[data-style] .seg-bar,
+html[data-style] .seg-btn,
+html[data-style] .seg-indicator {
+  border-radius: var(--v-r-btn);
+}
+html[data-style] .ptl-hero-badge,
+html[data-style] .ptl-prod-badge,
+html[data-style] .ptl-feature-tag,
+html[data-style] .ptl-badge-pill,
+html[data-style] .marquee-chip,
+html[data-style] .badge-pill,
+html[data-style] .ptl-demo-kicker,
+html[data-style] .footer-logo-tld {
+  border-radius: var(--v-r-chip);
+}
+html[data-style] .ptl-prod-icon,
+html[data-style] .ptl-app-main-icon,
+html[data-style] .ptl-stat-icon-wrapper,
+html[data-style] .ptl-feature-icon,
+html[data-style] .ptl-security-icon,
+html[data-style] .ptl-support-icon,
+html[data-style] .ptl-community-icon,
+html[data-style] .install-icon {
+  border-radius: var(--v-r-icon);
+}
+
+/* ---------- colours written inline in components (style={{…}}) ----------
+   The browser serialises them as rgb()/rgba(); phones (.phone-screen, .sbx) are
+   app screens and keep their own colours. */
+html[data-style] #root [style*="color: rgb(0, 245, 155)"]:not(.phone-screen *, .sbx *) {
+  color: var(--v-accent-text) !important;
+}
+html[data-style] #root [style*="color: rgb(0, 180, 216)"]:not(.phone-screen *, .sbx *) {
+  color: var(--v-gram-text) !important;
+}
+html[data-style] #root [style*="color: rgb(255, 0, 127)"]:not(.phone-screen *, .sbx *) {
+  color: var(--v-usta-text) !important;
+}
+html[data-style] #root [style*="color: rgb(245, 158, 11)"]:not(.phone-screen *, .sbx *) {
+  color: var(--v-stars-text) !important;
+}
+html[data-style] #root [style*="background: rgba(0, 245, 155"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-accent-soft) !important;
+}
+html[data-style] #root [style*="background: rgba(0, 180, 216"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-gram-soft) !important;
+}
+html[data-style] #root [style*="background: rgba(255, 0, 127"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-usta-soft) !important;
+}
+html[data-style] #root [style*="background: rgba(245, 158, 11"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-stars-soft) !important;
+}
+html[data-style] #root [style*="border-color: rgba(0, 245, 155"]:not(.phone-screen *, .sbx *),
+html[data-style] #root [style*="solid rgba(0, 245, 155"]:not(.phone-screen *, .sbx *) {
+  border-color: var(--v-accent-line) !important;
+}
+html[data-style] #root [style*="border-color: rgba(0, 180, 216"]:not(.phone-screen *, .sbx *) {
+  border-color: var(--v-gram-line) !important;
+}
+html[data-style] #root [style*="border-color: rgba(255, 0, 127"]:not(.phone-screen *, .sbx *) {
+  border-color: var(--v-usta-line) !important;
+}
+html[data-style] #root [style*="border-color: rgba(245, 158, 11"]:not(.phone-screen *, .sbx *) {
+  border-color: var(--v-stars-line) !important;
+}
+html[data-style] #root [style*="background: rgb(0, 245, 155)"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-accent) !important;
+}
+html[data-style] #root [style*="background: rgb(0, 180, 216)"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-gram) !important;
+}
+html[data-style] #root [style*="background: rgb(255, 0, 127)"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-usta) !important;
+}
+html[data-style] #root [style*="background: rgb(245, 158, 11)"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-stars) !important;
+}
+html[data-style] #root [style*="linear-gradient(135deg, rgb(0, 180, 216)"]:not(.phone-screen *, .sbx *) {
+  background: var(--v-btn-bg) !important;
+  color: var(--v-btn-ink) !important;
+}
+html[data-style] [style*="--chip-color: #00f59b"] { --chip: var(--v-accent-text); }
+html[data-style] [style*="--chip-color: #00b4d8"] { --chip: var(--v-gram-text); }
+html[data-style] [style*="--chip-color: #ff007f"] { --chip: var(--v-usta-text); }
+html[data-style] [style*="--chip-color: #f59e0b"] { --chip: var(--v-stars-text); }
+html[data-style] [style*="--cmp-color: #00b4d8"] { --cmp-color: var(--v-gram-text) !important; }
+html[data-style] [style*="--cmp-color: #ff007f"] { --cmp-color: var(--v-usta-text) !important; }
+html[data-style] [style*="--link-color: #00b4d8"] { --link-color: var(--v-gram-text) !important; }
+html[data-style] [style*="--link-color: #ff007f"] { --link-color: var(--v-usta-text) !important; }
+html[data-style] .install-step:nth-child(1) { --step-rgb: var(--v-accent-rgb) !important; }
+html[data-style] .install-step:nth-child(2) { --step-rgb: var(--v-gram-rgb) !important; }
+html[data-style] .install-step:nth-child(3) { --step-rgb: var(--v-usta-rgb) !important; }
+html[data-style] .phone-glow,
+html[data-style] .phone-frame {
+  --phone-accent: var(--v-phone-glow) !important;
+}
+
+/* ---------- portal shell ---------- */
+html[data-style] .ptl-layout {
+  background-color: transparent;
+  color: var(--v-text);
+}
+html[data-style] .ptl-load-error-modal {
+  background: var(--v-overlay);
+}
+html[data-style] .ptl-load-error--modal {
+  border-color: var(--v-line);
+  background: var(--v-panel);
+}
+
+/* topbar */
+html[data-style] .ptl-topbar {
+  background: var(--v-topbar-bg);
+  border-bottom-color: var(--v-line);
+}
+html[data-style] .ptl-menu-trigger {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+  color: var(--v-text);
+}
+html[data-style] .ptl-menu-trigger:hover {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-lang-trigger {
+  border-color: var(--v-line);
+  background: var(--v-surface-2);
+  color: var(--v-text-2);
+}
+html[data-style] .ptl-lang-current {
+  color: var(--v-text);
+}
+html[data-style] .ptl-lang-trigger.is-open {
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-lang-menu {
+  border-color: var(--v-line);
+  background: var(--v-panel);
+  box-shadow: var(--v-menu-shadow);
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-style] .ptl-lang-trigger:hover {
+    border-color: var(--v-accent-line);
+    color: var(--v-accent-text);
+  }
+  html[data-style] .ptl-lang-option:hover {
+    background: var(--v-surface-hover);
+  }
+}
+
+/* sidebar */
+html[data-style] .ptl-sidebar-backdrop {
+  background: var(--v-overlay);
+}
+html[data-style] .ptl-sidebar {
+  background: var(--v-sidebar-bg);
+  border-right-color: var(--v-line);
+}
+html[data-style] .ptl-sidebar-header {
+  border-bottom-color: var(--v-line);
+}
+html[data-style] .ptl-brand {
+  color: var(--v-text);
+}
+html[data-style] .ptl-brand-logo {
+  background: var(--v-logo-bg);
+  border-color: var(--v-logo-line);
+  box-shadow: none;
+}
+html[data-style] .ptl-brand-name {
+  background-image: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--v-heading);
+}
+html[data-style] .ptl-brand-badge {
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-toggle-btn {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+  color: var(--v-text-2);
+}
+html[data-style] .ptl-toggle-btn:hover {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-nav-item:hover {
+  background: var(--v-surface-hover);
+  color: var(--v-text);
+  border-color: var(--v-line);
+}
+html[data-style] .ptl-nav-item.active {
+  background: var(--v-nav-active-bg);
+  color: var(--v-nav-active-ink);
+  border-color: var(--v-nav-active-line);
+  box-shadow: none;
+}
+html[data-style] .ptl-nav-item.active::before {
+  background: var(--v-nav-bar);
+  box-shadow: none;
+}
+html[data-style] .ptl-nav-item:hover .ptl-nav-icon {
+  color: var(--v-text);
+}
+html[data-style] .ptl-nav-item.active .ptl-nav-icon {
+  color: var(--v-nav-active-icon);
+}
+html[data-style] .ptl-nav-arrow.expanded {
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-badge-pill {
+  background: var(--v-accent-soft);
+  color: var(--v-accent-text);
+  border-color: var(--v-accent-line);
+}
+html[data-style] .ptl-sub-nav::before {
+  background: var(--v-line);
+}
+html[data-style] .ptl-sub-item:hover {
+  background: var(--v-surface-hover);
+  color: var(--v-text);
+}
+html[data-style] .ptl-sub-item.active {
+  background: var(--v-accent-soft);
+  color: var(--v-accent-text);
+  border-color: var(--v-accent-line);
+}
+html[data-style] .ptl-sub-item.active .ptl-sub-dot {
+  background: var(--v-accent);
+  box-shadow: none;
+}
+html[data-style] .ptl-sidebar-footer {
+  border-top-color: var(--v-line);
+}
+html[data-style] .ptl-status-card {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-text);
+}
+html[data-style] .ptl-status-dot {
+  background: var(--v-ok);
+  box-shadow: none;
+}
+@media (max-width: 900px) {
+  html[data-style] .ptl-sidebar {
+    box-shadow: var(--v-drawer-shadow);
+  }
+}
+
+/* ---------- home ---------- */
+html[data-style] .ptl-hero-banner {
+  background: var(--v-hero-bg);
+  border-color: var(--v-hero-line);
+  box-shadow: var(--v-elev);
+}
+html[data-style] .ptl-hero-banner::before {
+  background: var(--v-hero-glow-1);
+}
+html[data-style] .ptl-hero-banner::after {
+  background: var(--v-hero-glow-2);
+}
+html[data-style] .ptl-hero-badge {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-hero-title {
+  color: var(--v-heading);
+}
+html[data-style] .ptl-hero-title span {
+  background-image: var(--v-title-grad);
+  -webkit-text-fill-color: var(--v-title-fill, transparent);
+  color: var(--v-title-color, var(--v-accent-text));
+}
+html[data-style] .ptl-btn-primary {
+  background: var(--v-btn-bg);
+  color: var(--v-btn-ink);
+  box-shadow: var(--v-btn-shadow);
+}
+html[data-style] .ptl-btn-primary:hover {
+  box-shadow: var(--v-btn-shadow-hover);
+}
+html[data-style] .ptl-btn-secondary {
+  background: var(--v-btn2-bg);
+  color: var(--v-btn2-ink);
+  border-color: var(--v-btn2-line);
+}
+html[data-style] .ptl-btn-secondary:hover {
+  background: var(--v-btn2-bg-hover);
+  border-color: var(--v-btn2-line-hover);
+}
+html[data-style] .ptl-hero-stats {
+  border-top-color: var(--v-line);
+}
+html[data-style] .ptl-hero-stat-card {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .ptl-stat-icon-wrapper {
+  background: var(--v-accent-soft) !important;
+  color: var(--v-accent-text) !important;
+}
+html[data-style] .ptl-hero-stat-card:nth-child(2) .ptl-stat-icon-wrapper {
+  background: var(--v-gram-soft) !important;
+  color: var(--v-gram-text) !important;
+}
+html[data-style] .ptl-hero-stat-card:nth-child(3) .ptl-stat-icon-wrapper {
+  background: var(--v-usta-soft) !important;
+  color: var(--v-usta-text) !important;
+}
+html[data-style] .ptl-hero-stat-title,
+html[data-style] .ptl-section-title,
+html[data-style] .ptl-prod-name {
+  color: var(--v-heading);
+}
+html[data-style] .ptl-product-card {
+  background: var(--v-surface);
+  border-color: var(--v-line);
+  box-shadow: var(--v-elev-card);
+}
+html[data-style] .ptl-product-card:hover {
+  border-color: var(--v-accent-line);
+  box-shadow: var(--v-elev-hover);
+}
+html[data-style] .ptl-product-card.usta:hover {
+  border-color: var(--v-usta-line);
+}
+html[data-style] .ptl-prod-icon {
+  box-shadow: var(--v-icon-shadow);
+}
+html[data-style] .ptl-prod-icon.gram,
+html[data-style] .ptl-app-main-icon.gram {
+  background: var(--v-gram-icon-bg);
+  color: var(--v-gram-icon-ink);
+}
+html[data-style] .ptl-prod-icon.usta,
+html[data-style] .ptl-app-main-icon.usta {
+  background: var(--v-usta-icon-bg);
+  color: var(--v-usta-icon-ink);
+}
+html[data-style] .ptl-prod-badge {
+  background: var(--v-chip-bg);
+  border-color: var(--v-line);
+  color: var(--v-text-2);
+}
+html[data-style] .ptl-prod-features-mini {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .ptl-feature-row {
+  color: var(--v-text);
+}
+html[data-style] .ptl-feature-dot,
+html[data-style] .ptl-changelog-dot {
+  background: var(--v-accent);
+}
+html[data-style] .ptl-product-card.usta .ptl-feature-dot {
+  background: var(--v-usta);
+}
+html[data-style] .ptl-card-btn-view {
+  background: var(--v-btn2-bg);
+  border-color: var(--v-btn2-line);
+  color: var(--v-btn2-ink);
+}
+html[data-style] .ptl-card-btn-view:hover {
+  background: var(--v-btn2-bg-hover);
+  border-color: var(--v-btn2-line-hover);
+}
+html[data-style] .ptl-card-btn-dl {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-card-btn-dl:hover {
+  background: var(--v-accent);
+  color: var(--v-accent-ink);
+}
+html[data-style] .ptl-product-card.usta .ptl-card-btn-dl {
+  background: var(--v-usta-soft);
+  border-color: var(--v-usta-line);
+  color: var(--v-usta-text);
+}
+html[data-style] .ptl-product-card.usta .ptl-card-btn-dl:hover {
+  background: var(--v-usta);
+  color: var(--v-usta-ink);
+}
+
+/* feature marquee: the chip colour comes inline; --chip is its theme twin */
+html[data-style] .marquee-chip {
+  border-color: color-mix(in srgb, var(--chip, var(--v-accent-text)) 30%, transparent);
+  background: color-mix(in srgb, var(--chip, var(--v-accent-text)) 8%, var(--v-surface-solid));
+  color: var(--v-text);
+}
+html[data-style] .marquee-chip svg {
+  color: var(--chip, var(--v-accent-text));
+}
+
+/* phone demo on the home page: the phone stays a phone (dark app screen) */
+html[data-style] .demo-section {
+  background: var(--v-demo-band, transparent);
+}
+html[data-style] .demo-progress-track {
+  background: var(--v-line);
+}
+html[data-style] .phone-frame {
+  box-shadow: 0 0 0 2px #0f131a, var(--v-phone-shadow);
+}
+html[data-style] .demo-scene-stack:focus-visible {
+  outline-color: var(--v-focus);
+}
+html[data-style] .demo-benefits svg {
+  stroke: var(--v-accent-text);
+}
+html[data-style] .demo-live-dot,
+html[data-style] .demo-live-dot::after {
+  background: var(--v-ok);
+}
+
+/* ---------- projects ---------- */
+html[data-style] .ptl-project-tabs {
+  background: var(--v-surface);
+  border-color: var(--v-line);
+}
+html[data-style] .ptl-project-tab-btn:hover {
+  color: var(--v-text);
+}
+html[data-style] .ptl-project-tab-btn.active.gram {
+  background: var(--v-gram-soft);
+  color: var(--v-gram-text);
+  border-color: var(--v-gram-line);
+  box-shadow: none;
+}
+html[data-style] .ptl-project-tab-btn.active.usta {
+  background: var(--v-usta-soft);
+  color: var(--v-usta-text);
+  border-color: var(--v-usta-line);
+  box-shadow: none;
+}
+html[data-style] .ptl-app-banner {
+  background: var(--v-surface);
+  border-color: var(--v-line);
+  box-shadow: var(--v-elev);
+}
+html[data-style] .ptl-app-main-icon {
+  box-shadow: var(--v-icon-shadow);
+  border-color: transparent;
+}
+html[data-style] .ptl-app-name,
+html[data-style] .ptl-feature-title,
+html[data-style] .ptl-security-title,
+html[data-style] .ptl-faq-question,
+html[data-style] .ptl-support-title,
+html[data-style] .ptl-community-title,
+html[data-style] .ptl-demo-title,
+html[data-style] .ptl-demo-roles-title,
+html[data-style] .footer-title {
+  color: var(--v-heading);
+}
+html[data-style] .ptl-spec-item {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .ptl-spec-val,
+html[data-style] .ptl-changelog-item,
+html[data-style] .ptl-demo-roles strong {
+  color: var(--v-text);
+}
+html[data-style] .ptl-feature-card,
+html[data-style] .ptl-changelog-card,
+html[data-style] .ptl-docs-security-card,
+html[data-style] .ptl-faq-item,
+html[data-style] .ptl-support-card,
+html[data-style] .ptl-community-card,
+html[data-style] .ptl-demo-roles {
+  background: var(--v-surface);
+  border-color: var(--v-line);
+  box-shadow: var(--v-elev-card);
+}
+html[data-style] .ptl-feature-card:hover,
+html[data-style] .ptl-support-card:hover,
+html[data-style] .ptl-community-card:hover {
+  border-color: var(--v-accent-line);
+  box-shadow: var(--v-elev-hover);
+}
+html[data-style] .ptl-feature-icon,
+html[data-style] .ptl-security-icon,
+html[data-style] .ptl-support-icon {
+  background: var(--v-accent-soft);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-feature-card.usta .ptl-feature-icon {
+  background: var(--v-usta-soft);
+  color: var(--v-usta-text);
+}
+html[data-style] .ptl-feature-tag {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-feature-card.usta .ptl-feature-tag {
+  background: var(--v-usta-soft);
+  border-color: var(--v-usta-line);
+  color: var(--v-usta-text);
+}
+html[data-style] .ptl-feature-demo-btn {
+  background: var(--v-btn-bg);
+  color: var(--v-btn-ink);
+  box-shadow: var(--v-btn-shadow);
+}
+html[data-style] .ptl-feature-demo-btn:focus-visible {
+  outline-color: var(--v-focus);
+}
+
+/* comparison */
+html[data-style] .cmp-table thead tr {
+  border-bottom-color: var(--v-line);
+}
+html[data-style] .cmp-table tbody tr {
+  border-bottom-color: var(--v-line-soft);
+}
+html[data-style] .cmp-table .cmp-ando,
+html[data-style] .cmp-card-ando {
+  color: var(--v-text);
+}
+html[data-style] .cmp-icon--yes {
+  box-shadow: none;
+}
+html[data-style] .cmp-icon--no {
+  background: var(--v-danger-soft);
+  color: var(--v-danger);
+}
+html[data-style] .cmp-card {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-style] .cmp-table tbody tr:hover {
+    background: var(--v-surface-2);
+  }
+}
+
+/* ---------- docs / support / community ---------- */
+html[data-style] .ptl-security-item {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .ptl-faq-item.open {
+  border-color: var(--v-accent-line);
+  box-shadow: var(--v-elev-hover);
+}
+html[data-style] .ptl-faq-question:hover {
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-support-icon.blue,
+html[data-style] .ptl-community-icon {
+  background: var(--v-gram-soft);
+  color: var(--v-gram-text);
+}
+html[data-style] .ptl-support-icon.amber,
+html[data-style] .ptl-community-icon.stars {
+  background: var(--v-stars-soft);
+  color: var(--v-stars-text);
+}
+html[data-style] .ptl-community-icon.github {
+  background: var(--v-surface-2);
+  color: var(--v-text);
+}
+html[data-style] .ptl-support-link-btn {
+  background: var(--v-btn-bg);
+  color: var(--v-btn-ink);
+}
+html[data-style] .ptl-support-link-btn:hover {
+  box-shadow: var(--v-btn-shadow-hover);
+}
+html[data-style] .ptl-support-status-bar {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-text);
+}
+html[data-style] .ptl-community-btn {
+  background: var(--v-btn2-bg);
+  border-color: var(--v-btn2-line);
+  color: var(--v-btn2-ink);
+}
+html[data-style] .ptl-community-btn:hover {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+
+/* install guide (the step colour comes inline as --step-rgb, remapped above) */
+html[data-style] .install-num {
+  background: var(--v-surface-solid);
+  border-color: var(--v-line-strong);
+}
+html[data-style] .is-visible .install-num {
+  background: color-mix(in srgb, rgb(var(--step-rgb)) 12%, var(--v-surface-solid));
+  box-shadow: none;
+}
+html[data-style] .install-notice {
+  background: var(--v-stars-soft);
+  border-color: var(--v-stars-line);
+}
+
+/* ---------- demo pages («Как работает») ---------- */
+html[data-style] .ptl-demo-back:hover {
+  color: var(--v-text);
+}
+html[data-style] .ptl-demo-kicker {
+  border-color: var(--v-accent-line);
+  background: var(--v-accent-soft);
+  color: var(--v-accent-text);
+}
+html[data-style] .ptl-demo-role-badge.role-a {
+  background: var(--v-accent);
+  color: var(--v-accent-ink);
+}
+
+/* sandbox phones are app screens: keep them dark, only our layer takes a bright accent */
+html[data-style] .sbx-phone {
+  --accent-ando: var(--v-accent-on-dark);
+  --accent-usta: var(--v-usta-on-dark);
+}
+html[data-style] .sbx-caption-title {
+  color: var(--v-heading);
+}
+html[data-style] .sbx-screen .sbx-cta {
+  background: var(--v-accent-on-dark);
+  color: #0b0d10;
+  box-shadow: none;
+}
+
+/* ---------- footer, back-to-top ---------- */
+html[data-style] .site-footer {
+  border-top-color: var(--v-line);
+  background: var(--v-footer-bg);
+}
+html[data-style] .footer-glow {
+  background: var(--v-footer-glow);
+}
+html[data-style] .footer-logo-tld {
+  background: var(--v-accent-soft);
+  color: var(--v-accent-text);
+  border-color: var(--v-accent-line);
+}
+html[data-style] .footer-disclaimer {
+  border-top-color: var(--v-line-soft);
+}
+html[data-style] .footer-wordmark {
+  background-image: var(--v-wordmark);
+}
+html[data-style] .site-footer svg[fill="#f59e0b"] {
+  fill: var(--v-stars-text);
+  stroke: var(--v-stars-text);
+}
+html[data-style] .to-top {
+  background: var(--v-panel);
+  box-shadow: var(--v-menu-shadow);
+  color: var(--v-text);
+}
+html[data-style] .to-top-track {
+  stroke: var(--v-line);
+}
+html[data-style] .to-top-progress {
+  stroke: var(--v-accent);
+  filter: none;
+}
+
+/* ---------- download modal (only colours; the flow is untouched) ---------- */
+html[data-style] .dl-price {
+  background: var(--v-stars-soft);
+  border-color: var(--v-stars-line);
+}
+html[data-style] .dl-price::before {
+  background: linear-gradient(110deg, transparent 35%, var(--v-stars-soft) 50%, transparent 65%);
+}
+html[data-style] .dl-input {
+  background: var(--v-input-bg);
+  border-color: var(--v-line-strong);
+  color: var(--v-text);
+}
+html[data-style] .dl-input:focus {
+  border-color: var(--v-accent);
+  background: var(--v-input-bg);
+  box-shadow: 0 0 0 4px var(--v-accent-soft);
+}
+html[data-style] .dl-input.is-invalid {
+  border-color: var(--v-danger);
+  box-shadow: 0 0 0 4px var(--v-danger-soft);
+}
+html[data-style] .dl-input.is-used {
+  border-color: var(--v-stars);
+  box-shadow: 0 0 0 4px var(--v-stars-soft);
+}
+html[data-style] .dl-status--invalid {
+  color: var(--v-danger);
+}
+html[data-style] .dl-dev-codes {
+  background: var(--v-surface-2);
+  border-color: var(--v-line-strong);
+}
+html[data-style] .dl-dev-chip {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .dl-success-glow {
+  background: radial-gradient(circle, var(--v-accent-soft), transparent 70%);
+}
+html[data-style] .dl-qr-box {
+  background: var(--v-surface-2);
+  border-color: var(--v-line);
+}
+html[data-style] .dl-qr {
+  box-shadow: var(--v-elev-card);
+}
+html[data-style] .dl-copy.is-copied {
+  border-color: var(--v-accent-line);
+  color: var(--v-accent-text);
+}
+html[data-style] .dl-code-box {
+  background: var(--v-accent-soft);
+  border-color: var(--v-accent-line);
+}
+html[data-style] .dl-code-value {
+  background: var(--v-input-bg);
+  border-color: var(--v-line-strong);
+  color: var(--v-text);
+}
+html[data-style] .dl-code-value:hover {
+  border-color: var(--v-accent);
+  background: var(--v-input-bg);
+}

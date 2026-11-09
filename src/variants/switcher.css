@@ -1,0 +1,118 @@
+/* Style previews — the floating 1–5 switcher (same neutral look on every theme). */
+.vsw,
+.vsw-show {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  color: #f4f4f5;
+  background: rgba(17, 18, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 34px -12px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.vsw {
+  position: fixed;
+  z-index: 950;
+  left: 50%;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 5px 5px 14px;
+  border-radius: 999px;
+}
+.vsw[hidden],
+.vsw-show[hidden] {
+  display: none;
+}
+.vsw-label {
+  margin-right: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.vsw-num,
+.vsw-hide {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.vsw-num {
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+.vsw-num[aria-current='page'] {
+  background: #ffffff;
+  color: #111111;
+}
+.vsw-name {
+  padding: 0 8px 0 6px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.vsw-orig {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #ffffff;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+.vsw-hide {
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 19px;
+  cursor: pointer;
+}
+.vsw-show {
+  position: fixed;
+  z-index: 950;
+  left: 50%;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: 800;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .vsw-num:not([aria-current='page']):hover,
+  .vsw-orig:hover,
+  .vsw-hide:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+  }
+}
+.vsw a:focus-visible,
+.vsw button:focus-visible,
+.vsw-show:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  .vsw-show {
+    left: 10px;
+    transform: none;
+  }
+  .vsw {
+    left: 10px;
+    transform: none;
+    gap: 4px;
+    padding-left: 5px;
+  }
+  .vsw-label,
+  .vsw-name {
+    display: none;
+  }
+}
