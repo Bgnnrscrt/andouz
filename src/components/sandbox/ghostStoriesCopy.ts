@@ -60,7 +60,7 @@ const UZ: GhostStoriesCopy = {
   story: 'Yangi hayot ✨',
   hints: {
     tHome: 'Instagram’ni och',
-    tFeed: 'Sabina hikoya joyladi. Ko‘r',
+    tFeed: 'Sabina hikoya joyladi. Ochib ko‘r',
     lStory: 'Kim ko‘rganini ko‘ramiz',
     lViewers: 'Sabina ko‘rganingni biladi',
     aHome: 'Endi Andusta’ni och',
