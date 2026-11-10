@@ -7,14 +7,18 @@ import { MemberCard } from './parts';
 import { sectionHref } from './router';
 
 /*
- * The home hero — a «curtain» (owner, 10.11, after a screen recording of an agency site).
+ * The home hero — a «curtain», as in the owner's reference video (10.11).
  *
- * A pinned stage holds the same content twice: the real one on paper (h1, buttons — what screen
- * readers, taps and Tab get) and a light copy (aria-hidden) on a dark «leather» panel with a phone that
- * flips through sandbox screens. Scrolling lifts the panel from the bottom: --p goes 0 → 1 over the
- * spacer's height, so every letter changes colour exactly at the panel's edge. The panel is cut by
- * moving it up while its content moves down by the same amount — transforms only, no repaint.
- * Both copies have the same markup and styles, so they line up to the pixel.
+ * First screen: a dark «leather» curtain with the phone pictures on top and the headline at the bottom.
+ * Scrolling: the headline goes up together with the curtain until it is in the middle of the screen and
+ * stops there; the curtain goes on up, and its bottom edge repaints the letters on its way (light on the
+ * curtain, dark on the paper); when the curtain is gone the headline holds a moment and then the page
+ * scrolls on — the text and the buttons come up under it.
+ *
+ * The stage is pinned for the spacer's height; useCurtain turns the scroll position into transforms:
+ * --m moves the curtain (1:1 with the scroll), --y the headline (1:1 until the middle, then 0). The headline
+ * exists twice with the same markup — the real one on paper and a light copy (aria-hidden) inside the
+ * curtain — so the curtain's edge cuts the letters exactly and both copies line up to the pixel.
  */
 
 /** Title font size as a share of the title column width, per language: the longest line fills ~92 %. */
@@ -26,14 +30,14 @@ const FRAME_MS = 1100;
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 const saveData = () => (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
 
-/** The phone on the panel: stacked screens shown one after another (hard cuts, like a flipbook), with a
+/** The phone on the curtain: stacked screens shown one after another (hard cuts, like a flipbook), with a
  *  pause button next to it (moving content must be stoppable). */
 function HeroPhone() {
   const { lang, t } = useSite();
   const box = useRef<HTMLDivElement>(null);
   const anims = useRef<Animation[]>([]);
   const userPaused = useRef(false);
-  const [running, setRunning] = useState<boolean | null>(null); // null = not flipping (still picture)
+  const [running, setRunning] = useState<boolean | null>(null); // null = not flipping (a still picture)
   const all = heroFrames(lang);
   const frames = all.length > 1 && saveData() ? all.slice(0, 1) : all;
 
@@ -52,7 +56,7 @@ function HeroPhone() {
         else a.pause();
       }
     };
-    // Flip only while the phone is on screen (the panel lifted away or scrolled past = paused).
+    // Flip only while the phone is on screen (the curtain gone or scrolled past = paused).
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       sync();
@@ -92,34 +96,32 @@ function HeroPhone() {
   };
 
   return (
-    <div className="hero-phone-slot">
-      <div className="hero-phone" ref={box}>
-        <div className="hero-screen">
-          {frames.map((f, i) => (
-            <img
-              key={f.id}
-              className="hero-shot"
-              src={f.src}
-              srcSet={f.srcSet}
-              sizes="(min-width: 960px) 320px, 64vw"
-              alt=""
-              decoding="async"
-              fetchPriority={i === 0 ? 'high' : 'low'}
-              draggable={false}
-            />
-          ))}
-        </div>
-        {running !== null && (
-          <button type="button" className="hero-pause" onClick={toggle} aria-label={running ? t.hero.pause : t.hero.play}>
-            {running ? <Pause size={15} strokeWidth={2} aria-hidden="true" /> : <Play size={15} strokeWidth={2} aria-hidden="true" />}
-          </button>
-        )}
+    <div className="hero-phone" ref={box}>
+      <div className="hero-screen">
+        {frames.map((f, i) => (
+          <img
+            key={f.id}
+            className="hero-shot"
+            src={f.src}
+            srcSet={f.srcSet}
+            sizes="(min-width: 960px) 320px, 56vw"
+            alt=""
+            decoding="async"
+            fetchPriority={i === 0 ? 'high' : 'low'}
+            draggable={false}
+          />
+        ))}
       </div>
+      {running !== null && (
+        <button type="button" className="hero-pause" onClick={toggle} aria-label={running ? t.hero.pause : t.hero.play}>
+          {running ? <Pause size={15} strokeWidth={2} aria-hidden="true" /> : <Play size={15} strokeWidth={2} aria-hidden="true" />}
+        </button>
+      )}
     </div>
   );
 }
 
-/** The two club cards — on paper, on wide screens only (where the phone stood on the panel). */
+/** The two club cards — after the curtain, on wide screens only. */
 function HeroArt() {
   return (
     <div className="hero-art" aria-hidden="true">
@@ -144,9 +146,9 @@ const line = (text: string): ReactNode =>
     text
   );
 
-/** One copy of the hero content. `panel` = the light copy (text aria-hidden, nothing to tap) + the phone. */
-function HeroCopy({ panel }: { panel?: boolean }) {
-  const { t, lang, openAccess } = useSite();
+/** Kicker + the 4-line title. `copy` = the light copy inside the curtain (aria-hidden, no h1). */
+function HeroHead({ copy }: { copy?: boolean }) {
+  const { t } = useSite();
   const h = t.hero;
   const [l1, l2, l3, l4] = h.title;
   const title = (
@@ -155,14 +157,11 @@ function HeroCopy({ panel }: { panel?: boolean }) {
       <span className="hero-line">{line(l3)}</span> <em className="hero-line">{line(l4)}</em>
     </>
   );
-  const hidden = panel ? true : undefined;
   return (
-    <div className="wrap hero-in">
-      <p className="kicker hero-kicker" aria-hidden={hidden}>
-        {h.kicker}
-      </p>
-      <div className="hero-title-box" aria-hidden={hidden}>
-        {panel ? (
+    <div className="wrap hero-head" aria-hidden={copy ? true : undefined}>
+      <p className="kicker hero-kicker">{h.kicker}</p>
+      <div className="hero-title-box">
+        {copy ? (
           <div className="hero-title">{title}</div>
         ) : (
           <h1 className="hero-title" id="hero-title">
@@ -170,96 +169,70 @@ function HeroCopy({ panel }: { panel?: boolean }) {
           </h1>
         )}
       </div>
-      <div className="hero-rest" aria-hidden={hidden}>
-        <p className="hero-lead">{h.lead.split(BRANDS).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))}</p>
-        <div className="hero-actions">
-          {panel ? (
-            <>
-              <span className="btn btn--primary btn--lg">{h.cta}</span>
-              <span className="btn btn--outline btn--lg">{h.ctaDemo}</span>
-            </>
-          ) : (
-            <>
-              <button type="button" className="btn btn--primary btn--lg" onClick={() => openAccess()}>
-                {h.cta}
-              </button>
-              <Link to={sectionHref('demos')} className="btn btn--outline btn--lg">
-                {h.ctaDemo}
-              </Link>
-            </>
-          )}
-        </div>
-        <ul className="trust">
-          {h.trust.map((x) => (
-            <li key={x}>{x}</li>
-          ))}
-        </ul>
-      </div>
-      {panel ? <HeroPhone key={lang} /> : <HeroArt />}
     </div>
   );
 }
 
-/** Scroll → --p on the stage (0 = curtain down, 1 = lifted) and `is-lifted` on the section. */
+/**
+ * Scroll → the stage's custom properties: --m (curtain offset, px), --y (headline offset, px), --hem (edge
+ * opacity); `is-lifted` on the section once the curtain is gone.
+ */
 function useCurtain(section: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = section.current;
+    const pin = el?.querySelector<HTMLElement>('.hero-pin');
     const stage = el?.querySelector<HTMLElement>('.hero-stage');
     const spacer = el?.querySelector<HTMLElement>('.hero-spacer');
-    if (!el || !stage || !spacer) return undefined;
+    const head = el?.querySelector<HTMLElement>('.hero-paper .hero-head');
+    if (!el || !pin || !stage || !spacer || !head) return undefined;
     let docTop = 0;
     let stick = 0;
-    let lift = 1;
-    let last = -1;
+    let H = 1; // stage height = how far the curtain travels
+    let L = 1; // pinned scroll length (curtain + a short hold)
+    let rise = 0; // how far the headline travels before it stops in the middle
+    let lastS = -1;
     let raf = 0;
     const measure = () => {
-      docTop = el.getBoundingClientRect().top + window.scrollY;
+      docTop = pin.getBoundingClientRect().top + window.scrollY;
       stick = parseFloat(getComputedStyle(stage).top) || 0;
-      lift = Math.max(1, spacer.offsetHeight);
+      H = Math.max(1, stage.offsetHeight);
+      L = Math.max(H, spacer.offsetHeight);
+      // the headline's place at the start (bottom of the screen) → its place in the middle
+      rise = Math.max(0, head.offsetTop - (H - head.offsetHeight) / 2);
     };
     const update = () => {
       raf = 0;
-      const p = Math.round(Math.min(1, Math.max(0, (window.scrollY + stick - docTop) / lift)) * 10000) / 10000;
-      if (p === last) return;
-      last = p;
-      stage.style.setProperty('--p', String(p));
-      el.classList.toggle('is-lifted', p >= 1);
+      const s = Math.min(L, Math.max(0, window.scrollY + stick - docTop));
+      if (s === lastS) return;
+      lastS = s;
+      const m = -Math.min(s, H);
+      const y = -Math.min(s, rise);
+      stage.style.setProperty('--m', `${m}px`);
+      stage.style.setProperty('--y', `${y}px`);
+      stage.style.setProperty('--hem', String(Math.min(1, Math.max(0, (H + m) / (0.08 * H)))));
+      el.classList.toggle('is-lifted', s >= H);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
     const onResize = () => {
       measure();
-      last = -1;
+      lastS = -1;
       onScroll();
-    };
-    // Tab to a button that sits below the screen while the stage is pinned (low window, 200 % zoom):
-    // the browser's own scroll doesn't move a pinned stage, so go to the end of the lift and on.
-    const onFocusIn = (e: FocusEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target || !stage.contains(target)) return;
-      requestAnimationFrame(() => {
-        const r = target.getBoundingClientRect();
-        const limit = window.innerHeight - 12;
-        const pinEnd = docTop - stick + lift;
-        if (r.bottom <= limit || window.scrollY >= pinEnd) return;
-        window.scrollTo(0, pinEnd + (r.bottom - limit));
-      });
     };
     measure();
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
-    stage.addEventListener('focusin', onFocusIn);
     const ro = new ResizeObserver(onResize);
-    ro.observe(el);
+    ro.observe(stage);
+    ro.observe(head);
     let alive = true;
     document.fonts?.ready.then(() => alive && onResize());
     return () => {
       alive = false;
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
-      stage.removeEventListener('focusin', onFocusIn);
       ro.disconnect();
       if (raf) cancelAnimationFrame(raf);
     };
@@ -267,23 +240,47 @@ function useCurtain(section: RefObject<HTMLElement | null>) {
 }
 
 export function Hero() {
-  const { lang } = useSite();
+  const { t, lang, openAccess } = useSite();
+  const h = t.hero;
   const ref = useRef<HTMLElement>(null);
   useCurtain(ref);
   return (
     <section ref={ref} className="hero" aria-labelledby="hero-title" style={{ '--fit': FIT[lang] } as CSSProperties}>
-      <div className="hero-stage">
-        <div className="hero-paper">
-          <HeroCopy />
-        </div>
-        <div className="hero-panel">
-          <div className="hero-panel-in">
-            <HeroCopy panel />
+      <div className="hero-pin">
+        <div className="hero-stage">
+          <div className="hero-layer hero-paper">
+            <div className="hero-room" />
+            <HeroHead />
           </div>
+          <div className="hero-layer hero-media">
+            <div className="hero-room">
+              <HeroPhone key={lang} />
+            </div>
+            <HeroHead copy />
+          </div>
+          <div className="hero-hem" aria-hidden="true" />
         </div>
-        <div className="hero-hem" aria-hidden="true" />
+        <div className="hero-spacer" aria-hidden="true" />
       </div>
-      <div className="hero-spacer" aria-hidden="true" />
+      <div className="wrap hero-after">
+        <div className="hero-rest">
+          <p className="hero-lead">{h.lead.split(BRANDS).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))}</p>
+          <div className="hero-actions">
+            <button type="button" className="btn btn--primary btn--lg" onClick={() => openAccess()}>
+              {h.cta}
+            </button>
+            <Link to={sectionHref('demos')} className="btn btn--outline btn--lg">
+              {h.ctaDemo}
+            </Link>
+          </div>
+          <ul className="trust">
+            {h.trust.map((x) => (
+              <li key={x}>{x}</li>
+            ))}
+          </ul>
+        </div>
+        <HeroArt />
+      </div>
     </section>
   );
 }
