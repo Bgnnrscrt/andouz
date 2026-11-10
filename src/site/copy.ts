@@ -1,4 +1,4 @@
-import type { AppId, Language } from '../types';
+import type { AppId, Language, SiteAppId } from '../types';
 import type { DemoId } from '../components/sandbox/demos';
 
 /*
@@ -9,7 +9,8 @@ import type { DemoId } from '../components/sandbox/demos';
 
 export type IconName =
   | 'key' | 'download' | 'archive' | 'ghost' | 'eye' | 'sparkles' | 'mic' | 'pin' | 'note' | 'sort'
-  | 'history' | 'music' | 'camera' | 'type' | 'image' | 'layout' | 'shield' | 'user-minus' | 'trash' | 'scan';
+  | 'history' | 'music' | 'camera' | 'type' | 'image' | 'layout' | 'shield' | 'user-minus' | 'trash' | 'scan'
+  | 'lock' | 'restore' | 'hand' | 'fast' | 'expand' | 'audio' | 'scissors' | 'playlist' | 'folder';
 
 export interface Feature {
   id: string;
@@ -33,6 +34,12 @@ export interface AppCopy {
   name: string;
   /** «для Telegram» */
   platform: string;
+  /** Who the app is compared with (the column name). Default: Telegram for AndoGram, Instagram for Andusta. */
+  rival?: string;
+  /** Title of the comparison on the app page. Default: `appPage.compare` («with the official app»). */
+  compareTitle?: string;
+  /** Price of an app that is not on sale yet, shown next to «Скоро» (apps on sale: 1000 ★ in the buttons). */
+  price?: string;
   tagline: string;
   lead: string;
   version: string;
@@ -63,7 +70,8 @@ export interface SiteCopy {
   };
   highlights: { kicker: string; title: string; items: { icon: IconName; title: string; text: string; app: AppId; demo?: DemoId }[]; open: string; try: string };
   demos: { kicker: string; title: string; lead: string; start: string; items: { id: DemoId; title: string; text: string; time: string }[] };
-  apps: { kicker: string; title: string; details: string; buy: string; tests: string };
+  /** `soon` / `soonShort` (+ the app's `price`) — instead of the buy button of an app that is not on sale yet (not in APP_IDS). */
+  apps: { kicker: string; title: string; details: string; buy: string; soon: string; soonShort: string; tests: string };
   compare: { kicker: string; title: string; official: string; ours: string; test: string };
   install: { kicker: string; title: string; steps: { title: string; text: string }[]; note: string; cta: string };
   faq: { kicker: string; title: string; items: { q: string; a: string }[] };
@@ -96,7 +104,7 @@ const RU: SiteCopy = {
     support: 'Поддержка', menu: 'Меню', close: 'Закрыть', language: 'Язык', getAccess: 'Получить доступ', buyShort: 'Купить',
   },
   hero: {
-    kicker: 'AndoGram · Andusta',
+    kicker: 'AndoGram · Andusta · Andeo',
     title: ['Тебе сказали,', 'что так нельзя,', 'мы покажем,', 'что можно'],
     lead: 'Тебе всё ещё кажется, что ты управляешь своим телефоном? Google решает, что ты увидишь. Meta решает, что ты купишь. Telegram решает, что ты читаешь. С нами возьми свою жизнь в свои руки.',
     cta: 'Получить доступ',
@@ -131,7 +139,7 @@ const RU: SiteCopy = {
       { id: 'ar_masks', title: 'Маски в кружках', text: 'Маска садится на лицо и двигается вместе с ним.', time: '≈ 50 с' },
     ],
   },
-  apps: { kicker: 'Приложения', title: 'Выбери своё', details: 'Подробнее', buy: 'Купить', tests: 'В тесте' },
+  apps: { kicker: 'Приложения', title: 'Выбери своё', details: 'Подробнее', buy: 'Купить', soon: 'Скоро в продаже', soonShort: 'Скоро', tests: 'В тесте' },
   compare: { kicker: 'Сравнение', title: 'Обычное приложение и наше', official: 'Обычное', ours: 'Наше', test: 'тест' },
   install: {
     kicker: 'Как получить',
@@ -159,7 +167,7 @@ const RU: SiteCopy = {
     ],
   },
   footer: {
-    about: 'Улучшенные Telegram и Instagram для Android.',
+    about: 'Улучшенные Telegram и Instagram и плеер Andeo для Android.',
     sections: 'Разделы',
     contact: 'Оплата и поддержка',
     bot: `Бот ${BOT}`,
@@ -229,7 +237,7 @@ const UZ: SiteCopy = {
     support: 'Yordam', menu: 'Menyu', close: 'Yopish', language: 'Til', getAccess: 'Kirish huquqini olish', buyShort: 'Sotib olish',
   },
   hero: {
-    kicker: 'AndoGram · Andusta',
+    kicker: 'AndoGram · Andusta · Andeo',
     title: ['«Buning iloji yo‘q»', 'deyishdi,', 'biz iloji borligini', 'isbotlaymiz'],
     lead: 'Hali ham telefoningni o‘zing boshqaryapsan deb o‘ylaysanmi? Google nimani ko‘rishingni hal qiladi. Meta nima sotib olishingni hal qiladi. Telegram nimani o‘qishingni hal qiladi. Biz bilan hayotingni o‘z qo‘lingga ol.',
     cta: 'Kirish huquqini olish',
@@ -264,7 +272,7 @@ const UZ: SiteCopy = {
       { id: 'ar_masks', title: 'Doirachalarda niqoblar', text: 'Niqob yuzga o‘tiradi va u bilan birga harakatlanadi.', time: '≈ 50 s' },
     ],
   },
-  apps: { kicker: 'Ilovalar', title: 'O‘zingnikini tanla', details: 'Batafsil', buy: 'Sotib olish', tests: 'Sinovda' },
+  apps: { kicker: 'Ilovalar', title: 'O‘zingnikini tanla', details: 'Batafsil', buy: 'Sotib olish', soon: 'Tez orada sotuvda', soonShort: 'Tez orada', tests: 'Sinovda' },
   compare: { kicker: 'Taqqoslash', title: 'Oddiy ilova va bizniki', official: 'Oddiy', ours: 'Bizniki', test: 'sinov' },
   install: {
     kicker: 'Qanday olish',
@@ -292,7 +300,7 @@ const UZ: SiteCopy = {
     ],
   },
   footer: {
-    about: 'Android uchun kuchaytirilgan Telegram va Instagram.',
+    about: 'Android uchun kuchaytirilgan Telegram va Instagram hamda Andeo pleyeri.',
     sections: 'Bo‘limlar',
     contact: 'To‘lov va yordam',
     bot: `${BOT} boti`,
@@ -362,7 +370,7 @@ const EN: SiteCopy = {
     support: 'Support', menu: 'Menu', close: 'Close', language: 'Language', getAccess: 'Get access', buyShort: 'Buy',
   },
   hero: {
-    kicker: 'AndoGram · Andusta',
+    kicker: 'AndoGram · Andusta · Andeo',
     title: ['They told you', 'it can’t be done,', 'we’ll show you', 'it can'],
     lead: 'Still think you’re the one in control of your phone? Google decides what you see. Meta decides what you buy. Telegram decides what you read. With us, take your life back into your own hands.',
     cta: 'Get access',
@@ -397,7 +405,7 @@ const EN: SiteCopy = {
       { id: 'ar_masks', title: 'Masks in video messages', text: 'The mask sits on the face and moves with it.', time: '≈ 50 s' },
     ],
   },
-  apps: { kicker: 'Apps', title: 'Pick yours', details: 'Details', buy: 'Buy', tests: 'In testing' },
+  apps: { kicker: 'Apps', title: 'Pick yours', details: 'Details', buy: 'Buy', soon: 'Coming soon', soonShort: 'Soon', tests: 'In testing' },
   compare: { kicker: 'Comparison', title: 'The regular app and ours', official: 'Regular', ours: 'Ours', test: 'beta' },
   install: {
     kicker: 'How to get it',
@@ -425,7 +433,7 @@ const EN: SiteCopy = {
     ],
   },
   footer: {
-    about: 'Enhanced Telegram and Instagram for Android.',
+    about: 'Enhanced Telegram and Instagram, plus the Andeo player, for Android.',
     sections: 'Sections',
     contact: 'Payment & support',
     bot: `Bot ${BOT}`,
@@ -708,9 +716,134 @@ const ANDUSTA: Record<Language, AppCopy> = {
   },
 };
 
-export const APPS: Record<AppId, Record<Language, AppCopy>> = { andogram: ANDOGRAM, andusta: ANDUSTA };
+/* Andeo — the video & music player (repo Bgnnrscrt/andeo). Not on sale yet: no buy button, «coming soon · 300 ★» (owner 10.11).
+ * Claims follow the app's code (10.11.2026): see /root/Apps/andeo/CLAUDE.md. Size = the release APK (4 956 610 B). */
+const ANDEO: Record<Language, AppCopy> = {
+  ru: {
+    name: 'Andeo',
+    platform: 'видео и музыка',
+    rival: 'Галерея',
+    compareTitle: 'Сравнение с обычной галереей',
+    price: '300 ★',
+    tagline: 'Плеер, который хранит твои секреты',
+    lead: 'Видео- и музыкальный плеер для Android. Прячет файлы в зашифрованный Сейф под PIN-кодом, спасает удалённые видео и хранит их без срока, управляется жестами. Без аккаунтов и облаков — всё остаётся на твоём телефоне.',
+    version: '1.0', size: '4,7 МБ', android: '7.0+', updated: '10.11.2026',
+    points: ['Сейф с шифрованием под PIN-кодом', 'Корзина без срока хранения', 'Сейф и корзина переживают переустановку', 'Ускорение и перемотка пальцем', 'Музыка в фоне и виджет'],
+    top: [
+      { id: 'vault', icon: 'lock', title: 'Сейф под PIN-кодом', text: 'Спрячь видео, музыку или целую папку: файлы шифруются (AES-256) и исчезают из галереи и других приложений. Смотреть и слушать их можно прямо в Сейфе — он запирается, как только сворачиваешь приложение.' },
+      { id: 'trash', icon: 'trash', title: 'Неуязвимая корзина', text: 'Видео длиннее 3 секунд, удалённые в галерее, Andeo копирует к себе и хранит без срока, пока ты сам их не удалишь. Восстановить — одним нажатием, на прежнее место и с прежним именем.' },
+      { id: 'reinstall', icon: 'restore', title: 'Переживает переустановку', text: 'Сейф и корзина лежат в скрытой папке на телефоне. Удалил Andeo и поставил снова — корзина вернётся сама, а Сейф откроется прежним PIN-кодом. Нужно разрешение «Доступ ко всем файлам».' },
+      { id: 'gestures', icon: 'hand', title: 'Управление жестами', text: 'У левого края — яркость, у правого — громкость, свайп по центру — переключение видео. Двойной тап — ±10 секунд, тройной — ±1 минута, двумя пальцами — зум.' },
+      { id: 'speed', icon: 'fast', title: 'Ускорение пальцем', text: 'Держи палец справа — видео ускоряется (от 1,5x до 10x, обычно 2x), слева — плавно идёт назад. Отпустил — обычная скорость.' },
+    ],
+    more: [
+      { id: 'music', icon: 'music', title: 'Музыка в фоне', text: 'Играет со свёрнутым приложением, на экране блокировки и в шторке, слушается кнопок наушников. Есть виджет на рабочий стол.' },
+      { id: 'view', icon: 'expand', title: 'Картинка как надо', text: 'Пропорции 16:9, 9:16, 1:1, 3:4 или по размеру экрана, картинка в картинке, блокировка экрана от случайных касаний.' },
+      { id: 'audio', icon: 'audio', title: 'Звук из видео', text: 'Достаёт звук из видео в файл M4A и кладёт в «Музыку».' },
+      { id: 'trim', icon: 'scissors', title: 'Обрезка без потерь', text: 'Вырежи нужный кусок видео — без перекодирования, качество не падает.' },
+      { id: 'playlists', icon: 'playlist', title: 'Плейлисты', text: 'Собирай видео и музыку в одни плейлисты, играй подряд или вперемешку.' },
+      { id: 'files', icon: 'folder', title: 'Файлы под контролем', text: 'Перенос, копирование и переименование с отменой. Имя занято — «оставить оба», «заменить» или «пропустить».' },
+    ],
+    compare: [
+      { topic: 'Шифровать скрытые файлы', official: 'Нет', ours: 'AES-256, ключ под PIN-кодом' },
+      { topic: 'Удалённые видео', official: 'Через 30 дней — навсегда', ours: 'Хранятся без срока' },
+      { topic: 'Ускорение удержанием', official: 'Нет', ours: 'Вперёд до 10x и назад' },
+      { topic: 'Звук из видео', official: 'Нет', ours: 'В M4A, в «Музыку»' },
+      { topic: 'Музыка в фоне', official: 'Нет', ours: 'Экран блокировки, наушники, виджет' },
+      { topic: 'Плейлисты', official: 'Нет', ours: 'Видео и музыка вместе' },
+    ],
+    changelog: {
+      version: '1.0', date: '10.11.2026',
+      items: ['Зоны жестов: яркость и громкость у краёв, переключение видео в центре', 'Сейф и корзина переживают переустановку', 'Сейф запирается, как только сворачиваешь приложение', 'Звук из видео — в M4A', 'Поддержка Android 16'],
+    },
+  },
+  uz: {
+    name: 'Andeo',
+    platform: 'video va musiqa',
+    rival: 'Galereya',
+    compareTitle: 'Oddiy galereya bilan taqqoslash',
+    price: '300 ★',
+    tagline: 'Sirlaringni saqlaydigan pleyer',
+    lead: 'Android uchun video va musiqa pleyeri. Fayllarni PIN-kod ostidagi shifrlangan Seyfga yashiradi, o‘chirilgan videolarni qutqaradi va muddatsiz saqlaydi, imo-ishoralar bilan boshqariladi. Akkaunt va bulutlarsiz — hammasi telefoningda qoladi.',
+    version: '1.0', size: '4,7 MB', android: '7.0+', updated: '10.11.2026',
+    points: ['PIN-kodli shifrlangan Seyf', 'Muddatsiz savat', 'Seyf va savat qayta o‘rnatishdan keyin ham qoladi', 'Barmoq bilan tezlatish va orqaga o‘tkazish', 'Fonda musiqa va vidjet'],
+    top: [
+      { id: 'vault', icon: 'lock', title: 'PIN-kod ostidagi Seyf', text: 'Video, musiqa yoki butun jildni yashir: fayllar shifrlanadi (AES-256) va galereya hamda boshqa ilovalardan yo‘qoladi. Ularni Seyfning o‘zida ko‘rish va tinglash mumkin — ilovani yig‘ishing bilan u qulflanadi.' },
+      { id: 'trash', icon: 'trash', title: 'Yo‘qolmaydigan savat', text: 'Galereyada o‘chirilgan 3 soniyadan uzun videolarni Andeo o‘ziga nusxalaydi va sen o‘zing o‘chirmaguningcha muddatsiz saqlaydi. Tiklash — bir bosishda, avvalgi joyiga va avvalgi nomi bilan.' },
+      { id: 'reinstall', icon: 'restore', title: 'Qayta o‘rnatishdan keyin ham qoladi', text: 'Seyf va savat telefondagi yashirin jildda turadi. Andeoni o‘chirib, qayta o‘rnatsang — savat o‘zi qaytadi, Seyf esa avvalgi PIN-kod bilan ochiladi. «Barcha fayllarga kirish» ruxsati kerak.' },
+      { id: 'gestures', icon: 'hand', title: 'Imo-ishoralar bilan boshqaruv', text: 'Chap chetda — yorqinlik, o‘ng chetda — ovoz balandligi, markazda surish — videoni almashtirish. Ikki marta bosish — ±10 soniya, uch marta — ±1 daqiqa, ikki barmoq — kattalashtirish.' },
+      { id: 'speed', icon: 'fast', title: 'Barmoq bilan tezlatish', text: 'Barmog‘ingni o‘ngda ushlab tur — video tezlashadi (1,5x dan 10x gacha, odatda 2x), chapda — silliq orqaga ketadi. Qo‘yib yubording — oddiy tezlik.' },
+    ],
+    more: [
+      { id: 'music', icon: 'music', title: 'Fonda musiqa', text: 'Ilova yig‘ilganda, qulf ekranida va bildirishnomalar panelida ijro etiladi, quloqchin tugmalariga bo‘ysunadi. Ish stoli uchun vidjet bor.' },
+      { id: 'view', icon: 'expand', title: 'Tasvir qanday kerak bo‘lsa', text: '16:9, 9:16, 1:1, 3:4 nisbatlari yoki ekran bo‘yicha, rasm ichida rasm, tasodifiy bosishlardan ekran qulfi.' },
+      { id: 'audio', icon: 'audio', title: 'Videodan ovoz', text: 'Videodan ovozni M4A faylga ajratib, «Musiqa» jildiga qo‘yadi.' },
+      { id: 'trim', icon: 'scissors', title: 'Sifatni yo‘qotmay qirqish', text: 'Videoning kerakli qismini qirqib ol — qayta kodlashsiz, sifat pasaymaydi.' },
+      { id: 'playlists', icon: 'playlist', title: 'Pleylistlar', text: 'Video va musiqani bitta pleylistga yig‘, ketma-ket yoki aralash ijro et.' },
+      { id: 'files', icon: 'folder', title: 'Fayllar nazoratda', text: 'Ko‘chirish, nusxalash va qayta nomlash — bekor qilish imkoni bilan. Nom band bo‘lsa — «ikkalasini qoldirish», «almashtirish» yoki «o‘tkazib yuborish».' },
+    ],
+    compare: [
+      { topic: 'Yashirin fayllarni shifrlash', official: 'Yo‘q', ours: 'AES-256, kalit PIN-kod ostida' },
+      { topic: 'O‘chirilgan videolar', official: '30 kundan keyin — butunlay', ours: 'Muddatsiz saqlanadi' },
+      { topic: 'Ushlab turib tezlatish', official: 'Yo‘q', ours: 'Oldinga 10x gacha va orqaga' },
+      { topic: 'Videodan ovoz', official: 'Yo‘q', ours: 'M4A, «Musiqa»ga' },
+      { topic: 'Fonda musiqa', official: 'Yo‘q', ours: 'Qulf ekrani, quloqchin, vidjet' },
+      { topic: 'Pleylistlar', official: 'Yo‘q', ours: 'Video va musiqa birga' },
+    ],
+    changelog: {
+      version: '1.0', date: '10.11.2026',
+      items: ['Imo-ishora zonalari: yorqinlik va ovoz — chetlarda, videoni almashtirish — markazda', 'Seyf va savat qayta o‘rnatishdan keyin ham qoladi', 'Ilovani yig‘ishing bilan Seyf qulflanadi', 'Videodan ovoz — M4A formatida', 'Android 16 qo‘llab-quvvatlanadi'],
+    },
+  },
+  en: {
+    name: 'Andeo',
+    platform: 'video & music',
+    rival: 'Gallery',
+    compareTitle: 'Compared with the stock gallery',
+    price: '300 ★',
+    tagline: 'A player that keeps your secrets',
+    lead: 'A video and music player for Android. It hides files in an encrypted PIN-locked Vault, rescues deleted videos and keeps them with no time limit, and runs on gestures. No accounts, no clouds — everything stays on your phone.',
+    version: '1.0', size: '4.7 MB', android: '7.0+', updated: '10.11.2026',
+    points: ['Encrypted Vault behind a PIN', 'A trash bin with no time limit', 'Vault and trash survive a reinstall', 'Speed up and rewind with a finger', 'Background music and a widget'],
+    top: [
+      { id: 'vault', icon: 'lock', title: 'A PIN-locked Vault', text: 'Hide videos, music or a whole folder: files get encrypted (AES-256) and vanish from the gallery and other apps. Watch and listen right inside the Vault — it locks as soon as you leave the app.' },
+      { id: 'trash', icon: 'trash', title: 'A trash bin that doesn’t forget', text: 'Videos longer than 3 seconds deleted in the gallery are copied into Andeo and kept with no time limit until you delete them yourself. Restoring takes one tap — back to the same folder, with the same name.' },
+      { id: 'reinstall', icon: 'restore', title: 'Survives a reinstall', text: 'The Vault and the trash live in a hidden folder on the phone. Uninstall Andeo and install it again — the trash comes back by itself, and the Vault opens with your old PIN. Needs the “All files access” permission.' },
+      { id: 'gestures', icon: 'hand', title: 'Gesture control', text: 'Left edge — brightness, right edge — volume, swipe in the middle — switch videos. Double tap — ±10 seconds, triple tap — ±1 minute, two fingers — zoom.' },
+      { id: 'speed', icon: 'fast', title: 'Speed up with a finger', text: 'Hold your finger on the right — the video speeds up (1.5x to 10x, 2x by default); on the left — it rewinds smoothly. Let go — normal speed.' },
+    ],
+    more: [
+      { id: 'music', icon: 'music', title: 'Background music', text: 'Keeps playing with the app minimized, on the lock screen and in the notification shade, and obeys your headphone buttons. There’s a home-screen widget.' },
+      { id: 'view', icon: 'expand', title: 'The picture you want', text: '16:9, 9:16, 1:1, 3:4 or fit to screen, picture-in-picture and a screen lock against accidental taps.' },
+      { id: 'audio', icon: 'audio', title: 'Sound from video', text: 'Pulls the sound out of a video into an M4A file and puts it in Music.' },
+      { id: 'trim', icon: 'scissors', title: 'Lossless trim', text: 'Cut out the part of a video you need — no re-encoding, no quality loss.' },
+      { id: 'playlists', icon: 'playlist', title: 'Playlists', text: 'Mix videos and music in one playlist, play in order or shuffled.' },
+      { id: 'files', icon: 'folder', title: 'Files under control', text: 'Move, copy and rename with undo. Name taken — “keep both”, “replace” or “skip”.' },
+    ],
+    compare: [
+      { topic: 'Encrypt hidden files', official: 'No', ours: 'AES-256, key behind a PIN' },
+      { topic: 'Deleted videos', official: 'Gone after 30 days', ours: 'Kept with no time limit' },
+      { topic: 'Hold to speed up', official: 'No', ours: 'Forward up to 10x and back' },
+      { topic: 'Sound from video', official: 'No', ours: 'M4A, into Music' },
+      { topic: 'Background music', official: 'No', ours: 'Lock screen, headphones, widget' },
+      { topic: 'Playlists', official: 'No', ours: 'Videos and music together' },
+    ],
+    changelog: {
+      version: '1.0', date: '10.11.2026',
+      items: ['Gesture zones: brightness and volume at the edges, switching videos in the middle', 'Vault and trash survive a reinstall', 'The Vault locks as soon as you leave the app', 'Sound from video — as M4A', 'Android 16 support'],
+    },
+  },
+};
 
+export const APPS: Record<SiteAppId, Record<Language, AppCopy>> = { andogram: ANDOGRAM, andusta: ANDUSTA, andeo: ANDEO };
+
+/** Apps on sale (the access window, promo codes, APK links). */
 export const APP_IDS: AppId[] = ['andogram', 'andusta'];
+
+/** Every app on the site, in display order (cards, tabs, menu, footer). Those not in APP_IDS are «coming soon». */
+export const SITE_APP_IDS: SiteAppId[] = ['andogram', 'andusta', 'andeo'];
+
+export const isOnSale = (id: SiteAppId): id is AppId => (APP_IDS as SiteAppId[]).includes(id);
 
 /**
  * Fallback APK links when the activation API returns none (GitHub release assets).

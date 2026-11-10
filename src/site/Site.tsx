@@ -2,7 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } fro
 import type { AppId, Language } from '../types';
 import { getDemoPageCopy } from '../components/sandbox/demoPages';
 import { isOverlayEntry } from '../hooks/useBackToClose';
-import { APPS, COPY } from './copy';
+import { APPS, COPY, isOnSale } from './copy';
 import { SiteContext, type SiteApi } from './context';
 import { ChunkBoundary } from './ChunkBoundary';
 import { Footer, MenuSheet, StickyCta, TopBar } from './Chrome';
@@ -139,7 +139,8 @@ export function Site() {
         )}
       </main>
       <Footer />
-      <StickyCta enabled={route.page !== 'demo' && !menuOpen && !access.open} />
+      {/* not on a demo page, and not on the page of an app that isn't on sale yet (Andeo) */}
+      <StickyCta enabled={route.page !== 'demo' && !(route.page === 'app' && !isOnSale(route.app)) && !menuOpen && !access.open} />
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
       {accessLoaded && (
         <ChunkBoundary

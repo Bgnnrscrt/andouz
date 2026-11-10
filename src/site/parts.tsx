@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { AppId } from '../types';
+import type { SiteAppId } from '../types';
 import { APPS } from './copy';
 import { useSite } from './context';
 import { AppEmblem } from './icons';
@@ -18,11 +18,11 @@ export function SectionHead({ kicker, title, lead, id }: { kicker: string; title
 }
 
 /**
- * An app as a private-club membership card: navy for AndoGram, burgundy for Andusta,
+ * An app as a private-club membership card: navy for AndoGram, burgundy for Andusta, cognac for Andeo,
  * a brass frame, the emblem, «№ 01», the name and the platform. Extra content (points,
  * facts) goes below the name.
  */
-export function MemberCard({ app, num, big, children }: { app: AppId; num: number; big?: boolean; children?: ReactNode }) {
+export function MemberCard({ app, num, big, children }: { app: SiteAppId; num: number; big?: boolean; children?: ReactNode }) {
   const { lang } = useSite();
   const a = APPS[app][lang];
   return (

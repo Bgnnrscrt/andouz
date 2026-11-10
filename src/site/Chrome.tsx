@@ -104,6 +104,7 @@ export function TopBar({ menuOpen, onMenu }: { menuOpen: boolean; onMenu: () => 
         <nav className="topnav" aria-label={t.nav.menu}>
           <Link to={appHref('andogram')}>AndoGram</Link>
           <Link to={appHref('andusta')}>Andusta</Link>
+          <Link to={appHref('andeo')}>Andeo</Link>
           <Link to={sectionHref('demos')}>{t.nav.demos}</Link>
           <Link to={sectionHref('install')}>{t.nav.install}</Link>
           <Link to={sectionHref('faq')}>{t.nav.faq}</Link>
@@ -134,6 +135,7 @@ export function MenuSheet({ open, onClose }: { open: boolean; onClose: () => voi
     [homeHref, t.nav.home],
     [appHref('andogram'), 'AndoGram'],
     [appHref('andusta'), 'Andusta'],
+    [appHref('andeo'), 'Andeo'],
     [sectionHref('demos'), t.nav.demos],
     [sectionHref('install'), t.nav.install],
     [sectionHref('faq'), t.nav.faq],
@@ -244,6 +246,7 @@ export function Footer() {
           <ul>
             <li><Link to={appHref('andogram')}>AndoGram</Link></li>
             <li><Link to={appHref('andusta')}>Andusta</Link></li>
+            <li><Link to={appHref('andeo')}>Andeo</Link></li>
             <li><Link to={sectionHref('demos')}>{t.nav.demos}</Link></li>
             <li><Link to={sectionHref('install')}>{t.nav.install}</Link></li>
             <li><Link to={sectionHref('faq')}>{t.nav.faq}</Link></li>

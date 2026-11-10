@@ -39,6 +39,7 @@
   --brass-line: rgba(176, 141, 87, 0.5);
   --navy: #23395d;
   --burgundy: #7a2c3a;
+  --cognac: #6f421b;
   --leather: #183a2c;
   --leather-ink: #eee6d4;
   --leather-ink-2: #c7bda5;
@@ -290,6 +291,20 @@ img.emoji {
   background: var(--brass);
   color: #1f1a10;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 10px 22px -14px rgba(120, 90, 40, 0.8);
+}
+/* «Скоро в продаже» — in place of the buy button of an app that is not on sale yet (Andeo): plain text, not a button */
+.btn.btn--soon,
+.btn.btn--soon:hover {
+  border: 1px dashed var(--brass);
+  background: transparent;
+  color: var(--ink-2);
+  box-shadow: none;
+  cursor: default;
+  transform: none;
+}
+.cta-band .btn.btn--soon {
+  border-color: var(--brass-light);
+  color: var(--brass-light);
 }
 .icon-btn {
   display: inline-grid;
@@ -767,6 +782,11 @@ img.emoji {
   right: 0;
   transform: rotate(6deg);
 }
+.hero-card--mid {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(1deg);
+}
 .hero-card--front {
   bottom: 0;
   left: 0;
@@ -810,7 +830,7 @@ img.emoji {
   .hero-art {
     display: block;
     position: relative;
-    height: 390px;
+    height: 430px;
   }
 }
 
@@ -830,6 +850,10 @@ img.emoji {
 .mcard--andusta {
   background: var(--burgundy);
   box-shadow: 0 24px 40px -24px rgba(50, 15, 22, 0.7), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.mcard--andeo {
+  background: var(--cognac);
+  box-shadow: 0 24px 40px -24px rgba(48, 26, 8, 0.7), 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 .mcard::before {
   content: '';
@@ -1084,20 +1108,23 @@ img.emoji {
   display: grid;
   gap: 10px;
 }
-.app-actions .btn--primary {
+.app-actions .btn--primary,
+.app-actions .btn--soon {
   order: -1;
 }
 @media (min-width: 520px) {
   .app-actions {
     grid-template-columns: 1fr 1fr;
   }
-  .app-actions .btn--primary {
+  .app-actions .btn--primary,
+  .app-actions .btn--soon {
     order: 0;
   }
 }
+/* three apps: three in a row where they fit (cards ≥ 300px), otherwise two + one */
 @media (min-width: 900px) {
   .apps-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 32px;
   }
 }
@@ -1105,7 +1132,8 @@ img.emoji {
 /* ---------- comparison ---------- */
 .switch {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   gap: 4px;
   max-width: 440px;
   margin-bottom: 22px;

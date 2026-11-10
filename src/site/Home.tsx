@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ArrowRight, Check, Clock, Plus, X } from 'lucide-react';
-import type { AppId } from '../types';
+import type { SiteAppId } from '../types';
 import { demoHref } from '../components/sandbox/demos';
-import { APPS, APP_IDS } from './copy';
+import { APPS, SITE_APP_IDS, isOnSale } from './copy';
 import { Link, useSite } from './context';
 import { Icon } from './icons';
 import { Hero } from './Hero';
@@ -78,7 +78,7 @@ function Apps() {
       <div className="wrap">
         <SectionHead kicker={t.apps.kicker} title={t.apps.title} id="apps-title" />
         <div className="apps-grid">
-          {APP_IDS.map((id, i) => {
+          {SITE_APP_IDS.map((id, i) => {
             const a = APPS[id][lang];
             return (
               <article key={id} className="app-block" aria-label={a.name}>
@@ -97,9 +97,16 @@ function Apps() {
                   <Link to={appHref(id)} className="btn btn--outline">
                     {t.apps.details}
                   </Link>
-                  <button type="button" className="btn btn--primary" onClick={() => openAccess(id)}>
-                    {t.apps.buy} · 1000 ★
-                  </button>
+                  {isOnSale(id) ? (
+                    <button type="button" className="btn btn--primary" onClick={() => openAccess(id)}>
+                      {t.apps.buy} · 1000 ★
+                    </button>
+                  ) : (
+                    <span className="btn btn--soon">
+                      {t.apps.soonShort}
+                      {a.price && ` · ${a.price}`}
+                    </span>
+                  )}
                 </div>
               </article>
             );
@@ -110,10 +117,10 @@ function Apps() {
   );
 }
 
-export function CompareList({ app }: { app: AppId }) {
+export function CompareList({ app }: { app: SiteAppId }) {
   const { lang } = useSite();
   const a = APPS[app][lang];
-  const official = app === 'andogram' ? 'Telegram' : 'Instagram';
+  const official = a.rival ?? (app === 'andogram' ? 'Telegram' : 'Instagram');
   return (
     <div className="cmp">
       <div className="cmp-head" aria-hidden="true">
@@ -148,11 +155,8 @@ export function CompareList({ app }: { app: AppId }) {
 
 function Compare() {
   const { t } = useSite();
-  const [which, setWhich] = useState<AppId>('andogram');
-  const tabs: { id: AppId; label: string }[] = [
-    { id: 'andogram', label: 'AndoGram' },
-    { id: 'andusta', label: 'Andusta' },
-  ];
+  const [which, setWhich] = useState<SiteAppId>('andogram');
+  const tabs: { id: SiteAppId; label: string }[] = SITE_APP_IDS.map((id) => ({ id, label: APPS[id].ru.name }));
   return (
     <section className="section section--paper" id="compare" aria-labelledby="compare-title">
       <div className="wrap">
@@ -171,7 +175,8 @@ function Compare() {
               onClick={() => setWhich(tab.id)}
               onKeyDown={(e) => {
                 if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-                  const next = which === 'andogram' ? 'andusta' : 'andogram';
+                  const step = e.key === 'ArrowRight' ? 1 : -1;
+                  const next = tabs[(tabs.findIndex((x) => x.id === which) + step + tabs.length) % tabs.length].id;
                   setWhich(next);
                   document.getElementById(`cmp-tab-${next}`)?.focus();
                 }

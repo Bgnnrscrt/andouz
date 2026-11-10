@@ -1,18 +1,30 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import type { AppId } from '../types';
+import type { SiteAppId } from '../types';
 import { demoHref, isListedDemo } from '../components/sandbox/demos';
-import { APPS } from './copy';
+import { APPS, SITE_APP_IDS, isOnSale } from './copy';
 import { Link, useSite } from './context';
 import { CompareList } from './Home';
 import { Icon } from './icons';
 import { MemberCard, SectionHead } from './parts';
 import { homeHref } from './router';
 
-export function AppPage({ app }: { app: AppId }) {
+export function AppPage({ app }: { app: SiteAppId }) {
   const { t, lang, openAccess } = useSite();
   const a = APPS[app][lang];
   const p = t.appPage;
   const firstDemo = a.top.find((f) => f.demo && isListedDemo(f.demo))?.demo;
+  /** «Купить» for an app on sale; «Скоро в продаже» (plain text, not a button) for the others. */
+  const buy = (className: string) =>
+    isOnSale(app) ? (
+      <button type="button" className={className} onClick={() => openAccess(app)}>
+        {p.buy}
+      </button>
+    ) : (
+      <span className={`${className} btn--soon`}>
+        {t.apps.soon}
+        {a.price && ` · ${a.price}`}
+      </span>
+    );
 
   return (
     <>
@@ -33,9 +45,7 @@ export function AppPage({ app }: { app: AppId }) {
               <p className="app-tagline">{a.tagline}</p>
               <p className="lead">{a.lead}</p>
               <div className="hero-actions">
-                <button type="button" className="btn btn--primary btn--lg" onClick={() => openAccess(app)}>
-                  {p.buy}
-                </button>
+                {buy('btn btn--primary btn--lg')}
                 {firstDemo && (
                   <Link to={demoHref(firstDemo)} className="btn btn--outline btn--lg">
                     {p.tryDemo}
@@ -44,7 +54,7 @@ export function AppPage({ app }: { app: AppId }) {
               </div>
             </div>
             <div className="app-hero-card" aria-hidden="true">
-              <MemberCard app={app} num={app === 'andogram' ? 1 : 2} big />
+              <MemberCard app={app} num={SITE_APP_IDS.indexOf(app) + 1} big />
             </div>
           </div>
           <dl className="facts">
@@ -118,7 +128,7 @@ export function AppPage({ app }: { app: AppId }) {
 
       <section className="section" aria-labelledby="cmp-title">
         <div className="wrap">
-          <SectionHead kicker={t.compare.kicker} title={p.compare} id="cmp-title" />
+          <SectionHead kicker={t.compare.kicker} title={a.compareTitle ?? p.compare} id="cmp-title" />
           <CompareList app={app} />
         </div>
       </section>
@@ -137,9 +147,7 @@ export function AppPage({ app }: { app: AppId }) {
       <section className="cta-band">
         <div className="wrap cta-band-in">
           <p className="cta-band-title">{a.tagline}</p>
-          <button type="button" className="btn btn--brass btn--lg" onClick={() => openAccess(app)}>
-            {p.buy}
-          </button>
+          {buy('btn btn--brass btn--lg')}
         </div>
       </section>
     </>

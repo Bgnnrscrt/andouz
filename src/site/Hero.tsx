@@ -121,11 +121,14 @@ function HeroPhone() {
   );
 }
 
-/** The two club cards — after the curtain, on wide screens only. */
+/** The three club cards as a fanned stack — after the curtain, on wide screens only. */
 function HeroArt() {
   return (
     <div className="hero-art" aria-hidden="true">
       <div className="hero-card hero-card--back">
+        <MemberCard app="andeo" num={3} />
+      </div>
+      <div className="hero-card hero-card--mid">
         <MemberCard app="andusta" num={2} />
       </div>
       <div className="hero-card hero-card--front">
