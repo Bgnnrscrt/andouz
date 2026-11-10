@@ -37,7 +37,7 @@ function LangMenu() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setOpen(false);
-        btnRef.current?.focus();
+        btnRef.current?.focus({ preventScroll: true });
       }
     };
     document.addEventListener('pointerdown', onDown);
@@ -81,7 +81,7 @@ function LangMenu() {
                 onClick={() => {
                   setLang(l.code);
                   setOpen(false);
-                  btnRef.current?.focus();
+                  btnRef.current?.focus({ preventScroll: true });
                 }}
               >
                 <span>{l.label}</span>

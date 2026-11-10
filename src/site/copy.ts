@@ -56,7 +56,11 @@ export interface SiteCopy {
   };
   /** The curtain hero (Hero.tsx): `title` is drawn in 4 lines, the last one in italics; in `lead` the words
    *  Google / Meta / Telegram are set in bold. */
-  hero: { kicker: string; title: [string, string, string, string]; lead: string; cta: string; ctaDemo: string; trust: string[] };
+  hero: {
+    kicker: string; title: [string, string, string, string]; lead: string; cta: string; ctaDemo: string; trust: string[];
+    /** the button next to the phone that stops / starts the pictures */
+    pause: string; play: string;
+  };
   highlights: { kicker: string; title: string; items: { icon: IconName; title: string; text: string; app: AppId; demo?: DemoId }[]; open: string; try: string };
   demos: { kicker: string; title: string; lead: string; start: string; items: { id: DemoId; title: string; text: string; time: string }[] };
   apps: { kicker: string; title: string; details: string; buy: string; tests: string };
@@ -98,6 +102,8 @@ const RU: SiteCopy = {
     cta: 'Получить доступ',
     ctaDemo: 'Попробовать в браузере',
     trust: ['Без Root', 'Android 8+', 'Оплата Telegram Stars'],
+    pause: 'Остановить смену кадров',
+    play: 'Запустить смену кадров',
   },
   highlights: {
     kicker: 'Возможности',
@@ -108,7 +114,7 @@ const RU: SiteCopy = {
       { icon: 'key', app: 'andogram', demo: 'honeypot', title: 'Скрытые аккаунты', text: 'У каждого PIN-кода свои аккаунты. Введёшь «безопасный» — остальные исчезнут из меню и уведомлений.' },
       { icon: 'download', app: 'andogram', demo: 'no_forwards_bypass', title: 'Сохранить запрещённое', text: 'Фото и видео из каналов, где сохранение отключено, — в галерею или в «Избранное».' },
       { icon: 'archive', app: 'andogram', demo: 'archive_bridge', title: 'Ничего не пропадёт', text: 'Личные переписки копируются в твой закрытый архив — вместе с изменёнными и удалёнными сообщениями.' },
-      { icon: 'ghost', app: 'andusta', title: 'Невидимка', text: 'Читай Telegram без «прочитано», смотри истории в Instagram без следа в списке зрителей.' },
+      { icon: 'ghost', app: 'andusta', title: 'Невидимка', text: 'Смотри истории в Instagram без следа в списке зрителей и читай Direct без «просмотрено».' },
       { icon: 'eye', app: 'andusta', title: 'Одноразовое — ещё раз', text: 'Одноразовое фото в Direct не сгорает: его можно открыть повторно.' },
       { icon: 'sparkles', app: 'andogram', demo: 'ar_masks', title: 'Маски и другой голос', text: 'AR-маски в видеокружках и смена голоса в голосовых сообщениях.' },
     ],
@@ -229,6 +235,8 @@ const UZ: SiteCopy = {
     cta: 'Kirish huquqini olish',
     ctaDemo: 'Brauzerda sinab ko‘rish',
     trust: ['Root kerak emas', 'Android 8+', 'Telegram Stars bilan to‘lov'],
+    pause: 'Kadrlar almashinuvini to‘xtatish',
+    play: 'Kadrlar almashinuvini yoqish',
   },
   highlights: {
     kicker: 'Imkoniyatlar',
@@ -239,7 +247,7 @@ const UZ: SiteCopy = {
       { icon: 'key', app: 'andogram', demo: 'honeypot', title: 'Yashirin akkauntlar', text: 'Har bir PIN-kodning o‘z akkauntlari bor. «Xavfsiz» PIN kiritilsa, qolganlari menyu va bildirishnomalardan yo‘qoladi.' },
       { icon: 'download', app: 'andogram', demo: 'no_forwards_bypass', title: 'Taqiqlanganni saqlash', text: 'Saqlash o‘chirilgan kanallardagi rasm va videolar — galereyaga yoki «Saqlanganlar»ga.' },
       { icon: 'archive', app: 'andogram', demo: 'archive_bridge', title: 'Hech narsa yo‘qolmaydi', text: 'Shaxsiy yozishmalar yopiq arxivingga ko‘chiriladi — tahrirlangan va o‘chirilgan xabarlar bilan birga.' },
-      { icon: 'ghost', app: 'andusta', title: 'Ko‘rinmas rejim', text: 'Telegramni «o‘qildi»siz o‘qi, Instagramda hikoyalarni ko‘ruvchilar ro‘yxatida iz qoldirmay ko‘r.' },
+      { icon: 'ghost', app: 'andusta', title: 'Ko‘rinmas rejim', text: 'Instagramda hikoyalarni ko‘ruvchilar ro‘yxatida iz qoldirmay ko‘r, Directni «ko‘rildi»siz o‘qi.' },
       { icon: 'eye', app: 'andusta', title: 'Bir martalik — yana bir bor', text: 'Directdagi bir martalik rasm yo‘qolmaydi: uni qayta ochish mumkin.' },
       { icon: 'sparkles', app: 'andogram', demo: 'ar_masks', title: 'Niqoblar va boshqa ovoz', text: 'Video-doirachalarda AR-niqoblar va ovozli xabarlarda ovozni o‘zgartirish.' },
     ],
@@ -360,6 +368,8 @@ const EN: SiteCopy = {
     cta: 'Get access',
     ctaDemo: 'Try it in your browser',
     trust: ['No root', 'Android 8+', 'Pay with Telegram Stars'],
+    pause: 'Pause the slideshow',
+    play: 'Play the slideshow',
   },
   highlights: {
     kicker: 'Features',
@@ -370,7 +380,7 @@ const EN: SiteCopy = {
       { icon: 'key', app: 'andogram', demo: 'honeypot', title: 'Hidden accounts', text: 'Every PIN opens its own accounts. Enter the “safe” one and the rest vanish from the menu and notifications.' },
       { icon: 'download', app: 'andogram', demo: 'no_forwards_bypass', title: 'Save what’s locked', text: 'Photos and videos from channels that block saving — to your gallery or Saved Messages.' },
       { icon: 'archive', app: 'andogram', demo: 'archive_bridge', title: 'Nothing gets lost', text: 'Your private chats are copied to your own closed archive — edited and deleted messages included.' },
-      { icon: 'ghost', app: 'andusta', title: 'Ghost mode', text: 'Read Telegram without “read” marks, watch Instagram stories without showing up in the viewers list.' },
+      { icon: 'ghost', app: 'andusta', title: 'Ghost mode', text: 'Watch Instagram stories without showing up in the viewers list, and read Direct without “seen”.' },
       { icon: 'eye', app: 'andusta', title: 'View-once, again', text: 'A view-once photo in Direct doesn’t burn: you can open it again.' },
       { icon: 'sparkles', app: 'andogram', demo: 'ar_masks', title: 'Masks and a new voice', text: 'AR masks in video messages and a voice changer for voice notes.' },
     ],

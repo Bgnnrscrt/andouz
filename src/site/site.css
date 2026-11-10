@@ -4,6 +4,19 @@
    Phone first: base rules are for phones, wider screens are added on top.
    ========================================================================== */
 
+/* Stand-ins for Cormorant Garamond while it loads, scaled to the same width (measured on the hero lines):
+   Times New Roman (iPhone, Windows) and Noto Serif (Android's serif). Missing fonts are skipped. */
+@font-face {
+  font-family: 'Cormorant Fallback';
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif');
+  size-adjust: 93%;
+}
+@font-face {
+  font-family: 'Cormorant Fallback Android';
+  src: local('Noto Serif'), local('NotoSerif-Regular'), local('NotoSerif');
+  size-adjust: 78%;
+}
+
 :root {
   --paper: #f1ece2;
   --paper-2: #ebe4d6;
@@ -30,7 +43,7 @@
   --leather-ink: #eee6d4;
   --leather-ink-2: #c7bda5;
   --danger: #9b2c2c;
-  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-display: 'Cormorant Garamond', 'Cormorant Fallback', 'Cormorant Fallback Android', serif;
   --font-body: 'Jost', 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --r: 4px;
@@ -107,8 +120,15 @@ ol {
   color: var(--ink);
 }
 :focus-visible {
-  outline: 2px solid var(--brass);
+  outline: 2px solid var(--green);
   outline-offset: 3px;
+}
+.section--leather :focus-visible,
+.cta-band :focus-visible,
+.footer :focus-visible,
+.sheet--menu :focus-visible,
+.hero-panel :focus-visible {
+  outline-color: var(--brass-light);
 }
 /* an emoji picture (src/lib/emoji.tsx) in running text */
 img.emoji {
@@ -475,11 +495,18 @@ img.emoji {
   /* the top bar with its 1px bottom line: the stage sticks right under it */
   --bar: calc(var(--topbar-h) + 1px);
   --lift: 72vh;
-  --lift: 72svh;
   --stage-h: calc(100vh - var(--bar));
-  --stage-h: calc(100svh - var(--bar));
-  --hero-pad: clamp(22px, 4.6svh, 46px);
+  --hero-pad: clamp(22px, 4.6vh, 46px);
   position: relative;
+}
+/* svh = the height with the browser bars shown: steady while the address bar slides away.
+   Custom properties don't fall back on their own, so the svh values are set only where svh works. */
+@supports (height: 1svh) {
+  .hero {
+    --lift: 72svh;
+    --stage-h: calc(100svh - var(--bar));
+    --hero-pad: clamp(22px, 4.6svh, 46px);
+  }
 }
 .hero-stage {
   position: sticky;
@@ -560,15 +587,32 @@ img.emoji {
 }
 .hero-title {
   font: 600 clamp(2.4rem, 11.6vw, 5.2rem) / 0.98 var(--font-display);
-  /* fills the column (per-language --fit from Hero.tsx); on short screens the height caps it */
-  font-size: min(5.6rem, calc(100cqi * var(--fit, 0.12)), 10.5vh);
-  font-size: min(5.6rem, calc(100cqi * var(--fit, 0.12)), 10.5svh);
   letter-spacing: -0.01em;
   color: var(--heading);
 }
+/* fills the column (per-language --fit from Hero.tsx); on short screens the height caps it */
+@supports (width: 1cqi) {
+  .hero-title {
+    font-size: min(5.6rem, calc(100cqi * var(--fit, 0.12)), 10.5vh);
+  }
+}
+@supports (width: 1cqi) and (height: 1svh) {
+  .hero-title {
+    font-size: min(5.6rem, calc(100cqi * var(--fit, 0.12)), 10.5svh);
+  }
+}
+/* one line each; a line may still wrap (a fallback font, user text spacing) rather than be cut */
 .hero-line {
   display: block;
-  white-space: nowrap;
+}
+/* an opening quote hangs in the margin, so the letters line up with the lines below */
+.hero-hang {
+  margin-left: -0.22em; /* phones: half of it, the screen edge is close */
+}
+@media (min-width: 960px) {
+  .hero-hang {
+    margin-left: -0.38em;
+  }
 }
 .hero-title em {
   font-style: italic;
@@ -584,6 +628,7 @@ img.emoji {
 .hero-lead {
   max-width: 34em;
   font-size: 16.5px;
+  text-wrap: pretty;
   line-height: 1.6;
   color: var(--ink-2);
 }
@@ -655,11 +700,26 @@ img.emoji {
 .hero-panel .hero-rest {
   visibility: hidden;
 }
-
-/* keyboard focus inside the hero: show the real (paper) content, not the copy that covers it */
-.hero:has(.hero-paper :focus-visible) .hero-panel,
-.hero:has(.hero-paper :focus-visible) .hero-hem {
+/* lifted: out of the way of taps and Tab */
+.hero.is-lifted .hero-panel {
   visibility: hidden;
+}
+
+/* keyboard focus inside the real content: it comes up over the curtain on opaque paper */
+.hero:has(.hero-paper :focus-visible) .hero-paper {
+  z-index: 3;
+  background-color: var(--paper);
+  background-image: radial-gradient(90% 60% at 15% 0%, rgba(255, 255, 255, 0.75), transparent 60%), var(--grain);
+}
+/* the curtain's copy of the buttons follows the hover of the real ones under it (wide screens) */
+@media (hover: hover) and (pointer: fine) {
+  .hero:has(.hero-paper .btn--primary:hover) .hero-panel .btn--primary {
+    background: #e6d9bd;
+  }
+  .hero:has(.hero-paper .btn--outline:hover) .hero-panel .btn--outline {
+    border-color: #f3ead6;
+    background: rgba(243, 234, 214, 0.08);
+  }
 }
 
 /* the phone: a slot in the same grid cell as the text; the phone hangs from its top */
@@ -703,8 +763,30 @@ img.emoji {
   height: 100%;
   object-fit: cover;
   opacity: 0;
+  pointer-events: none;
+  -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
+}
+/* pause / play the pictures (moving content needs a stop button): right of the phone's top corner */
+.hero-pause {
+  position: absolute;
+  top: 6px;
+  left: calc(100% + 10px);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(216, 184, 120, 0.55);
+  border-radius: 50%;
+  background: rgba(11, 20, 15, 0.55);
+  color: #f3ead6;
+  pointer-events: auto;
+}
+.hero-pause::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
 }
 .hero-shot:first-child {
   opacity: 1;
@@ -732,7 +814,27 @@ img.emoji {
   transform: rotate(-4deg);
 }
 
-/* the stage ends with free paper below the text on tall screens: the next section starts closer */
+/* phones and tablets: the curtain takes taps (under the phone picture lie the real buttons);
+   on paper the buttons stand at the bottom of the stage — the lift uncovers them first */
+@media (max-width: 959.98px) {
+  .hero-panel {
+    pointer-events: auto;
+  }
+  .hero-paper {
+    align-content: stretch;
+  }
+  .hero-paper .hero-in {
+    grid-template-rows: auto auto 1fr;
+  }
+  .hero-paper .hero-rest {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .hero-paper .hero-actions {
+    margin-top: auto;
+  }
+}
 .hero + .section {
   padding-top: 28px;
 }
@@ -756,7 +858,7 @@ img.emoji {
     column-gap: 56px;
   }
   .hero-panel .hero-rest {
-    visibility: visible;
+    visibility: inherit;
   }
   .hero-phone-slot {
     grid-area: side;

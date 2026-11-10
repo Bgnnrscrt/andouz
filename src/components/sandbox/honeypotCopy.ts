@@ -233,7 +233,7 @@ const RU: Words = {
     },
   },
   lock: {
-    legendTitle: 'Введи PIN-код:',
+    legendTitle: 'Какой PIN что открывает:',
     legend: {
       1: 'безопасный аккаунт',
       2: 'личный аккаунт',
