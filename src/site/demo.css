@@ -1,0 +1,96 @@
+/* «Проверь сам» page: the explanation, then the phone (side by side on a wide screen). */
+.demo-page {
+  display: grid;
+  gap: 26px;
+  padding: 14px 0 56px;
+}
+.demo-intro {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  max-width: 560px;
+}
+.demo-intro .back-link {
+  margin-bottom: 0;
+}
+.demo-title {
+  font-size: clamp(2.3rem, 8.4vw, 3.4rem);
+}
+.roles {
+  margin-top: 4px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--card);
+}
+.roles-title {
+  margin-bottom: 12px;
+  font: 600 12px/1 var(--font-body);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brass-ink);
+}
+.roles ul {
+  display: grid;
+  gap: 10px;
+}
+.roles li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.roles strong {
+  font-weight: 600;
+  color: var(--heading);
+}
+.role {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  min-width: 30px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 13px;
+  font: 700 12px/1 var(--font-body);
+  color: #fff;
+}
+.role--a {
+  background: var(--green);
+}
+.role--b {
+  background: #3f6aa0;
+}
+.role--c {
+  background: #a8653a;
+}
+.role--d {
+  background: #8f4572;
+}
+.role--e {
+  background: var(--brass);
+  color: #1f1a10;
+}
+.demo-stage {
+  min-height: 60vh;
+}
+.demo-loading {
+  min-height: 70vh;
+}
+/* the phone's caption next to it (SandboxFrame) */
+.demo-stage .sbx-caption-title {
+  color: var(--heading);
+}
+@media (min-width: 1180px) {
+  .demo-page {
+    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    align-items: start;
+    gap: 48px;
+    padding-top: 26px;
+  }
+  .demo-intro {
+    position: sticky;
+    top: calc(var(--topbar-h) + 24px);
+  }
+}

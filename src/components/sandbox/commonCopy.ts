@@ -42,7 +42,7 @@ const COMMON: Record<Language, CommonCopy> = {
   uz: {
     end: { buy: 'AndoGram sotib olish', more: 'Boshqa ssenariylar', again: 'Yana bir bor' },
     restart: 'Qaytadan boshlash',
-    cta: 'O‘zingiz sinab ko‘ring',
+    cta: 'O‘zing sinab ko‘r',
     page: { back: 'AndoGram', kicker: 'Qanday ishlaydi' },
   },
   en: {

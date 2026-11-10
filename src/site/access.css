@@ -1,0 +1,321 @@
+/* «Получить доступ» window (loads with AccessSheet). */
+.access-body,
+.unlocked {
+  display: grid;
+  gap: 16px;
+}
+.access-title {
+  padding-right: 40px;
+  font: 600 32px/1.05 var(--font-display);
+  color: var(--heading);
+}
+.access-label {
+  font: 600 12px/1.2 var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass-ink);
+}
+.access-hint,
+.access-text {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.access-hint {
+  margin-top: -6px;
+  text-align: center;
+}
+
+/* app choice */
+.app-picks {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  border: 0;
+}
+.app-picks legend {
+  margin-bottom: 8px;
+}
+.app-pick {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--card);
+  cursor: pointer;
+}
+.app-pick.is-on {
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+.app-pick-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.app-pick:has(.app-pick-input:focus-visible) {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+.app-pick .emblem {
+  border: 0;
+  color: #f3ead6;
+  background: var(--navy);
+}
+.app-pick .emblem--andusta {
+  background: var(--burgundy);
+}
+.app-pick-text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+}
+.app-pick-name {
+  font: 600 22px/1.1 var(--font-display);
+  color: var(--heading);
+}
+.app-pick-platform {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.app-pick-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: #f6f1e6;
+}
+.app-pick.is-on .app-pick-mark {
+  border-color: var(--green);
+  background: var(--green);
+}
+
+/* price */
+.price {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 18px 14px;
+  border: 1px solid var(--brass-line);
+  border-radius: var(--r);
+  background: rgba(176, 141, 87, 0.08);
+  text-align: center;
+}
+.price-value {
+  font: 600 44px/1 var(--font-display);
+  color: var(--brass-ink);
+}
+.price-note {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+/* promo code */
+.promo {
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.promo-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  font: 600 13px/1.2 var(--font-body);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.promo-chev {
+  transition: transform 0.2s var(--ease);
+}
+.promo-toggle[aria-expanded='true'] .promo-chev {
+  transform: rotate(180deg);
+}
+.promo-form {
+  display: grid;
+  gap: 10px;
+  padding-top: 6px;
+}
+.promo-input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: #fffdf8;
+  font: 500 16px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.promo-input::placeholder {
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-3);
+}
+.promo-input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-soft);
+}
+.promo-input.is-bad {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(155, 44, 44, 0.1);
+}
+.promo-input.is-shake {
+  animation: promo-shake 0.42s var(--ease);
+}
+@keyframes promo-shake {
+  20% {
+    transform: translateX(-7px);
+  }
+  45% {
+    transform: translateX(6px);
+  }
+  70% {
+    transform: translateX(-4px);
+  }
+  90% {
+    transform: translateX(2px);
+  }
+}
+.promo-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 20px;
+  font-size: 14px;
+  color: var(--danger);
+}
+.promo-status:empty {
+  display: none;
+}
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* unlocked */
+.unlocked {
+  justify-items: stretch;
+}
+.unlocked-mark {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--green-line);
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
+  justify-self: start;
+}
+.unlocked-downloads {
+  display: grid;
+  gap: 10px;
+}
+.code-box {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--brass-line);
+  border-radius: var(--r);
+  background: rgba(176, 141, 87, 0.08);
+}
+.code-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 12px/1.2 var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass-ink);
+}
+.code-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: #fffdf8;
+  color: var(--heading);
+  text-align: left;
+}
+.code-value code {
+  overflow-wrap: anywhere;
+  font: 600 19px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+}
+.code-hint {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.mini-steps {
+  display: grid;
+  gap: 8px;
+}
+.mini-steps li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--ink-2);
+}
+.mini-steps span {
+  width: 26px;
+  flex: none;
+  font: italic 600 20px/1 var(--font-display);
+  color: var(--brass);
+}
+/* a QR helps only when the window is open on a computer */
+.qr-box {
+  display: none;
+}
+@media (min-width: 700px) {
+  .qr-box {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-top: 6px;
+    border-top: 1px solid var(--line);
+  }
+  .qr {
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: #faf7f0;
+  }
+  .qr-side {
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .qr-side .btn {
+    justify-self: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .promo-input.is-shake,
+  .spin {
+    animation: none;
+  }
+  .promo-chev {
+    transition: none;
+  }
+}
