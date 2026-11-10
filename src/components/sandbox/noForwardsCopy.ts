@@ -134,7 +134,7 @@ const RU: NoForwardsCopy = {
 
 const UZ: NoForwardsCopy = {
   phones: {
-    a: { title: '1-urinish · AndoGram', sub: 'Telefoningiz' },
+    a: { title: '1-urinish · AndoGram', sub: 'Telefoning' },
     t: { title: '2-urinish · Telegram', sub: 'Rasmiy ilova' },
   },
   channel: {
@@ -178,14 +178,14 @@ const UZ: NoForwardsCopy = {
     sideLabel: 'Post menyusini ochish',
   },
   hints: {
-    aList: '«Xarizma darslari» kanalini oching',
-    aChannel: 'Video yonidagi bo‘sh joyga bosing',
-    aMenu: 'Videoni «Saqlangan xabarlar»ga saqlang',
-    tList: 'Endi xuddi shuni rasmiy Telegram’da qiling. «Xarizma darslari»ni oching',
-    tChannel: 'Video yonidagi bo‘sh joyga bosing',
+    aList: '«Xarizma darslari» kanalini och',
+    aChannel: 'Video yonidagi bo‘sh joyga bos',
+    aMenu: 'Videoni «Saqlangan xabarlar»ga saqla',
+    tList: 'Endi xuddi shuni rasmiy Telegram’da qil. «Xarizma darslari»ni och',
+    tChannel: 'Video yonidagi bo‘sh joyga bos',
   },
-  shrug: 'Xo‘sh, nima bo‘pti?\u00a0😅\nQaytadan urinib ko‘ring, dadilroq',
-  tagline: 'Nima mumkinligini\nboshqalar hal qilgan\nAndoGram\nTelefon sizniki\u00a0—\nqoidalar ham sizniki',
+  shrug: 'Xo‘sh, nima bo‘pti?\u00a0😅\nQaytadan urinib ko‘r, dadilroq',
+  tagline: 'Nima mumkinligini\nboshqalar hal qilgan\nAndoGram\nTelefon seniki\u00a0—\nqoidalar ham seniki',
   start: {
     title: 'No-Forwards’ni chetlab o‘tish',
     sub: '1 daqiqa. Hech narsa o‘rnatish shart emas',

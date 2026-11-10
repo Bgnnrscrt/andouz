@@ -23,13 +23,13 @@ const HONEYPOT: Record<Language, DemoPageCopy> = {
   },
   uz: {
     title: 'Honeypot parollari',
-    lead: 'AndoGram’da bir nechta PIN-kod o‘rnatish mumkin. Har biri faqat o‘z akkauntlarini ochadi, qolganlari esa menyu va bildirishnomalardan yo‘qoladi — go‘yo ular umuman yo‘qdek. Asosiy PIN-kod esa avvalgidek hammasini ochadi. Telefonni ochishga majburlashdimi? Ortiqcha hech narsani ko‘rsatmaydigan PIN-kodni kiriting.',
+    lead: 'AndoGram’da bir nechta PIN-kod o‘rnatish mumkin. Har biri faqat o‘z akkauntlarini ochadi, qolganlari esa menyu va bildirishnomalardan yo‘qoladi — go‘yo ular umuman yo‘qdek. Asosiy PIN-kod esa avvalgidek hammasini ochadi. Telefonni ochishga majburlashdimi? Ortiqcha hech narsani ko‘rsatmaydigan PIN-kodni kirit.',
     rolesTitle: 'Demodagi PIN-kodlar',
     roles: [
       { badge: '1111', tone: 'a', who: 'Xavfsiz.', what: 'Deyarli bo‘sh akkaunt — begona ko‘zlar uchun' },
       { badge: '2222', tone: 'c', who: 'Shaxsiy.', what: 'Xotin, oila, yaqinlar' },
       { badge: '3333', tone: 'b', who: 'Ish.', what: 'Ikki akkaunt: hamkasblar va mijozlar' },
-      { badge: '4444', tone: 'd', who: 'Maxfiy.', what: 'Faqat o‘zingiz biladigan narsalar' },
+      { badge: '4444', tone: 'd', who: 'Maxfiy.', what: 'Faqat o‘zing biladigan narsalar' },
       { badge: '7777', tone: 'e', who: 'Asosiy.', what: 'Barcha akkauntlar birdaniga' },
     ],
   },
@@ -93,8 +93,8 @@ const BRIDGE: Record<Language, DemoPageCopy> = {
     lead: 'AndoGram shaxsiy yozishmalarni «Shaxsiy arxiv» yopiq guruhiga o‘zi nusxalaydi — har bir suhbatdosh uchun alohida mavzu bilan. Keyin tahrirlangan yoki o‘chirilgan xabarlar ham saqlanib qoladi. Arxivdan esa ikkinchi telefondan asosiy akkaunt nomidan javob berish mumkin.',
     rolesTitle: 'Kim kim',
     roles: [
-      { badge: 'A', tone: 'a', who: 'Siz — Aziz.', what: 'AndoGram o‘rnatilgan telefon' },
-      { badge: 'B', tone: 'b', who: 'Ikkinchi akkauntingiz.', what: 'Istalgan Telegram, hatto rasmiysi ham' },
+      { badge: 'A', tone: 'a', who: 'Sen — Aziz.', what: 'AndoGram o‘rnatilgan telefon' },
+      { badge: 'B', tone: 'b', who: 'Ikkinchi akkaunting.', what: 'Istalgan Telegram, hatto rasmiysi ham' },
       { badge: 'C', tone: 'c', who: 'Sanjar.', what: 'Oddiy suhbatdosh' },
     ],
   },
@@ -122,7 +122,7 @@ const AR_MASKS: Record<Language, DemoPageCopy> = {
   },
   uz: {
     title: 'Dumaloq videolarda 3D AR-niqoblar',
-    lead: 'Oddiy Telegram’da dumaloq video — shunchaki kamera videosi. AndoGram’da dumaloq video yozayotganda uning ostida niqoblar bor: MediaPipe AR-dvijogi yuzning 468 nuqtasini kuzatadi va niqob harakatlansangiz ham haqiqiydek turadi.',
+    lead: 'Oddiy Telegram’da dumaloq video — shunchaki kamera videosi. AndoGram’da dumaloq video yozayotganda uning ostida niqoblar bor: MediaPipe AR-dvijogi yuzning 468 nuqtasini kuzatadi va niqob harakatlansang ham haqiqiydek turadi.',
     rolesTitle: 'Nimani solishtiramiz',
     roles: [
       { badge: 'T', tone: 'b', who: 'Telegram.', what: 'Niqob va effektlarsiz dumaloq video' },
@@ -154,10 +154,10 @@ const GHOST_STORIES: Record<Language, DemoPageCopy> = {
   },
   uz: {
     title: 'Hikoyalarda ko‘rinmaslik',
-    lead: 'Andusta muallifga «ko‘rildi» belgisini yubormaydi. Siz hikoyani ko‘rasiz — ko‘rganlar ro‘yxatida esa yo‘qsiz. Bu ⚡ menyusidagi «Maxfiylik» kartasida yoqiladi.',
+    lead: 'Andusta muallifga «ko‘rildi» belgisini yubormaydi. Sen hikoyani ko‘rasan — ko‘rganlar ro‘yxatida esa yo‘qsan. Bu ⚡ menyusidagi «Maxfiylik» kartasida yoqiladi.',
     rolesTitle: 'Demoda kimlar',
     roles: [
-      { badge: 'Siz', tone: 'b', who: 'Aziz.', what: 'Hikoyani ko‘rasiz — avval Instagram’da, keyin Andusta’da' },
+      { badge: 'Sen', tone: 'b', who: 'Aziz.', what: 'Hikoyani ko‘rasan — avval Instagram’da, keyin Andusta’da' },
       { badge: 'U', tone: 'd', who: 'Sabina 💔.', what: 'Sobiq qiz do‘st. Hikoyasini kim ko‘rganini tekshiradi' },
     ],
   },
@@ -187,7 +187,7 @@ const VIEW_ONCE: Record<Language, DemoPageCopy> = {
     lead: 'Andusta’da Direct’dagi bir martalik rasmni telefon xotirasida turguncha yana ochish mumkin. Darhol yoqilgan, hech narsani sozlash shart emas.',
     rolesTitle: 'Demoda kimlar',
     roles: [
-      { badge: 'Siz', tone: 'b', who: 'Aziz.', what: 'Bir martalik rasm olasiz' },
+      { badge: 'Sen', tone: 'b', who: 'Aziz.', what: 'Bir martalik rasm olasan' },
       { badge: 'Do‘st', tone: 'c', who: 'Timur.', what: 'Yangi krossovkalari bilan maqtanadi' },
     ],
   },
@@ -214,10 +214,10 @@ const LIKE_FONTS: Record<Language, DemoPageCopy> = {
   },
   uz: {
     title: 'Och yashil layk va shriftlar',
-    lead: 'Andusta’da layk yurakchasi och yashil — bu darhol yoqilgan. Ilova shriftini beshtadan biriga almashtirish yoki o‘zingiznikini yuklash mumkin. Yangi shrift tanlovdan keyin ochiladigan ekranlarda ko‘rinadi.',
+    lead: 'Andusta’da layk yurakchasi och yashil — bu darhol yoqilgan. Ilova shriftini beshtadan biriga almashtirish yoki o‘zingnikini yuklash mumkin. Yangi shrift tanlovdan keyin ochiladigan ekranlarda ko‘rinadi.',
     rolesTitle: 'Demoda kimlar',
     roles: [
-      { badge: 'Siz', tone: 'b', who: 'Aziz.', what: 'Postga layk bosasiz va shriftni almashtirasiz' },
+      { badge: 'Sen', tone: 'b', who: 'Aziz.', what: 'Postga layk bosasan va shriftni almashtirasan' },
       { badge: 'U', tone: 'd', who: 'Kamola.', what: 'Dugona. Birinchi tortini pishirdi' },
     ],
   },

@@ -324,7 +324,7 @@ const RU: Words = {
 
 const UZ: Words = {
   home: {
-    caption: { title: 'Telefoningiz', sub: 'AndoGram PIN\u2011kod ostida' },
+    caption: { title: 'Telefoning', sub: 'AndoGram PIN\u2011kod ostida' },
     date: 'Yakshanba, 1-noyabr',
     apps: {
       gallery: 'Galereya',
@@ -355,7 +355,7 @@ const UZ: Words = {
     1: { caption: { title: 'PIN 1111 · Xavfsiz', sub: 'Begona ko‘zlar uchun' } },
     2: { caption: { title: 'PIN 2222 · Shaxsiy', sub: 'Xotin va oila' } },
     3: { caption: { title: 'PIN 3333 · Ish', sub: 'Hamkasblar va mijozlar' } },
-    4: { caption: { title: 'PIN 4444 · Maxfiy', sub: 'Faqat siz uchun' } },
+    4: { caption: { title: 'PIN 4444 · Maxfiy', sub: 'Faqat sen uchun' } },
     5: { caption: { title: 'PIN 7777 · Asosiy', sub: 'Barcha akkauntlar' } },
   },
   accounts: {
@@ -399,21 +399,21 @@ const UZ: Words = {
     },
   },
   hints: {
-    home: 'AndoGram’ni oching',
-    pin1: '1111 ni kiriting — xavfsiz PIN',
-    list1: 'Deyarli bo‘sh akkaunt — ortiqcha hech narsa yo‘q. Menyuni oching',
+    home: 'AndoGram’ni och',
+    pin1: '1111 ni kirit — xavfsiz PIN',
+    list1: 'Deyarli bo‘sh akkaunt — ortiqcha hech narsa yo‘q. Menyuni och',
     drawer1: 'Bu yerda bitta akkaunt bor, xolos. Qolganlari go‘yo yo‘q. Keyingisi\u00a0— PIN\u00a02222',
-    pin2: 'Endi 2222 ni kiriting — shaxsiy PIN',
-    list2: 'Xotiningiz, onangiz, oilangiz. Menyuni oching',
+    pin2: 'Endi 2222 ni kirit — shaxsiy PIN',
+    list2: 'Xotining, onang, oilang. Menyuni och',
     drawer2: 'Yana bitta akkaunt — shaxsiy. Na ish, na maxfiy akkaunt bor. Keyingisi\u00a0— PIN\u00a03333',
-    pin3: '3333 ni kiriting — ish PIN-kodi',
-    list3: 'Hamkasblar, mijozlar va ish guruhlari. Menyuni oching',
+    pin3: '3333 ni kirit — ish PIN-kodi',
+    list3: 'Hamkasblar, mijozlar va ish guruhlari. Menyuni och',
     drawer3: 'Ikkita ish akkaunti — boshqa hech narsa yo‘q. Keyingisi\u00a0— PIN\u00a04444',
     pin4: 'Endi esa 4444 — maxfiy PIN',
-    list4: 'Oshnalar, Lola 💋 va hech kim bilmasligi kerak bo‘lgan kanallar. Menyuni oching',
+    list4: 'Oshnalar, Lola 💋 va hech kim bilmasligi kerak bo‘lgan kanallar. Menyuni och',
     drawer4: '1111, 2222 va 3333 bilan ochganda bu akkaunt menyuda ko‘rinmadi. Keyingisi\u00a0— asosiy PIN\u00a07777',
     pin5: 'Va nihoyat 7777 — asosiy PIN',
-    list5: 'Asosiy PIN hammasini ochadi. Menyuni oching',
+    list5: 'Asosiy PIN hammasini ochadi. Menyuni och',
     drawer5: 'Beshala akkaunt ham joyida: asosiy PIN hammasini ochadi',
   },
   buttons: {
@@ -422,7 +422,7 @@ const UZ: Words = {
     drawer3: 'Boshidan boshlash',
     drawer4: 'Boshidan boshlash',
   },
-  tagline: 'AndoGram\nKim nimani ko‘rishini\no‘zingiz hal qilasiz',
+  tagline: 'AndoGram\nKim nimani ko‘rishini\no‘zing hal qilasan',
   start: { title: 'Honeypot parollari', sub: '1 daqiqa. Hech narsa o‘rnatish shart emas' },
   screenLabel: 'AndoGram demosi: Honeypot parollari',
 };
