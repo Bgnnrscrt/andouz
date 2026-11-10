@@ -201,7 +201,10 @@ export function StickyCta({ enabled }: { enabled: boolean }) {
       raf = 0;
       const footer = document.querySelector('.footer');
       const footerTop = footer ? footer.getBoundingClientRect().top : Infinity;
-      setShow(window.scrollY > 520 && footerTop > window.innerHeight - 40);
+      // Home: only once the hero's own buttons have gone up under the top bar; other pages: after 520 px.
+      const heroActions = document.querySelector('.hero-paper .hero-actions');
+      const past = heroActions ? heroActions.getBoundingClientRect().bottom < 64 : window.scrollY > 520;
+      setShow(past && footerTop > window.innerHeight - 40);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);

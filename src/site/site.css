@@ -466,42 +466,134 @@ img.emoji {
   }
 }
 
-/* ---------- hero ---------- */
+/* ---------- hero: the curtain (Hero.tsx) ----------
+   A pinned stage with two copies of the same content: paper (the real one) and a «leather» panel
+   on top (light copy + phone). Hero.tsx sets --p 0 → 1 while the page scrolls the spacer; the panel
+   moves up by p × its height and its content moves down by the same amount, so the panel is cut
+   from the bottom and letters change colour exactly at its edge. Phone first. */
 .hero {
+  /* the top bar with its 1px bottom line: the stage sticks right under it */
+  --bar: calc(var(--topbar-h) + 1px);
+  --lift: 72vh;
+  --lift: 72svh;
+  --stage-h: calc(100vh - var(--bar));
+  --stage-h: calc(100svh - var(--bar));
+  --hero-pad: clamp(22px, 4.6svh, 46px);
   position: relative;
-  overflow: hidden;
-  padding: 32px 0 56px;
 }
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+.hero-stage {
+  position: sticky;
+  top: var(--bar);
+  min-height: var(--stage-h);
+  overflow: clip;
+}
+.hero-spacer {
+  height: var(--lift);
+}
+.hero-paper,
+.hero-panel-in {
+  display: grid;
+  align-content: start;
+  padding: var(--hero-pad) 0 36px;
+}
+.hero-paper {
+  position: relative;
+  min-height: var(--stage-h);
   background: radial-gradient(90% 60% at 15% 0%, rgba(255, 255, 255, 0.75), transparent 60%);
+}
+/* the panel: as tall as the visible stage, cut from the bottom */
+.hero-panel,
+.hero-hem {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: min(100%, var(--stage-h));
+  transform: translate3d(0, calc(var(--p, 0) * -100%), 0);
   pointer-events: none;
 }
-.hero-in {
-  position: relative;
-  display: grid;
-  gap: 44px;
+.hero-panel {
+  z-index: 1;
+  overflow: hidden;
+  will-change: transform;
 }
-.hero-copy {
+.hero-panel-in {
+  position: absolute;
+  inset: 0;
+  background-color: var(--leather);
+  background-image:
+    radial-gradient(70% 45% at 50% 100%, rgba(216, 184, 120, 0.16), transparent 70%),
+    radial-gradient(90% 55% at 12% 0%, rgba(255, 255, 255, 0.07), transparent 60%),
+    var(--grain);
+  transform: translate3d(0, calc(var(--p, 0) * 100%), 0);
+  will-change: transform;
+}
+/* the hem: a brass line at the panel's edge and its soft shadow on the paper; gone at the end */
+.hero-hem {
+  z-index: 2;
+  opacity: calc(min(1, (1 - var(--p, 0)) * 12));
+}
+.hero-hem::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 18px;
+  border-top: 1px solid rgba(176, 141, 87, 0.7);
+  background: linear-gradient(rgba(23, 37, 30, 0.16), rgba(23, 37, 30, 0));
+}
+
+/* content (the same in both copies) */
+.hero-in {
   display: grid;
-  gap: 20px;
+  grid-template-areas: 'kicker' 'title' 'rest';
+  align-content: start;
+  gap: 16px;
+}
+.hero-kicker {
+  grid-area: kicker;
+}
+.hero-title-box {
+  grid-area: title;
+  container-type: inline-size;
 }
 .hero-title {
-  font: 600 clamp(3.1rem, 13.5vw, 5.6rem) / 0.98 var(--font-display);
+  font: 600 clamp(2.4rem, 11.6vw, 5.2rem) / 0.98 var(--font-display);
+  /* fills the column (per-language --fit from Hero.tsx); on short screens the height caps it */
+  font-size: min(5.6rem, calc(100cqi * var(--fit, 0.12)), 10.5vh);
+  font-size: min(5.6rem, calc(100cqi * var(--fit, 0.12)), 10.5svh);
+  letter-spacing: -0.01em;
   color: var(--heading);
-  letter-spacing: -0.012em;
+}
+.hero-line {
+  display: block;
+  white-space: nowrap;
 }
 .hero-title em {
-  display: block;
   font-style: italic;
   color: var(--green);
+}
+.hero-rest {
+  grid-area: rest;
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  padding-top: 6px;
+}
+.hero-lead {
+  max-width: 34em;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.hero-lead strong {
+  font-weight: 600;
+  color: var(--heading);
 }
 .hero-actions {
   display: grid;
   gap: 12px;
-  margin-top: 4px;
 }
 .trust {
   display: flex;
@@ -524,16 +616,107 @@ img.emoji {
   background: var(--brass);
   transform: rotate(45deg);
 }
-.hero-art {
+
+/* the light copy on the panel */
+.hero-panel .kicker {
+  color: var(--brass-light);
+}
+.hero-panel .kicker::before {
+  background: var(--brass-light);
+}
+.hero-panel .hero-title {
+  color: #f6efdf;
+}
+.hero-panel .hero-title em {
+  color: var(--brass-light);
+}
+.hero-panel .hero-lead {
+  color: var(--leather-ink-2);
+}
+.hero-panel .hero-lead strong {
+  color: #f6efdf;
+}
+.hero-panel .btn--primary {
+  background: #f3ead6;
+  color: var(--leather);
+  box-shadow: none;
+}
+.hero-panel .btn--outline {
+  border-color: rgba(243, 234, 214, 0.5);
+  color: #f3ead6;
+}
+.hero-panel .trust {
+  color: var(--brass-light);
+}
+.hero-panel .trust li::before {
+  background: var(--brass-light);
+}
+/* phone: under the title the panel shows the phone instead of the text */
+.hero-panel .hero-rest {
+  visibility: hidden;
+}
+
+/* keyboard focus inside the hero: show the real (paper) content, not the copy that covers it */
+.hero:has(.hero-paper :focus-visible) .hero-panel,
+.hero:has(.hero-paper :focus-visible) .hero-hem {
+  visibility: hidden;
+}
+
+/* the phone: a slot in the same grid cell as the text; the phone hangs from its top */
+.hero-phone-slot {
+  grid-area: rest;
   position: relative;
+}
+.hero-phone {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: min(64vw, 272px);
+  padding: 7px;
+  border-radius: 38px;
+  background: #0b140f;
+  box-shadow:
+    0 0 0 1px rgba(216, 184, 120, 0.4),
+    0 0 0 5px rgba(216, 184, 120, 0.06),
+    0 40px 70px -30px rgba(0, 0, 0, 0.75),
+    0 0 120px rgba(216, 184, 120, 0.1);
+  transform: translateX(-50%);
+}
+.hero-screen {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 720 / 1567; /* the frames' own shape (src/assets/hero) */
+  border-radius: 31px;
+  background: #17212b;
+}
+.hero-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 38%);
+  pointer-events: none;
+}
+.hero-shot {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 420px;
-  height: 330px;
-  margin: 0 auto;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.hero-shot:first-child {
+  opacity: 1;
+}
+
+/* the club cards: paper, wide screens only */
+.hero-art {
+  display: none;
 }
 .hero-card {
   position: absolute;
-  width: min(78%, 310px);
+  width: 330px;
 }
 .hero-card .mcard {
   aspect-ratio: 1.586;
@@ -548,27 +731,56 @@ img.emoji {
   left: 0;
   transform: rotate(-4deg);
 }
+
+/* the stage ends with free paper below the text on tall screens: the next section starts closer */
+.hero + .section {
+  padding-top: 28px;
+}
 @media (min-width: 600px) {
   .hero-actions {
     grid-auto-flow: column;
     justify-content: start;
   }
 }
+/* wide screens: text on the left, the phone (panel) / the cards (paper) on the right */
 @media (min-width: 960px) {
-  .hero {
-    padding: 72px 0 104px;
+  .hero-paper,
+  .hero-panel-in {
+    align-content: start;
+    align-content: safe center;
+    padding-bottom: var(--hero-pad);
   }
   .hero-in {
-    grid-template-columns: 1.15fr 0.85fr;
-    align-items: center;
-    gap: 56px;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    grid-template-areas: 'kicker side' 'title side' 'rest side';
+    column-gap: 56px;
+  }
+  .hero-panel .hero-rest {
+    visibility: visible;
+  }
+  .hero-phone-slot {
+    grid-area: side;
+  }
+  .hero-phone {
+    top: 50%;
+    width: auto;
+    height: min(calc(var(--stage-h) - 2 * var(--hero-pad)), 700px);
+    transform: translate(-50%, -50%);
+  }
+  .hero-screen {
+    height: 100%;
   }
   .hero-art {
+    display: block;
+    grid-area: side;
+    position: relative;
+    align-self: center;
     height: 390px;
-    max-width: none;
   }
-  .hero-card {
-    width: 330px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-shot {
+    animation: none;
   }
 }
 

@@ -5,48 +5,11 @@ import { demoHref } from '../components/sandbox/demos';
 import { APPS, APP_IDS } from './copy';
 import { Link, useSite } from './context';
 import { Icon } from './icons';
+import { Hero } from './Hero';
 import { MemberCard, SectionHead } from './parts';
-import { appHref, sectionHref } from './router';
+import { appHref } from './router';
 
 const ROMAN = ['I', 'II', 'III', 'IV'];
-
-function Hero() {
-  const { t, openAccess } = useSite();
-  return (
-    <section className="hero" aria-labelledby="hero-title">
-      <div className="wrap hero-in">
-        <div className="hero-copy">
-          <p className="kicker">{t.hero.kicker}</p>
-          <h1 className="hero-title" id="hero-title">
-            {t.hero.title[0]} <em>{t.hero.title[1]}</em>
-          </h1>
-          <p className="lead hero-lead">{t.hero.lead}</p>
-          <div className="hero-actions">
-            <button type="button" className="btn btn--primary btn--lg" onClick={() => openAccess()}>
-              {t.hero.cta}
-            </button>
-            <Link to={sectionHref('demos')} className="btn btn--outline btn--lg">
-              {t.hero.ctaDemo}
-            </Link>
-          </div>
-          <ul className="trust">
-            {t.hero.trust.map((x) => (
-              <li key={x}>{x}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="hero-card hero-card--back">
-            <MemberCard app="andusta" num={2} />
-          </div>
-          <div className="hero-card hero-card--front">
-            <MemberCard app="andogram" num={1} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function Highlights() {
   const { t } = useSite();
