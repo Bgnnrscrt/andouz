@@ -43,7 +43,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ lang }) => {
           </div>
 
           <a
-            href="https://t.me/ando_stars_bot"
+            href="https://t.me/Andouzbot"
             target="_blank"
             rel="noopener noreferrer"
             className="ptl-community-btn"
@@ -86,7 +86,7 @@ export const CommunityView: React.FC<CommunityViewProps> = ({ lang }) => {
           </div>
 
           <a
-            href="https://t.me/ando_stars_bot"
+            href="https://t.me/Andouzbot"
             target="_blank"
             rel="noopener noreferrer"
             className="ptl-community-btn"

@@ -46,7 +46,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ lang }) => {
           </div>
 
           <a
-            href="https://t.me/ando_stars_bot"
+            href="https://t.me/Andouzbot"
             target="_blank"
             rel="noopener noreferrer"
             className="ptl-support-link-btn"
@@ -68,7 +68,7 @@ export const SupportView: React.FC<SupportViewProps> = ({ lang }) => {
           </div>
 
           <a
-            href="https://t.me/ando_stars_bot?start=idea"
+            href="https://t.me/Andouzbot"
             target="_blank"
             rel="noopener noreferrer"
             className="ptl-support-link-btn"

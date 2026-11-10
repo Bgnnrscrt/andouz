@@ -329,3 +329,25 @@
     animation-duration: 1.6s;
   }
 }
+
+/* Licences v2: a strike-through old price during a discount, one code row per app (bundle coupon), the trial button */
+.dl-price-old {
+  opacity: 0.55;
+  margin-right: 8px;
+  font-size: 0.8em;
+}
+.dl-code-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+.dl-code-app {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.dl-trial {
+  margin-top: 10px;
+}
