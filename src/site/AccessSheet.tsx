@@ -11,8 +11,9 @@ import './access.css';
  * «Получить доступ» window. The logic is the old DownloadModal's, unchanged:
  * - Stars: https://t.me/andouzbot?start=buy_<app> — the bot takes 1000 Stars and sends a code;
  * - promo code: POST {API_BASE}/api/redeem-coupon {code, user_identifier: 0} → success +
- *   activation_code (+ app, apk_url) | status «already_used» | anything else = invalid |
- *   network error;
+ *   activation_code (+ app, apk_url, apk_urls per app) | status «already_used» | anything else = invalid |
+ *   network error. When the bot's APK shelf has a file, apk_url(s) are t.me links (?start=apk_<app>): the bot
+ *   sends the current file — so the button drops the version and a hint says the bot sends it;
  * - a success is kept in localStorage «ando_activation» (a refresh never loses the code).
  * Only the look is new: app cards, the price, the bot button, a folded promo-code field.
  */
@@ -28,8 +29,13 @@ const ROMAN = ['I', 'II', 'III'];
 interface Activation {
   app: AppId | 'all';
   apkUrl: string | null;
+  /** Per app (the bundle too): the server's current download links. Missing in activations saved before 11.11. */
+  apkUrls?: Partial<Record<AppId, string>>;
   code: string;
 }
+
+/** A link that opens our bot, which sends the newest APK (andouzbot APK shelf), not a fixed file. */
+const isBotLink = (url: string) => url.startsWith('https://t.me/');
 
 const readActivation = (): Activation | null => {
   try {
@@ -80,7 +86,8 @@ function AccessPanel({ lang, initialApp }: { lang: Language; initialApp: AppId }
 
   const granted: AppId[] = activation ? (activation.app === 'all' ? APP_IDS : [activation.app]) : [];
   const primary = granted[0] ?? selected;
-  const primaryUrl = activation?.apkUrl || DOWNLOAD_URLS[primary];
+  const primaryUrl = activation?.apkUrl || activation?.apkUrls?.[primary] || DOWNLOAD_URLS[primary];
+  const urlFor = (id: AppId) => activation?.apkUrls?.[id] || (granted.length === 1 ? primaryUrl : DOWNLOAD_URLS[id]);
 
   const nudge = () => {
     setShake(true);
@@ -112,9 +119,15 @@ function AccessPanel({ lang, initialApp }: { lang: Language; initialApp: AppId }
       });
       const data = await res.json().catch(() => ({}));
       if (data?.success && data.activation_code) {
+        const apkUrls: Partial<Record<AppId, string>> = {};
+        for (const id of APP_IDS) {
+          const url = data.apk_urls?.[id];
+          if (typeof url === 'string' && url) apkUrls[id] = url;
+        }
         const act: Activation = {
           app: (data.app as Activation['app']) || 'all',
           apkUrl: typeof data.apk_url === 'string' ? data.apk_url : null,
+          apkUrls,
           code: String(data.activation_code),
         };
         writeActivation(act);
@@ -161,15 +174,23 @@ function AccessPanel({ lang, initialApp }: { lang: Language; initialApp: AppId }
         <div className="unlocked-downloads">
           {granted.map((id) => {
             const info = APPS[id][lang];
-            const url = granted.length === 1 ? primaryUrl : DOWNLOAD_URLS[id];
+            const url = urlFor(id);
+            const viaBot = isBotLink(url);
             return (
-              <a key={id} href={url} className="btn btn--primary btn--block btn--lg" data-autofocus={id === primary || undefined}>
+              <a
+                key={id}
+                href={url}
+                className="btn btn--primary btn--block btn--lg"
+                data-autofocus={id === primary || undefined}
+                {...(viaBot ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
                 <Download size={19} aria-hidden="true" />
-                {a.download(info.name, info.version)}
+                {a.download(info.name, viaBot ? '' : info.version).replace(/\s+/g, ' ').trim()}
               </a>
             );
           })}
         </div>
+        {granted.some((id) => isBotLink(urlFor(id))) && <p className="access-text">{a.viaBot}</p>}
         <div className="code-box">
           <div className="code-head">
             <KeyRound size={16} strokeWidth={1.7} aria-hidden="true" />

@@ -83,7 +83,8 @@ export interface SiteCopy {
     title: string; whichApp: string; price: string; priceNote: string; pay: string; payHint: string;
     promoToggle: string; promoLabel: string; promoPlaceholder: string; promoBtn: string; checking: string;
     invalid: string; used: string; network: string; unlockedTitle: string; unlockedText: string;
-    download: (name: string, version: string) => string; codeTitle: string; codeHint: string; codeCopied: string;
+    download: (name: string, version: string) => string; viaBot: string; codeTitle: string; codeHint: string;
+    codeCopied: string;
     qrHint: string; copyLink: string; linkCopied: string; next: string; steps: string[]; close: string;
   };
   errors: { page: string; window: string; reload: string; close: string };
@@ -206,6 +207,7 @@ const RU: SiteCopy = {
     unlockedTitle: 'Доступ открыт',
     unlockedText: 'Скачай приложение и введи код установки при первом запуске.',
     download: (name, version) => `Скачать ${name} ${version}`,
+    viaBot: 'Файл пришлёт наш бот в Telegram: нажми кнопку — бот откроется сам.',
     codeTitle: 'Код установки',
     codeHint: 'Нажми, чтобы скопировать. Код привяжется к твоему телефону.',
     codeCopied: 'Код скопирован',
@@ -339,6 +341,7 @@ const UZ: SiteCopy = {
     unlockedTitle: 'Kirish ochildi',
     unlockedText: 'Ilovani yuklab ol va birinchi ishga tushirishda o‘rnatish kodini kirit.',
     download: (name, version) => `${name} ${version} ni yuklab olish`,
+    viaBot: 'Faylni Telegramdagi botimiz yuboradi: tugmani bos — bot o‘zi ochiladi.',
     codeTitle: 'O‘rnatish kodi',
     codeHint: 'Nusxa olish uchun bos. Kod telefoningga bog‘lanadi.',
     codeCopied: 'Kod nusxalandi',
@@ -472,6 +475,7 @@ const EN: SiteCopy = {
     unlockedTitle: 'Access granted',
     unlockedText: 'Download the app and enter the installation code on first launch.',
     download: (name, version) => `Download ${name} ${version}`,
+    viaBot: 'Our Telegram bot sends the file: tap the button and the bot opens.',
     codeTitle: 'Installation code',
     codeHint: 'Tap to copy. The code gets tied to your phone.',
     codeCopied: 'Code copied',
