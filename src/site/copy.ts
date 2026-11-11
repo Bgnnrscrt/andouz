@@ -81,10 +81,7 @@ export interface SiteCopy {
   sticky: { text: string; price: string };
   access: {
     title: string; whichApp: string; price: string; priceNote: string; pay: string; payHint: string;
-    promoToggle: string; promoLabel: string; promoPlaceholder: string; promoBtn: string; checking: string;
-    invalid: string; used: string; network: string; unlockedTitle: string; unlockedText: string;
-    download: (name: string, version: string) => string; codeTitle: string; codeHint: string; codeCopied: string;
-    qrHint: string; copyLink: string; linkCopied: string; next: string; steps: string[]; close: string;
+    promo: string; qrHint: string; close: string;
   };
   errors: { page: string; window: string; reload: string; close: string };
 }
@@ -145,8 +142,8 @@ const RU: SiteCopy = {
     kicker: 'Как получить',
     title: 'Три шага — и готово',
     steps: [
-      { title: 'Оплати доступ', text: `1000 ★ Telegram Stars в нашем боте ${BOT} или промокод. Бот сразу пришлёт код установки.` },
-      { title: 'Скачай и установи', text: 'Скачай APK и разреши установку из этого источника — Android спросит один раз. Так он предупреждает о любом приложении не из Google Play.' },
+      { title: 'Оплати доступ', text: `1000 ★ Telegram Stars в нашем боте ${BOT} — или отправь ему промокод. Бот сразу пришлёт код установки и сам файл.` },
+      { title: 'Установи файл', text: 'Открой APK, который прислал бот, и разреши установку из этого источника — Android спросит один раз. Так он предупреждает о любом приложении не из Google Play.' },
       { title: 'Введи код', text: 'При первом запуске введи код установки — приложение привяжется к твоему телефону.' },
     ],
     note: 'Root-права не нужны. Работает на Android 8.0 и новее.',
@@ -159,11 +156,11 @@ const RU: SiteCopy = {
       { q: 'Это безопасно для моего аккаунта?', a: 'Приложения общаются с Telegram и Instagram так же, как официальные. Риск блокировки небольшой, но честно: ни одно неофициальное приложение не даёт стопроцентных гарантий.' },
       { q: 'Нужен ли Root?', a: 'Нет. Приложение ставится как обычное, из APK-файла.' },
       { q: 'Мой обычный Telegram или Instagram удалится?', a: 'Нет. Andusta ставится рядом с Instagram отдельным приложением. AndoGram — тоже отдельное приложение: официальный Telegram остаётся на месте.' },
-      { q: 'Как оплатить?', a: `Через Telegram Stars в боте ${BOT}: 1000 ★ за приложение. Если у тебя есть промокод — введи его в окне «Получить доступ».` },
+      { q: 'Как оплатить?', a: `Через Telegram Stars в боте ${BOT}: 1000 ★ за приложение. Если у тебя есть промокод — просто отправь его боту.` },
       { q: 'Что такое код установки?', a: 'Одноразовый код, который присылает бот после оплаты. Его вводят при первом запуске — так приложение привязывается к твоему телефону.' },
       { q: 'Почему Android предупреждает при установке?', a: 'Так Android реагирует на любое приложение не из Google Play. В наших приложениях нет вредоносного кода — нажми «Всё равно установить».' },
       { q: 'Работает на iPhone?', a: 'Нет, только на Android 8.0 и новее.' },
-      { q: 'Где брать обновления?', a: 'Новые версии выкладываются здесь же, на ando.uz.' },
+      { q: 'Где брать обновления?', a: `В боте ${BOT}: в разделе «Мой доступ» всегда лежит самая свежая версия.` },
     ],
   },
   footer: {
@@ -194,26 +191,9 @@ const RU: SiteCopy = {
     price: '1000 ★',
     priceNote: 'Разовая оплата Telegram Stars · обновления включены',
     pay: 'Оплатить в боте',
-    payHint: `Откроется ${BOT}. После оплаты он сразу пришлёт код установки.`,
-    promoToggle: 'У меня есть промокод',
-    promoLabel: 'Промокод',
-    promoPlaceholder: 'Введи промокод',
-    promoBtn: 'Активировать',
-    checking: 'Проверяем…',
-    invalid: 'Такого промокода нет. Проверь, как он написан.',
-    used: 'Этот промокод уже активирован.',
-    network: 'Нет связи с сервером. Попробуй ещё раз чуть позже.',
-    unlockedTitle: 'Доступ открыт',
-    unlockedText: 'Скачай приложение и введи код установки при первом запуске.',
-    download: (name, version) => `Скачать ${name} ${version}`,
-    codeTitle: 'Код установки',
-    codeHint: 'Нажми, чтобы скопировать. Код привяжется к твоему телефону.',
-    codeCopied: 'Код скопирован',
-    qrHint: 'Открой ссылку на телефоне: наведи камеру на код',
-    copyLink: 'Скопировать ссылку',
-    linkCopied: 'Ссылка скопирована',
-    next: 'Дальше',
-    steps: ['Скачай APK', 'Разреши установку', 'Введи код установки'],
+    payHint: `Откроется ${BOT}. После оплаты он сразу пришлёт код установки и сам файл приложения.`,
+    promo: 'Промокод? Введи его в боте',
+    qrHint: 'С компьютера? Наведи камеру телефона на код — бот откроется прямо на телефоне, туда же придёт файл.',
     close: 'Закрыть',
   },
   errors: {
@@ -278,8 +258,8 @@ const UZ: SiteCopy = {
     kicker: 'Qanday olish',
     title: 'Uch qadam — tayyor',
     steps: [
-      { title: 'Kirish huquqi uchun to‘la', text: `${BOT} botimizda 1000 ★ Telegram Stars yoki promokod. Bot darhol o‘rnatish kodini yuboradi.` },
-      { title: 'Yuklab ol va o‘rnat', text: 'APK faylni yuklab ol va shu manbadan o‘rnatishga ruxsat ber — Android bir marta so‘raydi. U Google Playdan bo‘lmagan har qanday ilova haqida shunday ogohlantiradi.' },
+      { title: 'Kirish huquqi uchun to‘la', text: `${BOT} botimizda 1000 ★ Telegram Stars — yoki unga promokod yubor. Bot darhol o‘rnatish kodini va faylning o‘zini yuboradi.` },
+      { title: 'Faylni o‘rnat', text: 'Bot yuborgan APK faylni och va shu manbadan o‘rnatishga ruxsat ber — Android bir marta so‘raydi. U Google Playdan bo‘lmagan har qanday ilova haqida shunday ogohlantiradi.' },
       { title: 'Kodni kirit', text: 'Birinchi ishga tushirishda o‘rnatish kodini kirit — ilova telefoningga bog‘lanadi.' },
     ],
     note: 'Root-huquqlar kerak emas. Android 8.0 va undan yangi versiyalarda ishlaydi.',
@@ -292,11 +272,11 @@ const UZ: SiteCopy = {
       { q: 'Akkauntim uchun xavfsizmi?', a: 'Ilovalar Telegram va Instagram bilan rasmiylari kabi muloqot qiladi. Bloklanish xavfi kichik, lekin rostini aytsak: hech bir norasmiy ilova yuz foiz kafolat bermaydi.' },
       { q: 'Root kerakmi?', a: 'Yo‘q. Ilova oddiy ilova kabi, APK fayldan o‘rnatiladi.' },
       { q: 'Oddiy Telegram yoki Instagramim o‘chib ketadimi?', a: 'Yo‘q. Andusta Instagram yonida alohida ilova bo‘lib o‘rnatiladi. AndoGram ham alohida ilova: rasmiy Telegram joyida qoladi.' },
-      { q: 'Qanday to‘lash mumkin?', a: `${BOT} botida Telegram Stars orqali: bitta ilova uchun 1000 ★. Promokoding bo‘lsa — uni «Kirish huquqini olish» oynasida kirit.` },
+      { q: 'Qanday to‘lash mumkin?', a: `${BOT} botida Telegram Stars orqali: bitta ilova uchun 1000 ★. Promokoding bo‘lsa — uni shunchaki botga yubor.` },
       { q: 'O‘rnatish kodi nima?', a: 'To‘lovdan keyin bot yuboradigan bir martalik kod. U birinchi ishga tushirishda kiritiladi — shu bilan ilova telefoningga bog‘lanadi.' },
       { q: 'Nega Android o‘rnatishda ogohlantiradi?', a: 'Android Google Playdan bo‘lmagan har qanday ilovaga shunday munosabatda bo‘ladi. Ilovalarimizda zararli kod yo‘q — «Baribir o‘rnatish»ni bos.' },
       { q: 'iPhone’da ishlaydimi?', a: 'Yo‘q, faqat Android 8.0 va undan yangi versiyalarda.' },
-      { q: 'Yangilanishlarni qayerdan olaman?', a: 'Yangi versiyalar shu yerning o‘zida, ando.uz saytida chiqadi.' },
+      { q: 'Yangilanishlarni qayerdan olaman?', a: `${BOT} botida: «Mening kirishim» bo‘limida doim eng yangi versiya turadi.` },
     ],
   },
   footer: {
@@ -327,26 +307,9 @@ const UZ: SiteCopy = {
     price: '1000 ★',
     priceNote: 'Telegram Stars bilan bir martalik to‘lov · yangilanishlar kiradi',
     pay: 'Botda to‘lash',
-    payHint: `${BOT} ochiladi. To‘lovdan keyin u darhol o‘rnatish kodini yuboradi.`,
-    promoToggle: 'Menda promokod bor',
-    promoLabel: 'Promokod',
-    promoPlaceholder: 'Promokodni kirit',
-    promoBtn: 'Faollashtirish',
-    checking: 'Tekshirilmoqda…',
-    invalid: 'Bunday promokod yo‘q. Yozilishini tekshir.',
-    used: 'Bu promokod allaqachon faollashtirilgan.',
-    network: 'Server bilan aloqa yo‘q. Birozdan so‘ng yana urinib ko‘r.',
-    unlockedTitle: 'Kirish ochildi',
-    unlockedText: 'Ilovani yuklab ol va birinchi ishga tushirishda o‘rnatish kodini kirit.',
-    download: (name, version) => `${name} ${version} ni yuklab olish`,
-    codeTitle: 'O‘rnatish kodi',
-    codeHint: 'Nusxa olish uchun bos. Kod telefoningga bog‘lanadi.',
-    codeCopied: 'Kod nusxalandi',
-    qrHint: 'Havolani telefonda och: kamerani kodga qarat',
-    copyLink: 'Havoladan nusxa olish',
-    linkCopied: 'Havola nusxalandi',
-    next: 'Keyin',
-    steps: ['APK ni yuklab ol', 'O‘rnatishga ruxsat ber', 'O‘rnatish kodini kirit'],
+    payHint: `${BOT} ochiladi. To‘lovdan keyin u darhol o‘rnatish kodini va ilova faylining o‘zini yuboradi.`,
+    promo: 'Promokod bormi? Botda kirit',
+    qrHint: 'Kompyuterdanmisan? Telefon kamerasini kodga qarat — bot telefoningda ochiladi, fayl ham o‘sha yerga keladi.',
     close: 'Yopish',
   },
   errors: {
@@ -411,8 +374,8 @@ const EN: SiteCopy = {
     kicker: 'How to get it',
     title: 'Three steps and you’re done',
     steps: [
-      { title: 'Pay for access', text: `1000 ★ Telegram Stars in our bot ${BOT}, or a promo code. The bot sends your installation code right away.` },
-      { title: 'Download and install', text: 'Download the APK and allow installs from this source — Android asks once. It warns like this about any app that isn’t from Google Play.' },
+      { title: 'Pay for access', text: `1000 ★ Telegram Stars in our bot ${BOT} — or send it a promo code. The bot sends your installation code and the file itself right away.` },
+      { title: 'Install the file', text: 'Open the APK the bot sent and allow installs from this source — Android asks once. It warns like this about any app that isn’t from Google Play.' },
       { title: 'Enter the code', text: 'On first launch, enter the installation code — the app gets tied to your phone.' },
     ],
     note: 'No root needed. Works on Android 8.0 and newer.',
@@ -425,11 +388,11 @@ const EN: SiteCopy = {
       { q: 'Is it safe for my account?', a: 'The apps talk to Telegram and Instagram the same way the official ones do. The risk of a ban is small, but honestly: no unofficial app can give a hundred percent guarantee.' },
       { q: 'Do I need root?', a: 'No. It installs like any app, from an APK file.' },
       { q: 'Will my regular Telegram or Instagram be removed?', a: 'No. Andusta installs next to Instagram as a separate app. AndoGram is a separate app too: the official Telegram stays where it is.' },
-      { q: 'How do I pay?', a: `With Telegram Stars in the bot ${BOT}: 1000 ★ per app. If you have a promo code, enter it in the “Get access” window.` },
+      { q: 'How do I pay?', a: `With Telegram Stars in the bot ${BOT}: 1000 ★ per app. If you have a promo code, just send it to the bot.` },
       { q: 'What is the installation code?', a: 'A one-time code the bot sends after payment. You enter it on first launch — that ties the app to your phone.' },
       { q: 'Why does Android warn me when installing?', a: 'Android does that for any app that isn’t from Google Play. There’s no malicious code in our apps — tap “Install anyway”.' },
       { q: 'Does it work on iPhone?', a: 'No, only on Android 8.0 and newer.' },
-      { q: 'Where do I get updates?', a: 'New versions are published right here, on ando.uz.' },
+      { q: 'Where do I get updates?', a: `In the bot ${BOT}: the “My access” section always has the newest version.` },
     ],
   },
   footer: {
@@ -460,26 +423,9 @@ const EN: SiteCopy = {
     price: '1000 ★',
     priceNote: 'One-time payment in Telegram Stars · updates included',
     pay: 'Pay in the bot',
-    payHint: `${BOT} opens. Right after payment it sends your installation code.`,
-    promoToggle: 'I have a promo code',
-    promoLabel: 'Promo code',
-    promoPlaceholder: 'Enter promo code',
-    promoBtn: 'Activate',
-    checking: 'Checking…',
-    invalid: 'No such promo code. Check how it’s written.',
-    used: 'This promo code has already been used.',
-    network: 'Can’t reach the server. Please try again a bit later.',
-    unlockedTitle: 'Access granted',
-    unlockedText: 'Download the app and enter the installation code on first launch.',
-    download: (name, version) => `Download ${name} ${version}`,
-    codeTitle: 'Installation code',
-    codeHint: 'Tap to copy. The code gets tied to your phone.',
-    codeCopied: 'Code copied',
-    qrHint: 'Open the link on your phone: point the camera at the code',
-    copyLink: 'Copy link',
-    linkCopied: 'Link copied',
-    next: 'Next',
-    steps: ['Download the APK', 'Allow the install', 'Enter the installation code'],
+    payHint: `${BOT} opens. Right after payment it sends your installation code and the app file itself.`,
+    promo: 'Promo code? Enter it in the bot',
+    qrHint: 'On a computer? Point your phone’s camera at the code — the bot opens right on your phone, and the file arrives there.',
     close: 'Close',
   },
   errors: {
@@ -837,21 +783,12 @@ const ANDEO: Record<Language, AppCopy> = {
 
 export const APPS: Record<SiteAppId, Record<Language, AppCopy>> = { andogram: ANDOGRAM, andusta: ANDUSTA, andeo: ANDEO };
 
-/** Apps on sale (the access window, promo codes, APK links). */
+/** Apps on sale (the access window → the bot: buy_<app>). */
 export const APP_IDS: AppId[] = ['andogram', 'andusta'];
 
 /** Every app on the site, in display order (cards, tabs, menu, footer). Those not in APP_IDS are «coming soon». */
 export const SITE_APP_IDS: SiteAppId[] = ['andogram', 'andusta', 'andeo'];
 
 export const isOnSale = (id: SiteAppId): id is AppId => (APP_IDS as SiteAppId[]).includes(id);
-
-/**
- * Fallback APK links when the activation API returns none (GitHub release assets).
- * The real link comes from the bot's /api/redeem-coupon answer.
- */
-export const DOWNLOAD_URLS: Record<AppId, string> = {
-  andogram: 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andogram-arm64-v8a-27102026.apk',
-  andusta: 'https://github.com/Bgnnrscrt/andouz/releases/download/v1.0.0/Andusta-v1.0.0.apk',
-};
 
 export const BOT_URL = 'https://t.me/andouzbot';

@@ -43,7 +43,7 @@
 - **Стилизация**: Ванильный CSS (CSS Custom Properties, Glassmorphism, Neon Cyberpunk)
 - **Анимации**: [`motion`](https://motion.dev), canvas-фон с частицами, CSS-анимации
 - **Иконки**: `lucide-react`
-- **Эффекты**: `canvas-confetti`, `qrcode.react` (QR-код для скачивания)
+- **Эффекты**: `qrcode.react` (QR-код ссылки на бота в окне «Получить доступ», только на ПК). С 11.11 сайт APK не раздаёт — покупка, промокоды и файлы только в боте @Andouzbot
 - **Инфраструктура**: Vercel Serverless Edge CDN + aHOST.uz DNS (`ando.uz`)
 - **Языки**: Русский (`ru`), Узбекский (`uz`), Английский (`en`)
 
