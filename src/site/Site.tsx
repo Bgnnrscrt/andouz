@@ -93,6 +93,14 @@ export function Site() {
   }, [route, lang, t]);
 
   // A new page starts at the top; a section address scrolls to its section.
+  /** Each app has its own look on its pages (owner 11.11): its page and its demo pages carry data-app (site.css «per-app pages»). */
+  const appTheme = route.page === 'app' || route.page === 'demo' ? route.app : undefined;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (appTheme) root.dataset.app = appTheme;
+    else delete root.dataset.app;
+  }, [appTheme]);
+
   const key = pageKey(route);
   const lastKey = useRef(key);
   useEffect(() => {
@@ -127,7 +135,7 @@ export function Site() {
         {t.skip}
       </a>
       <TopBar menuOpen={menuOpen} onMenu={() => setMenuOpen(true)} />
-      <main id="main" className={`page page--${route.page}`}>
+      <main id="main" className={`page page--${route.page}`} data-app={appTheme}>
         {route.page === 'home' && <Home />}
         {route.page === 'app' && <AppPage key={route.app} app={route.app} />}
         {route.page === 'demo' && (
@@ -140,7 +148,10 @@ export function Site() {
       </main>
       <Footer />
       {/* not on a demo page, and not on the page of an app that isn't on sale yet (Andeo) */}
-      <StickyCta enabled={route.page !== 'demo' && !(route.page === 'app' && !isOnSale(route.app)) && !menuOpen && !access.open} />
+      <StickyCta
+        enabled={route.page !== 'demo' && !(route.page === 'app' && !isOnSale(route.app)) && !menuOpen && !access.open}
+        app={route.page === 'app' && isOnSale(route.app) ? route.app : undefined}
+      />
       <MenuSheet open={menuOpen} onClose={() => setMenuOpen(false)} />
       {accessLoaded && (
         <ChunkBoundary

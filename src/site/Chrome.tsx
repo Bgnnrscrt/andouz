@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, Languages, Menu, Send } from 'lucide-react';
-import type { Language } from '../types';
+import type { AppId, Language } from '../types';
 import { BOT_URL } from './copy';
 import { Link, useSite } from './context';
 import { Sheet } from './Sheet';
@@ -192,7 +192,8 @@ export function MenuSheet({ open, onClose }: { open: boolean; onClose: () => voi
  * Phones: a slim «Получить доступ · 1000 ★» bar at the bottom once the hero's own buttons
  * have scrolled away; it steps aside over the footer.
  */
-export function StickyCta({ enabled }: { enabled: boolean }) {
+/** `app`: on an app page the bar opens the access window with that app chosen. */
+export function StickyCta({ enabled, app }: { enabled: boolean; app?: AppId }) {
   const { t, openAccess } = useSite();
   const [show, setShow] = useState(false);
 
@@ -224,7 +225,7 @@ export function StickyCta({ enabled }: { enabled: boolean }) {
   const visible = enabled && show;
   return (
     <div className={`sticky-cta${visible ? ' is-shown' : ''}`} aria-hidden={!visible}>
-      <button type="button" className="btn btn--primary btn--block" tabIndex={visible ? 0 : -1} onClick={() => openAccess()}>
+      <button type="button" className="btn btn--primary btn--block" tabIndex={visible ? 0 : -1} onClick={() => openAccess(app)}>
         <span>{t.sticky.text}</span>
         <span className="sticky-price">{t.sticky.price}</span>
       </button>

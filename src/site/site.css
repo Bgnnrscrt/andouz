@@ -1856,3 +1856,268 @@ img.emoji {
 .mcard-facts {
   font-variant-numeric: lining-nums;
 }
+
+/* ==========================================================================
+   Per-app pages (owner 11.11: «для каждого проекта внутри сайта свой личный дизайн»).
+   Site.tsx puts data-app on <main> and <html> on an app page and its demo pages. The shared
+   frame stays (top bar, fonts, shapes); inside, each app gets its own room — 2 base colours +
+   1 accent: AndoGram — night navy + ice paper, sky accent (a chat doodle like Telegram's
+   wallpaper); Andusta — burgundy + blush paper, the lime of its «салатовый лайк» (story rings);
+   Andeo — espresso + warm cream, amber (a film strip and a projector beam).
+   Text contrast ≥ 4.5:1 everywhere (big italic numbers ≥ 3:1), checked by hand.
+   ========================================================================== */
+main[data-app] {
+  background: var(--paper) var(--grain);
+}
+main[data-app='andogram'] {
+  --paper: #eef2f6;
+  --paper-2: #e3e9f1;
+  --card: #f8fafd;
+  --card-2: #eef3f8;
+  --line: #d2dbe6;
+  --line-soft: #e1e8f0;
+  --line-strong: #a9b8cb;
+  --ink: #16223a;
+  --ink-2: #43516a;
+  --ink-3: #5b6880;
+  --heading: #0f1a2e;
+  --green: #1f5fa0;
+  --green-deep: #184c82;
+  --green-soft: rgba(31, 95, 160, 0.08);
+  --green-line: rgba(31, 95, 160, 0.32);
+  --brass: #3a86cc;
+  --brass-ink: #22609c;
+  --brass-light: #8fd0ff;
+  --brass-line: rgba(58, 134, 204, 0.45);
+  --hero-bg: #0f1b30;
+  --hero-bg-2: #16294a;
+  --hero-glow: rgba(143, 208, 255, 0.18);
+  --hero-ink: #eef3fa;
+  --hero-ink-2: #b8c6da;
+  --hero-accent: #8fd0ff;
+  --hero-accent-ink: #0b1626;
+  --hero-line: rgba(196, 220, 255, 0.16);
+  --hero-cell: rgba(255, 255, 255, 0.045);
+}
+main[data-app='andusta'] {
+  --paper: #f7efef;
+  --paper-2: #f0e3e4;
+  --card: #fdf8f8;
+  --card-2: #f7eded;
+  --line: #e8d4d7;
+  --line-soft: #f0e2e4;
+  --line-strong: #cfa9b0;
+  --ink: #2a1218;
+  --ink-2: #5c3a41;
+  --ink-3: #74535a;
+  --heading: #230d13;
+  --green: #8a2e42;
+  --green-deep: #6f2233;
+  --green-soft: rgba(138, 46, 66, 0.08);
+  --green-line: rgba(138, 46, 66, 0.32);
+  --brass: #b4455a;
+  --brass-ink: #8a2e42;
+  --brass-light: #c6f25a;
+  --brass-line: rgba(180, 69, 90, 0.42);
+  --hero-bg: #3a111b;
+  --hero-bg-2: #5a1c2b;
+  --hero-glow: rgba(233, 165, 177, 0.22);
+  --hero-ink: #fbeff1;
+  --hero-ink-2: #e5c2c9;
+  --hero-accent: #c6f25a;
+  --hero-accent-ink: #1e270a;
+  --hero-line: rgba(255, 214, 222, 0.18);
+  --hero-cell: rgba(255, 255, 255, 0.05);
+}
+main[data-app='andeo'] {
+  --paper: #f6efe5;
+  --paper-2: #eee3d3;
+  --card: #fcf8f2;
+  --card-2: #f5ede1;
+  --line: #e3d4be;
+  --line-soft: #ede2d2;
+  --line-strong: #c9b08c;
+  --ink: #2a1c10;
+  --ink-2: #5b4935;
+  --ink-3: #72604b;
+  --heading: #22160b;
+  --green: #8a4f1d;
+  --green-deep: #713f15;
+  --green-soft: rgba(138, 79, 29, 0.08);
+  --green-line: rgba(138, 79, 29, 0.32);
+  --brass: #b8741d;
+  --brass-ink: #8a4f1d;
+  --brass-light: #f4b04a;
+  --brass-line: rgba(184, 116, 29, 0.45);
+  --hero-bg: #1d120a;
+  --hero-bg-2: #362113;
+  --hero-glow: rgba(244, 176, 74, 0.2);
+  --hero-ink: #f8eedd;
+  --hero-ink-2: #d8c3a3;
+  --hero-accent: #f4b04a;
+  --hero-accent-ink: #261405;
+  --hero-line: rgba(255, 226, 180, 0.16);
+  --hero-cell: rgba(255, 255, 255, 0.045);
+}
+main[data-app] ::selection {
+  background: var(--brass-line);
+}
+
+/* the first screen: the app's own dark room */
+main[data-app] .app-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(110% 60% at 88% 0%, var(--hero-glow), transparent 62%),
+    linear-gradient(180deg, var(--hero-bg) 0%, var(--hero-bg-2) 100%);
+  color: var(--hero-ink);
+}
+main[data-app] .app-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+main[data-app] .app-hero :focus-visible,
+main[data-app] .cta-band :focus-visible {
+  outline-color: var(--hero-accent);
+}
+main[data-app] .app-hero .back-link {
+  color: var(--hero-ink-2);
+}
+main[data-app] .app-hero .kicker,
+main[data-app] .app-hero .app-tagline {
+  color: var(--hero-accent);
+}
+main[data-app] .app-hero .kicker::before {
+  background: var(--hero-accent);
+}
+main[data-app] .app-hero .h1 {
+  color: #fff;
+}
+main[data-app] .app-hero .lead {
+  color: var(--hero-ink-2);
+}
+main[data-app] .app-hero .btn--primary {
+  background: var(--hero-accent);
+  color: var(--hero-accent-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 14px 32px -16px var(--hero-accent);
+}
+main[data-app] .app-hero .btn--outline {
+  border-color: var(--hero-line);
+  color: var(--hero-ink);
+}
+main[data-app] .app-hero .btn.btn--soon,
+main[data-app] .cta-band .btn.btn--soon {
+  border-color: var(--hero-accent);
+  background: transparent;
+  color: var(--hero-accent);
+  box-shadow: none;
+}
+main[data-app] .app-hero .facts {
+  border-color: var(--hero-line);
+  background: var(--hero-line);
+}
+main[data-app] .app-hero .facts div {
+  background: linear-gradient(var(--hero-cell), var(--hero-cell)), var(--hero-bg);
+}
+main[data-app] .app-hero .facts dt {
+  color: var(--hero-accent);
+}
+main[data-app] .app-hero .facts dd {
+  color: var(--hero-ink);
+}
+main[data-app] .app-hero-card .mcard {
+  box-shadow:
+    0 40px 70px -30px rgba(0, 0, 0, 0.8),
+    0 0 0 1px var(--hero-line),
+    0 0 80px -24px var(--hero-accent);
+}
+
+/* AndoGram: a chat doodle like Telegram's wallpaper (planes, bubbles, locks, stars), fading out downwards */
+main[data-app='andogram'] .app-hero::before {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' fill='none' stroke='%238fd0ff' stroke-opacity='.11' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M28 54l50-20-13 50-12-17-25-13z'/%3E%3Cpath d='M53 67l25-33'/%3E%3Cpath d='M140 28h46a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10h-28l-14 12V72h-4a10 10 0 0 1-10-10V38a10 10 0 0 1 10-10z'/%3E%3Crect x='38' y='146' width='36' height='28' rx='6'/%3E%3Cpath d='M45 146v-9a11 11 0 0 1 22 0v9'/%3E%3Cpath d='M160 142l6 12 13 2-9 9 2 13-12-6-12 6 2-13-9-9 13-2z'/%3E%3Ccircle cx='112' cy='112' r='3'/%3E%3C/svg%3E")
+    0 0 / 220px 220px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+}
+
+/* Andusta: story rings (lime + blush) behind the corner, like a story you are about to open */
+main[data-app='andusta'] .app-hero::before {
+  background:
+    radial-gradient(circle at calc(100% + 26px) -18px, transparent 0 112px, rgba(198, 242, 90, 0.34) 113px 117px, transparent 118px 140px,
+      rgba(233, 165, 177, 0.28) 141px 144px, transparent 145px),
+    radial-gradient(circle at 4% 96%, transparent 0 170px, rgba(233, 165, 177, 0.16) 171px 174px, transparent 175px 204px,
+      rgba(198, 242, 90, 0.12) 205px 207px, transparent 208px);
+}
+
+/* Andeo: a film strip along the top and the bottom and a warm projector beam */
+main[data-app='andeo'] .app-hero {
+  padding-top: 52px;
+  padding-bottom: 76px;
+}
+main[data-app='andeo'] .app-hero::before {
+  background:
+    repeating-linear-gradient(90deg, rgba(248, 238, 221, 0.16) 0 16px, transparent 16px 34px) 0 12px / 100% 11px no-repeat,
+    repeating-linear-gradient(90deg, rgba(248, 238, 221, 0.16) 0 16px, transparent 16px 34px) 0 calc(100% - 12px) / 100% 11px no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)) 0 0 / 100% 35px no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)) 0 100% / 100% 35px no-repeat,
+    conic-gradient(from 198deg at 100% 0%, transparent 0deg, rgba(244, 176, 74, 0.16) 16deg, rgba(244, 176, 74, 0.05) 30deg, transparent 44deg);
+}
+
+/* the closing band and the footer follow the room */
+main[data-app] .cta-band {
+  background:
+    radial-gradient(90% 120% at 0% 0%, var(--hero-glow), transparent 60%),
+    linear-gradient(180deg, var(--hero-bg-2), var(--hero-bg));
+  color: var(--hero-ink);
+}
+main[data-app] .cta-band-title {
+  color: #fff;
+}
+main[data-app] .cta-band .btn--brass {
+  background: var(--hero-accent);
+  color: var(--hero-accent-ink);
+}
+html[data-app='andogram'] .footer {
+  --leather: #0b1526;
+  --leather-ink: #e6edf7;
+  --leather-ink-2: #aab9cd;
+  --brass-light: #8fd0ff;
+}
+html[data-app='andusta'] .footer {
+  --leather: #2b0c14;
+  --leather-ink: #f6e9ec;
+  --leather-ink-2: #d9b6bd;
+  --brass-light: #c6f25a;
+}
+html[data-app='andeo'] .footer {
+  --leather: #160d07;
+  --leather-ink: #f3e7d4;
+  --leather-ink-2: #cfb994;
+  --brass-light: #f4b04a;
+}
+
+/* the phone buy bar on an app page: the room's dark colour, the price in its accent */
+html[data-app='andogram'] .sticky-cta {
+  background: linear-gradient(180deg, rgba(238, 242, 246, 0), rgba(238, 242, 246, 0.96) 34%);
+}
+html[data-app='andogram'] .sticky-cta .btn--primary {
+  background: #0f1b30;
+  color: #eef3fa;
+}
+html[data-app='andogram'] .sticky-cta .sticky-price {
+  color: #8fd0ff;
+}
+html[data-app='andusta'] .sticky-cta {
+  background: linear-gradient(180deg, rgba(247, 239, 239, 0), rgba(247, 239, 239, 0.96) 34%);
+}
+html[data-app='andusta'] .sticky-cta .btn--primary {
+  background: #3a111b;
+  color: #fbeff1;
+}
+html[data-app='andusta'] .sticky-cta .sticky-price {
+  color: #c6f25a;
+}
