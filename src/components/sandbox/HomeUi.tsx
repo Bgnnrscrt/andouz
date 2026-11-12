@@ -99,7 +99,7 @@ function AppIcon({
       aria-label={label}
     >
       <span className={`hp-tile hp-tile--${id}`} aria-hidden="true">
-        {Glyph ? <Glyph size={27} strokeWidth={1.9} /> : <img src="/logo-96.webp" alt="" width={54} height={54} />}
+        {Glyph ? <Glyph size={27} strokeWidth={1.9} /> : <img src="/andogram-icon.svg" alt="" width={54} height={54} />}
       </span>
       {!dock && (
         <span className="hp-app-label" aria-hidden="true">

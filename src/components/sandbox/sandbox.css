@@ -948,10 +948,8 @@
 }
 
 .sbx-splash-logo--andogram {
-  background: #16140f;
-  box-shadow:
-    0 0 0 1px rgba(216, 184, 120, 0.35),
-    0 0 40px rgba(216, 184, 120, 0.22);
+  background: #9570ff;
+  box-shadow: 0 0 40px rgba(149, 112, 255, 0.35);
 }
 
 .sbx-splash-logo--andogram img,

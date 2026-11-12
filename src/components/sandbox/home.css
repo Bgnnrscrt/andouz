@@ -103,12 +103,10 @@
   object-fit: cover;
 }
 
-/* Generic glyphs on coloured tiles: no brand logos. */
+/* AndoGram — its own launcher icon (public/andogram-icon.svg, from the app); the rest are generic glyphs on
+   coloured tiles, no brand logos. */
 .hp-tile--andogram {
-  background: #05070b;
-  box-shadow:
-    0 0 0 1px rgba(216, 184, 120, 0.25),
-    0 4px 14px rgba(0, 0, 0, 0.35);
+  background: #9570ff;
 }
 
 .hp-tile--telegram {

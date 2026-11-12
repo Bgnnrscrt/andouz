@@ -526,7 +526,7 @@ export function Splash({ kind }: { kind: 'andogram' | 'telegram' }) {
     <div className="sbx-splash">
       <span className={`sbx-splash-logo sbx-splash-logo--${kind}`} aria-hidden="true">
         {kind === 'andogram' ? (
-          <img src="/logo-96.webp" alt="" width={64} height={64} />
+          <img src="/andogram-icon.svg" alt="" width={86} height={86} />
         ) : (
           <MessageCircle size={42} />
         )}

@@ -117,7 +117,7 @@ export function LockScreen({
       <div className="hp-lock-main">
         <span className="hp-lock-logo" aria-hidden="true">
           <span className="hp-lock-mark">
-            <img src="/logo-96.webp" alt="" width={46} height={46} />
+            <img src="/andogram-icon.svg" alt="" width={46} height={46} />
           </span>
           <span key={ok ? 'open' : 'shut'} className="hp-lock-badge">
             {ok ? <LockOpen size={12} strokeWidth={2.4} /> : <Lock size={12} strokeWidth={2.4} />}
