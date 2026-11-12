@@ -10,7 +10,7 @@ import './access.css';
 /*
  * «Получить доступ» window. Since 11.11 the site only sends the visitor to the bot (owner: «APK only through the
  * bot, the site sends buyers to the bot»): choose the app, see the price, «Оплатить в боте» →
- * t.me/andouzbot?start=buy_<app>. The bot takes the Stars and sends the installation code AND the APK file (its
+ * t.me/andouzbot?start=buy_<app>. The bot takes the Stars and sends the activation code AND the APK file (its
  * APK shelf). A coupon or a promo code is entered in the bot too (?start=redeem). On a computer a QR of the same link opens the
  * bot on the phone, where the app gets installed. No downloads, codes or API calls on the site.
  */
