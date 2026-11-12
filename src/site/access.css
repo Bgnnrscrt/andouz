@@ -115,7 +115,7 @@
   color: var(--ink-2);
 }
 
-/* promo code: entered in the bot (the site doesn't redeem codes since 11.11) */
+/* a coupon or a promo code: entered in the bot (the site doesn't redeem codes since 11.11) */
 .promo-link {
   display: flex;
   align-items: center;
