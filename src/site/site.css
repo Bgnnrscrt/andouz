@@ -350,27 +350,22 @@ img.emoji {
   height: var(--topbar-h);
 }
 .brand {
+  --brand-accent: var(--green);
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   min-height: 44px;
   color: var(--heading);
   text-decoration: none;
 }
-.brand-mono {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--leather);
-  color: var(--brass-light);
-  font: 600 21px/1 var(--font-display);
-  box-shadow: inset 0 0 0 2px var(--leather), inset 0 0 0 3px rgba(201, 168, 106, 0.6);
+/* the logo (AndoLogo, icons.tsx): letters = currentColor, the switch = --brand-accent; width from its box 3.428 : 1 */
+.brand-logo {
+  --h: 30px;
+  display: block;
+  width: calc(var(--h) * 3.428);
+  height: var(--h);
 }
-.brand-word {
-  font: 700 20px/1 var(--font-display);
-  letter-spacing: 0.2em;
+.brand-logo-switch {
+  fill: var(--brand-accent);
 }
 .topnav {
   display: none;
@@ -1523,14 +1518,14 @@ img.emoji {
   background: var(--leather) var(--grain);
   color: var(--leather-ink);
 }
+/* on leather: cream letters, light brass switch (on an app page the footer re-tints both — see «Per-app pages») */
 .footer .brand,
 .menu .brand {
-  color: #f6efdf;
+  --brand-accent: var(--brass-light);
+  color: var(--leather-ink);
 }
-.footer .brand-mono,
-.menu .brand-mono {
-  background: transparent;
-  box-shadow: inset 0 0 0 1px rgba(216, 184, 120, 0.6);
+.footer .brand-logo {
+  --h: 38px;
 }
 .footer-in {
   display: grid;

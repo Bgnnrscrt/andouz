@@ -3,6 +3,7 @@ import { ArrowRight, Check, ChevronDown, Languages, Menu, Send } from 'lucide-re
 import type { AppId, Language } from '../types';
 import { BOT_URL } from './copy';
 import { Link, useSite } from './context';
+import { AndoLogo } from './icons';
 import { Sheet } from './Sheet';
 import { appHref, homeHref, sectionHref } from './router';
 
@@ -17,8 +18,7 @@ const LANGS: { code: Language; label: string }[] = [
 export function Brand({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <Link to={homeHref} className="brand" ariaLabel="ANDO" onNavigate={onNavigate}>
-      <span className="brand-mono" aria-hidden="true">A</span>
-      <span className="brand-word" aria-hidden="true">ANDO</span>
+      <AndoLogo className="brand-logo" />
     </Link>
   );
 }

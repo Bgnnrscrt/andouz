@@ -175,7 +175,7 @@ export function StartScreen({
   return (
     <div className="sbx-start">
       <span className="sbx-start-logo" aria-hidden="true">
-        <img src="/logo-96.webp" alt="" width={72} height={72} />
+        <img src="/logo-192.png" alt="" width={72} height={72} />
       </span>
       <span className="sbx-start-title">{title}</span>
       <span className="sbx-start-sub">{sub}</span>
